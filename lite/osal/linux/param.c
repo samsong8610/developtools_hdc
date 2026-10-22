@@ -46,9 +46,24 @@ static void key_to_path(const char *key, char *out, size_t out_len)
 int GetParameter(const char *key, const char *def, char *value, unsigned int len)
 {
     char path[768];
+    char envname[320];
+    const char *env;
+    size_t el;
     int n;
     if (key == NULL || value == NULL || len == 0) {
         return -1;
+    }
+    /* Bringup override: HDCD_PARAM_<key with '.' -> '_'> */
+    el = 0;
+    memcpy(envname, "HDCD_PARAM_", 11); el = 11;
+    for (const char *p = key; *p && el + 1 < sizeof(envname); ++p) {
+        envname[el++] = (*p == '.') ? '_' : *p;
+    }
+    envname[el] = '\0';
+    env = getenv(envname);
+    if (env != NULL) {
+        snprintf(value, len, "%s", env);
+        return (int)strlen(value);
     }
     key_to_path(key, path, sizeof(path));
     n = hdc_osal_read_file(path, value, len);
