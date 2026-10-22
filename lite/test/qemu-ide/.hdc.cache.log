@@ -1,0 +1,415 @@
+[D][2026-10-22 21:39:08.818][4bf860][main.cpp:191] Foreground cli-mode
+[F][2026-10-22 21:39:08.826][4bf860][main.cpp:301] setuid(0) fail Operation not permitted
+[D][2026-10-22 21:39:08.827][4bf860][main.cpp:303] Root run rc:-1
+[I][2026-10-22 21:39:08.827][4bf860][main.cpp:387] HdcDaemon run as root mode.
+[D][2026-10-22 21:39:08.827][4bf860][main.cpp:393] HdcDaemon main run
+[I][2026-10-22 21:39:08.828][4bf860][session.cpp:28] Program running. Ver: 3.2.0c Pid:85363
+[I][2026-10-22 21:39:08.828][4bf860][session.cpp:36] set UV_THREADPOOL_SIZE:16
+[D][2026-10-22 21:39:08.830][4bf860][session.cpp:47] loopMain init
+[D][2026-10-22 21:39:08.831][4bf860][daemon.cpp:174] HdcDaemon InitMod
+[I][2026-10-22 21:39:08.831][4bf860][daemon_tcp.cpp:152] HdcDaemonTCP init
+[I][2026-10-22 21:39:08.834][4bf860][daemon_tcp.cpp:159] TCP listen on port:[8710]
+[F][2026-10-22 21:39:08.838][4bf860][connect_validation.cpp:34] Parameter not found or value is empty.
+[I][2026-10-22 21:39:08.838][4bf860][daemon.cpp:141] Authentication is not required in root mode
+[I][2026-10-22 21:39:08.838][4bf860][daemon.cpp:411] not enable secure, noneed clear keyfile
+[F][2026-10-22 21:39:08.839][6f9bca68][uv_status.cpp:133] LoopMonitorWorker every 3000 ms check hung 500 us
+[I][2026-10-22 21:39:10.604][4bf860][session.cpp:481] HdcSessionBase NewSession, sessionId:271******552(L:10), connType:1.
+[I][2026-10-22 21:39:10.605][4bf860][session.cpp:395] MallocSessionByConnectType init hWorkTCP sid:271******552(L:10)
+[W][2026-10-22 21:39:10.610][6f958a68][base.cpp:2837] turn On heartbeatSwitch
+[D][2026-10-22 21:39:10.610][6f958a68][session.cpp:1537] StartHeartbeatWork
+[I][2026-10-22 21:39:10.610][6f958a68][session.cpp:1562] !!!Workthread run begin, sid:271******552(L:10) instance:daemon
+[I][2026-10-22 21:39:10.611][6f958a68][session.cpp:1508] session 271******552(L:10) not support heatbeat
+[W][2026-10-22 21:39:10.611][6f958a68][session.cpp:1370] Dispatch MainThreadCommand  START_SESSION sessionId:271******552(L:10) instance:daemon
+[I][2026-10-22 21:39:10.611][6f958a68][session.cpp:1300] start tcp open fdChildWorkTCP, sid:271******552(L:10)
+[D][2026-10-22 21:39:10.613][6f958a68][daemon.cpp:1142] FetchCommand channelId:0 command:1
+[I][2026-10-22 21:39:10.614][6f958a68][daemon.cpp:859] client auth type is 1 for 146******588(L:10) session
+[I][2026-10-22 21:39:10.615][6f958a68][session.cpp:1709] peer support features are Ver: 3.2.0c,TCP,linux,heartbeat for session 146******588(L:10)
+[F][2026-10-22 21:39:10.616][6f958a68][connect_validation.cpp:34] Parameter not found or value is empty.
+[F][2026-10-22 21:39:10.616][6f958a68][connect_validation.cpp:34] Parameter not found or value is empty.
+[I][2026-10-22 21:39:10.616][6f958a68][daemon.cpp:799] not enable secure, allow access for 146******588(L:10)
+[F][2026-10-22 21:39:10.617][6f958a68][connect_validation.cpp:34] Parameter not found or value is empty.
+[D][2026-10-22 21:39:10.618][6f958a68][daemon.cpp:974] receive hs version = Ver: 3.2.0c7fdbc1aa8c5fefaa
+[D][2026-10-22 21:39:10.619][6f958a68][daemon.cpp:1142] FetchCommand channelId:0 command:2
+[D][2026-10-22 21:39:10.661][6f958a68][daemon.cpp:1142] FetchCommand channelId:3432035451 command:1001
+[I][2026-10-22 21:39:10.661][6f958a68][session.cpp:1652] New HTaskInfo cid:3432035451 sid:146******588(L:10) command:1001
+[I][2026-10-22 21:39:10.662][6f958a68][session.cpp:891] AdminTask add task type:0 cid:3432035451 sid:146******588(L:10) mapsize:1
+[D][2026-10-22 21:39:10.662][6f958a68][task.cpp:34] HdcTaskBase type:0 cid:3432035451 sid:146******588(L:10)
+[I][2026-10-22 21:39:10.662][6f958a68][daemon_unity.cpp:414] Unity CommandDispatch command:1001 cid:3432035451 sid:146******588(L:10)
+[D][2026-10-22 21:39:10.664][6c436a68][async_cmd.cpp:225] Popen pipe fds[pipeRead]:24 fds[pipeWrite]:25, mode 1
+[D][2026-10-22 21:39:10.666][6f958a68][async_cmd.cpp:291] ExecuteCommand cmd:echo hello; echo __RC=$? fd:24 pid:85540
+[I][2026-10-22 21:39:10.668][6f958a68][daemon_unity.cpp:493] Unity CommandDispatch command:1001 finish cid:3432035451 sid:146******588(L:10)
+[D][2026-10-22 21:39:10.670][6c436a68][async_cmd.cpp:88] FinishShellProc finish pipeRead fd:24 pid:85540 count:1
+[D][2026-10-22 21:39:10.670][6c436a68][task.cpp:55] HdcTaskBase::TaskFinish notify begin type:0 cid:3432035451 sid:146******588(L:10)
+[D][2026-10-22 21:39:10.670][6c436a68][task.cpp:58] HdcTaskBase::TaskFinish notify end type:0 cid:3432035451 sid:146******588(L:10)
+[D][2026-10-22 21:39:10.714][6f958a68][daemon.cpp:1142] FetchCommand channelId:3432035451 command:2
+[W][2026-10-22 21:39:10.714][6f958a68][session.cpp:160] BeginRemoveTask taskType:0 channelId:3432035451
+[W][2026-10-22 21:39:10.715][6f958a68][session.cpp:190] ClearOwnTasks OP_CLEAR finish, sessionId:146******588(L:10) channelIDInput:3432035451
+[W][2026-10-22 21:39:10.715][6f958a68][session.cpp:115] taskClassDeleteRetry start clear task, taskType:0 cid:3432035451 sid:146******588(L:10)
+[I][2026-10-22 21:39:10.716][6f958a68][async_cmd.cpp:69] DoRelease rc:-3 pid:85540
+[D][2026-10-22 21:39:10.716][6f958a68][session.cpp:126] TaskDelay task remove retry count 0/30, taskType:0 channelId:3432035451, sessionId:146******588(L:10)
+[I][2026-10-22 21:39:10.718][6f958a68][daemon_unity.cpp:31] ~HdcDaemonUnity cid:3432035451 sid:146******588(L:10)
+[D][2026-10-22 21:39:10.718][6f958a68][task.cpp:40] ~HdcTaskBase type:0 cid:3432035451 sid:146******588(L:10)
+[W][2026-10-22 21:39:10.718][6f958a68][session.cpp:134] TaskDelay task remove finish, channelId:3432035451
+[D][2026-10-22 21:39:10.719][6f958a68][base.cpp:969] before uv handle close, the uv handle type is 13
+[D][2026-10-22 21:39:10.761][6f958a68][daemon.cpp:1142] FetchCommand channelId:3432035451 command:2
+[D][2026-10-22 21:39:10.761][6f958a68][daemon.cpp:1142] FetchCommand channelId:3947530741 command:1001
+[I][2026-10-22 21:39:10.761][6f958a68][session.cpp:1652] New HTaskInfo cid:3947530741 sid:146******588(L:10) command:1001
+[I][2026-10-22 21:39:10.761][6f958a68][session.cpp:891] AdminTask add task type:0 cid:3947530741 sid:146******588(L:10) mapsize:1
+[D][2026-10-22 21:39:10.762][6f958a68][task.cpp:34] HdcTaskBase type:0 cid:3947530741 sid:146******588(L:10)
+[I][2026-10-22 21:39:10.762][6f958a68][daemon_unity.cpp:414] Unity CommandDispatch command:1001 cid:3947530741 sid:146******588(L:10)
+[D][2026-10-22 21:39:10.762][6c436a68][async_cmd.cpp:225] Popen pipe fds[pipeRead]:24 fds[pipeWrite]:25, mode 1
+[D][2026-10-22 21:39:10.764][6f958a68][async_cmd.cpp:291] ExecuteCommand cmd:false; echo __RC=$? fd:24 pid:85550
+[I][2026-10-22 21:39:10.764][6f958a68][daemon_unity.cpp:493] Unity CommandDispatch command:1001 finish cid:3947530741 sid:146******588(L:10)
+[D][2026-10-22 21:39:10.767][6c436a68][async_cmd.cpp:88] FinishShellProc finish pipeRead fd:24 pid:85550 count:1
+[D][2026-10-22 21:39:10.767][6c436a68][task.cpp:55] HdcTaskBase::TaskFinish notify begin type:0 cid:3947530741 sid:146******588(L:10)
+[D][2026-10-22 21:39:10.768][6c436a68][task.cpp:58] HdcTaskBase::TaskFinish notify end type:0 cid:3947530741 sid:146******588(L:10)
+[D][2026-10-22 21:39:10.809][6f958a68][daemon.cpp:1142] FetchCommand channelId:3947530741 command:2
+[W][2026-10-22 21:39:10.809][6f958a68][session.cpp:160] BeginRemoveTask taskType:0 channelId:3947530741
+[W][2026-10-22 21:39:10.809][6f958a68][session.cpp:190] ClearOwnTasks OP_CLEAR finish, sessionId:146******588(L:10) channelIDInput:3947530741
+[W][2026-10-22 21:39:10.810][6f958a68][session.cpp:115] taskClassDeleteRetry start clear task, taskType:0 cid:3947530741 sid:146******588(L:10)
+[I][2026-10-22 21:39:10.810][6f958a68][async_cmd.cpp:69] DoRelease rc:-3 pid:85550
+[D][2026-10-22 21:39:10.810][6f958a68][session.cpp:126] TaskDelay task remove retry count 0/30, taskType:0 channelId:3947530741, sessionId:146******588(L:10)
+[I][2026-10-22 21:39:10.810][6f958a68][daemon_unity.cpp:31] ~HdcDaemonUnity cid:3947530741 sid:146******588(L:10)
+[D][2026-10-22 21:39:10.810][6f958a68][task.cpp:40] ~HdcTaskBase type:0 cid:3947530741 sid:146******588(L:10)
+[W][2026-10-22 21:39:10.811][6f958a68][session.cpp:134] TaskDelay task remove finish, channelId:3947530741
+[D][2026-10-22 21:39:10.811][6f958a68][base.cpp:969] before uv handle close, the uv handle type is 13
+[D][2026-10-22 21:39:10.853][6f958a68][daemon.cpp:1142] FetchCommand channelId:3947530741 command:2
+[D][2026-10-22 21:39:10.853][6f958a68][daemon.cpp:1142] FetchCommand channelId:2299798065 command:12
+[I][2026-10-22 21:39:10.853][6f958a68][session.cpp:1652] New HTaskInfo cid:2299798065 sid:146******588(L:10) command:12
+[I][2026-10-22 21:39:10.853][6f958a68][session.cpp:891] AdminTask add task type:0 cid:2299798065 sid:146******588(L:10) mapsize:1
+[D][2026-10-22 21:39:10.873][6f958a68][daemon.cpp:1142] FetchCommand channelId:2299798065 command:3001
+[D][2026-10-22 21:39:10.874][6f958a68][task.cpp:34] HdcTaskBase type:2 cid:2299798065 sid:146******588(L:10)
+[W][2026-10-22 21:39:10.880][6f958a68][base.cpp:2737] bundleName is empty
+[D][2026-10-22 21:39:10.885][6f958a68][transfer.cpp:725] CheckDirectory localPath = /tm******hap(L:18) optName = dem******hap(L:8)
+[D][2026-10-22 21:39:10.886][6f958a68][transfer.cpp:732] Not directory mode optName = dem******hap(L:8), return
+[D][2026-10-22 21:39:10.887][6f958a68][transfer.cpp:815] No need create dir for file = dem******hap(L:8)
+[I][2026-10-22 21:39:10.888][6f958a68][file.cpp:559] BeginFileOperations cid:2299798065 sid:146******588(L:10) uv_fs_open local:/tm******hap(L:18) remote:
+[D][2026-10-22 21:39:10.889][6f958a68][transfer.cpp:513] Filemod openfile: channelId:2299798065 result:24
+[D][2026-10-22 21:39:10.893][6f958a68][transfer.cpp:274] channelId:2299798065 result:24, closeReqSubmitted:0, context->isFdOpen 1
+[D][2026-10-22 21:39:10.894][6f958a68][transfer.h:158] CloseCtxFd, localPath:/tm******hap(L:18) result:24, closeReqSubmitted:0
+[D][2026-10-22 21:39:10.894][6f958a68][transfer.cpp:278] OnFileIO fs_close, channelId:2299798065
+[D][2026-10-22 21:39:10.894][6f958a68][transfer.cpp:171] OnFileClose channelId:2299798065 closeNotify:1
+[D][2026-10-22 21:39:10.894][6f958a68][file.cpp:349] WhenTransferFinish fileCnt:0
+[D][2026-10-22 21:39:10.895][6f958a68][daemon.cpp:1142] FetchCommand channelId:2299798065 command:3004
+[D][2026-10-22 21:39:10.898][6f958a68][task.cpp:55] HdcTaskBase::TaskFinish notify begin type:2 cid:2299798065 sid:146******588(L:10)
+[D][2026-10-22 21:39:10.898][6f958a68][task.cpp:58] HdcTaskBase::TaskFinish notify end type:2 cid:2299798065 sid:146******588(L:10)
+[D][2026-10-22 21:39:10.943][6f958a68][daemon.cpp:1142] FetchCommand channelId:2299798065 command:2
+[W][2026-10-22 21:39:10.943][6f958a68][session.cpp:160] BeginRemoveTask taskType:2 channelId:2299798065
+[W][2026-10-22 21:39:10.944][6f958a68][session.cpp:190] ClearOwnTasks OP_CLEAR finish, sessionId:146******588(L:10) channelIDInput:2299798065
+[W][2026-10-22 21:39:10.944][6f958a68][session.cpp:115] taskClassDeleteRetry start clear task, taskType:2 cid:2299798065 sid:146******588(L:10)
+[D][2026-10-22 21:39:10.945][6f958a68][file.cpp:38] StopTask channelId:2299798065
+[D][2026-10-22 21:39:10.945][6f958a68][session.cpp:126] TaskDelay task remove retry count 0/30, taskType:2 channelId:2299798065, sessionId:146******588(L:10)
+[D][2026-10-22 21:39:10.945][6f958a68][file.cpp:33] ~HdcFile channelId:2299798065
+[D][2026-10-22 21:39:10.946][6f958a68][transfer.cpp:53] ~HdcTransferBase channelId:2299798065 lastErrno:0 ioFinish:1
+[D][2026-10-22 21:39:10.947][6f958a68][task.cpp:40] ~HdcTaskBase type:2 cid:2299798065 sid:146******588(L:10)
+[W][2026-10-22 21:39:10.947][6f958a68][session.cpp:134] TaskDelay task remove finish, channelId:2299798065
+[D][2026-10-22 21:39:10.948][6f958a68][base.cpp:969] before uv handle close, the uv handle type is 13
+[D][2026-10-22 21:39:10.985][6f958a68][daemon.cpp:1142] FetchCommand channelId:2299798065 command:2
+[D][2026-10-22 21:39:10.986][6f958a68][daemon.cpp:1142] FetchCommand channelId:1949568564 command:1001
+[I][2026-10-22 21:39:10.987][6f958a68][session.cpp:1652] New HTaskInfo cid:1949568564 sid:146******588(L:10) command:1001
+[I][2026-10-22 21:39:10.987][6f958a68][session.cpp:891] AdminTask add task type:0 cid:1949568564 sid:146******588(L:10) mapsize:1
+[D][2026-10-22 21:39:10.987][6f958a68][task.cpp:34] HdcTaskBase type:0 cid:1949568564 sid:146******588(L:10)
+[I][2026-10-22 21:39:10.988][6f958a68][daemon_unity.cpp:414] Unity CommandDispatch command:1001 cid:1949568564 sid:146******588(L:10)
+[D][2026-10-22 21:39:10.989][6c436a68][async_cmd.cpp:225] Popen pipe fds[pipeRead]:24 fds[pipeWrite]:25, mode 1
+[D][2026-10-22 21:39:10.991][6f958a68][async_cmd.cpp:291] ExecuteCommand cmd:hilogcat > /tmp/ohjs/hilog.cap 2>&1 & echo $! > /tmp/ohjs/hilogcat.pid fd:24 pid:85567
+[I][2026-10-22 21:39:10.991][6f958a68][daemon_unity.cpp:493] Unity CommandDispatch command:1001 finish cid:1949568564 sid:146******588(L:10)
+[D][2026-10-22 21:39:10.994][6c436a68][async_cmd.cpp:88] FinishShellProc finish pipeRead fd:24 pid:85567 count:1
+[D][2026-10-22 21:39:10.994][6c436a68][task.cpp:55] HdcTaskBase::TaskFinish notify begin type:0 cid:1949568564 sid:146******588(L:10)
+[D][2026-10-22 21:39:10.995][6c436a68][task.cpp:58] HdcTaskBase::TaskFinish notify end type:0 cid:1949568564 sid:146******588(L:10)
+[D][2026-10-22 21:39:10.995][6f958a68][daemon.cpp:1142] FetchCommand channelId:1949568564 command:2
+[W][2026-10-22 21:39:10.995][6f958a68][session.cpp:160] BeginRemoveTask taskType:0 channelId:1949568564
+[W][2026-10-22 21:39:10.996][6f958a68][session.cpp:190] ClearOwnTasks OP_CLEAR finish, sessionId:146******588(L:10) channelIDInput:1949568564
+[W][2026-10-22 21:39:10.996][6f958a68][session.cpp:115] taskClassDeleteRetry start clear task, taskType:0 cid:1949568564 sid:146******588(L:10)
+[I][2026-10-22 21:39:10.996][6f958a68][async_cmd.cpp:69] DoRelease rc:-3 pid:85567
+[D][2026-10-22 21:39:10.996][6f958a68][session.cpp:126] TaskDelay task remove retry count 0/30, taskType:0 channelId:1949568564, sessionId:146******588(L:10)
+[I][2026-10-22 21:39:10.996][6f958a68][daemon_unity.cpp:31] ~HdcDaemonUnity cid:1949568564 sid:146******588(L:10)
+[D][2026-10-22 21:39:10.997][6f958a68][task.cpp:40] ~HdcTaskBase type:0 cid:1949568564 sid:146******588(L:10)
+[W][2026-10-22 21:39:10.997][6f958a68][session.cpp:134] TaskDelay task remove finish, channelId:1949568564
+[D][2026-10-22 21:39:10.997][6f958a68][base.cpp:969] before uv handle close, the uv handle type is 13
+[D][2026-10-22 21:39:11.041][6f958a68][daemon.cpp:1142] FetchCommand channelId:1949568564 command:2
+[D][2026-10-22 21:39:11.041][6f958a68][daemon.cpp:1142] FetchCommand channelId:895629747 command:1001
+[I][2026-10-22 21:39:11.042][6f958a68][session.cpp:1652] New HTaskInfo cid:895629747 sid:146******588(L:10) command:1001
+[I][2026-10-22 21:39:11.042][6f958a68][session.cpp:891] AdminTask add task type:0 cid:895629747 sid:146******588(L:10) mapsize:1
+[D][2026-10-22 21:39:11.042][6f958a68][task.cpp:34] HdcTaskBase type:0 cid:895629747 sid:146******588(L:10)
+[I][2026-10-22 21:39:11.042][6f958a68][daemon_unity.cpp:414] Unity CommandDispatch command:1001 cid:895629747 sid:146******588(L:10)
+[D][2026-10-22 21:39:11.043][6c436a68][async_cmd.cpp:225] Popen pipe fds[pipeRead]:24 fds[pipeWrite]:25, mode 1
+[D][2026-10-22 21:39:11.045][6f958a68][async_cmd.cpp:291] ExecuteCommand cmd:bm set -s disable; echo __RC=$? fd:24 pid:85576
+[I][2026-10-22 21:39:11.046][6f958a68][daemon_unity.cpp:493] Unity CommandDispatch command:1001 finish cid:895629747 sid:146******588(L:10)
+[D][2026-10-22 21:39:11.049][6c436a68][async_cmd.cpp:88] FinishShellProc finish pipeRead fd:24 pid:85576 count:1
+[D][2026-10-22 21:39:11.050][6c436a68][task.cpp:55] HdcTaskBase::TaskFinish notify begin type:0 cid:895629747 sid:146******588(L:10)
+[D][2026-10-22 21:39:11.050][6c436a68][task.cpp:58] HdcTaskBase::TaskFinish notify end type:0 cid:895629747 sid:146******588(L:10)
+[D][2026-10-22 21:39:11.097][6f958a68][daemon.cpp:1142] FetchCommand channelId:895629747 command:2
+[W][2026-10-22 21:39:11.097][6f958a68][session.cpp:160] BeginRemoveTask taskType:0 channelId:895629747
+[W][2026-10-22 21:39:11.097][6f958a68][session.cpp:190] ClearOwnTasks OP_CLEAR finish, sessionId:146******588(L:10) channelIDInput:895629747
+[W][2026-10-22 21:39:11.097][6f958a68][session.cpp:115] taskClassDeleteRetry start clear task, taskType:0 cid:895629747 sid:146******588(L:10)
+[I][2026-10-22 21:39:11.098][6f958a68][async_cmd.cpp:69] DoRelease rc:-3 pid:85576
+[D][2026-10-22 21:39:11.098][6f958a68][session.cpp:126] TaskDelay task remove retry count 0/30, taskType:0 channelId:895629747, sessionId:146******588(L:10)
+[I][2026-10-22 21:39:11.098][6f958a68][daemon_unity.cpp:31] ~HdcDaemonUnity cid:895629747 sid:146******588(L:10)
+[D][2026-10-22 21:39:11.098][6f958a68][task.cpp:40] ~HdcTaskBase type:0 cid:895629747 sid:146******588(L:10)
+[W][2026-10-22 21:39:11.099][6f958a68][session.cpp:134] TaskDelay task remove finish, channelId:895629747
+[D][2026-10-22 21:39:11.099][6f958a68][base.cpp:969] before uv handle close, the uv handle type is 13
+[D][2026-10-22 21:39:11.141][6f958a68][daemon.cpp:1142] FetchCommand channelId:895629747 command:2
+[D][2026-10-22 21:39:11.141][6f958a68][daemon.cpp:1142] FetchCommand channelId:3542649089 command:1001
+[I][2026-10-22 21:39:11.141][6f958a68][session.cpp:1652] New HTaskInfo cid:3542649089 sid:146******588(L:10) command:1001
+[I][2026-10-22 21:39:11.141][6f958a68][session.cpp:891] AdminTask add task type:0 cid:3542649089 sid:146******588(L:10) mapsize:1
+[D][2026-10-22 21:39:11.142][6f958a68][task.cpp:34] HdcTaskBase type:0 cid:3542649089 sid:146******588(L:10)
+[I][2026-10-22 21:39:11.142][6f958a68][daemon_unity.cpp:414] Unity CommandDispatch command:1001 cid:3542649089 sid:146******588(L:10)
+[D][2026-10-22 21:39:11.143][6c436a68][async_cmd.cpp:225] Popen pipe fds[pipeRead]:24 fds[pipeWrite]:25, mode 1
+[D][2026-10-22 21:39:11.144][6f958a68][async_cmd.cpp:291] ExecuteCommand cmd:bm install -p /tmp/ohjs/demo.hap; echo __RC=$? fd:24 pid:85587
+[I][2026-10-22 21:39:11.144][6f958a68][daemon_unity.cpp:493] Unity CommandDispatch command:1001 finish cid:3542649089 sid:146******588(L:10)
+[D][2026-10-22 21:39:11.157][6c436a68][async_cmd.cpp:88] FinishShellProc finish pipeRead fd:24 pid:85587 count:1
+[D][2026-10-22 21:39:11.157][6c436a68][task.cpp:55] HdcTaskBase::TaskFinish notify begin type:0 cid:3542649089 sid:146******588(L:10)
+[D][2026-10-22 21:39:11.157][6c436a68][task.cpp:58] HdcTaskBase::TaskFinish notify end type:0 cid:3542649089 sid:146******588(L:10)
+[D][2026-10-22 21:39:11.201][6f958a68][daemon.cpp:1142] FetchCommand channelId:3542649089 command:2
+[W][2026-10-22 21:39:11.201][6f958a68][session.cpp:160] BeginRemoveTask taskType:0 channelId:3542649089
+[W][2026-10-22 21:39:11.202][6f958a68][session.cpp:190] ClearOwnTasks OP_CLEAR finish, sessionId:146******588(L:10) channelIDInput:3542649089
+[W][2026-10-22 21:39:11.202][6f958a68][session.cpp:115] taskClassDeleteRetry start clear task, taskType:0 cid:3542649089 sid:146******588(L:10)
+[I][2026-10-22 21:39:11.202][6f958a68][async_cmd.cpp:69] DoRelease rc:-3 pid:85587
+[D][2026-10-22 21:39:11.202][6f958a68][session.cpp:126] TaskDelay task remove retry count 0/30, taskType:0 channelId:3542649089, sessionId:146******588(L:10)
+[I][2026-10-22 21:39:11.203][6f958a68][daemon_unity.cpp:31] ~HdcDaemonUnity cid:3542649089 sid:146******588(L:10)
+[D][2026-10-22 21:39:11.203][6f958a68][task.cpp:40] ~HdcTaskBase type:0 cid:3542649089 sid:146******588(L:10)
+[W][2026-10-22 21:39:11.203][6f958a68][session.cpp:134] TaskDelay task remove finish, channelId:3542649089
+[D][2026-10-22 21:39:11.204][6f958a68][base.cpp:969] before uv handle close, the uv handle type is 13
+[D][2026-10-22 21:39:11.245][6f958a68][daemon.cpp:1142] FetchCommand channelId:3542649089 command:2
+[D][2026-10-22 21:39:11.245][6f958a68][daemon.cpp:1142] FetchCommand channelId:4093439457 command:1001
+[I][2026-10-22 21:39:11.245][6f958a68][session.cpp:1652] New HTaskInfo cid:4093439457 sid:146******588(L:10) command:1001
+[I][2026-10-22 21:39:11.246][6f958a68][session.cpp:891] AdminTask add task type:0 cid:4093439457 sid:146******588(L:10) mapsize:1
+[D][2026-10-22 21:39:11.246][6f958a68][task.cpp:34] HdcTaskBase type:0 cid:4093439457 sid:146******588(L:10)
+[I][2026-10-22 21:39:11.246][6f958a68][daemon_unity.cpp:414] Unity CommandDispatch command:1001 cid:4093439457 sid:146******588(L:10)
+[D][2026-10-22 21:39:11.247][6c436a68][async_cmd.cpp:225] Popen pipe fds[pipeRead]:24 fds[pipeWrite]:25, mode 1
+[D][2026-10-22 21:39:11.248][6f958a68][async_cmd.cpp:291] ExecuteCommand cmd:aa start -p com.ohjs.demo -n MainAbility; echo __RC=$? fd:24 pid:85607
+[I][2026-10-22 21:39:11.249][6f958a68][daemon_unity.cpp:493] Unity CommandDispatch command:1001 finish cid:4093439457 sid:146******588(L:10)
+[D][2026-10-22 21:39:11.254][6c436a68][async_cmd.cpp:88] FinishShellProc finish pipeRead fd:24 pid:85607 count:1
+[D][2026-10-22 21:39:11.254][6c436a68][task.cpp:55] HdcTaskBase::TaskFinish notify begin type:0 cid:4093439457 sid:146******588(L:10)
+[D][2026-10-22 21:39:11.255][6c436a68][task.cpp:58] HdcTaskBase::TaskFinish notify end type:0 cid:4093439457 sid:146******588(L:10)
+[D][2026-10-22 21:39:11.293][6f958a68][daemon.cpp:1142] FetchCommand channelId:4093439457 command:2
+[W][2026-10-22 21:39:11.293][6f958a68][session.cpp:160] BeginRemoveTask taskType:0 channelId:4093439457
+[W][2026-10-22 21:39:11.293][6f958a68][session.cpp:190] ClearOwnTasks OP_CLEAR finish, sessionId:146******588(L:10) channelIDInput:4093439457
+[W][2026-10-22 21:39:11.294][6f958a68][session.cpp:115] taskClassDeleteRetry start clear task, taskType:0 cid:4093439457 sid:146******588(L:10)
+[I][2026-10-22 21:39:11.294][6f958a68][async_cmd.cpp:69] DoRelease rc:-3 pid:85607
+[D][2026-10-22 21:39:11.294][6f958a68][session.cpp:126] TaskDelay task remove retry count 0/30, taskType:0 channelId:4093439457, sessionId:146******588(L:10)
+[I][2026-10-22 21:39:11.294][6f958a68][daemon_unity.cpp:31] ~HdcDaemonUnity cid:4093439457 sid:146******588(L:10)
+[D][2026-10-22 21:39:11.294][6f958a68][task.cpp:40] ~HdcTaskBase type:0 cid:4093439457 sid:146******588(L:10)
+[W][2026-10-22 21:39:11.295][6f958a68][session.cpp:134] TaskDelay task remove finish, channelId:4093439457
+[D][2026-10-22 21:39:11.295][6f958a68][base.cpp:969] before uv handle close, the uv handle type is 13
+[D][2026-10-22 21:39:11.341][6f958a68][daemon.cpp:1142] FetchCommand channelId:4093439457 command:2
+[D][2026-10-22 21:39:11.342][6f958a68][daemon.cpp:1142] FetchCommand channelId:1089771015 command:1001
+[I][2026-10-22 21:39:11.342][6f958a68][session.cpp:1652] New HTaskInfo cid:1089771015 sid:146******588(L:10) command:1001
+[I][2026-10-22 21:39:11.342][6f958a68][session.cpp:891] AdminTask add task type:0 cid:1089771015 sid:146******588(L:10) mapsize:1
+[D][2026-10-22 21:39:11.343][6f958a68][task.cpp:34] HdcTaskBase type:0 cid:1089771015 sid:146******588(L:10)
+[I][2026-10-22 21:39:11.377][6f958a68][daemon_unity.cpp:414] Unity CommandDispatch command:1001 cid:1089771015 sid:146******588(L:10)
+[D][2026-10-22 21:39:11.378][6c436a68][async_cmd.cpp:225] Popen pipe fds[pipeRead]:24 fds[pipeWrite]:25, mode 1
+[D][2026-10-22 21:39:11.381][6f958a68][async_cmd.cpp:291] ExecuteCommand cmd:aa dump -a; echo __RC=$? fd:24 pid:85621
+[I][2026-10-22 21:39:11.382][6f958a68][daemon_unity.cpp:493] Unity CommandDispatch command:1001 finish cid:1089771015 sid:146******588(L:10)
+[D][2026-10-22 21:39:11.388][6c436a68][async_cmd.cpp:88] FinishShellProc finish pipeRead fd:24 pid:85621 count:1
+[D][2026-10-22 21:39:11.388][6c436a68][task.cpp:55] HdcTaskBase::TaskFinish notify begin type:0 cid:1089771015 sid:146******588(L:10)
+[D][2026-10-22 21:39:11.389][6c436a68][task.cpp:58] HdcTaskBase::TaskFinish notify end type:0 cid:1089771015 sid:146******588(L:10)
+[D][2026-10-22 21:39:11.433][6f958a68][daemon.cpp:1142] FetchCommand channelId:1089771015 command:2
+[W][2026-10-22 21:39:11.433][6f958a68][session.cpp:160] BeginRemoveTask taskType:0 channelId:1089771015
+[W][2026-10-22 21:39:11.434][6f958a68][session.cpp:190] ClearOwnTasks OP_CLEAR finish, sessionId:146******588(L:10) channelIDInput:1089771015
+[W][2026-10-22 21:39:11.434][6f958a68][session.cpp:115] taskClassDeleteRetry start clear task, taskType:0 cid:1089771015 sid:146******588(L:10)
+[I][2026-10-22 21:39:11.434][6f958a68][async_cmd.cpp:69] DoRelease rc:-3 pid:85621
+[D][2026-10-22 21:39:11.434][6f958a68][session.cpp:126] TaskDelay task remove retry count 0/30, taskType:0 channelId:1089771015, sessionId:146******588(L:10)
+[I][2026-10-22 21:39:11.435][6f958a68][daemon_unity.cpp:31] ~HdcDaemonUnity cid:1089771015 sid:146******588(L:10)
+[D][2026-10-22 21:39:11.435][6f958a68][task.cpp:40] ~HdcTaskBase type:0 cid:1089771015 sid:146******588(L:10)
+[W][2026-10-22 21:39:11.435][6f958a68][session.cpp:134] TaskDelay task remove finish, channelId:1089771015
+[D][2026-10-22 21:39:11.435][6f958a68][base.cpp:969] before uv handle close, the uv handle type is 13
+[D][2026-10-22 21:39:11.436][6f958a68][daemon.cpp:1142] FetchCommand channelId:1089771015 command:2
+[D][2026-10-22 21:39:11.453][6f958a68][daemon.cpp:1142] FetchCommand channelId:4226053070 command:1001
+[I][2026-10-22 21:39:11.453][6f958a68][session.cpp:1652] New HTaskInfo cid:4226053070 sid:146******588(L:10) command:1001
+[I][2026-10-22 21:39:11.454][6f958a68][session.cpp:891] AdminTask add task type:0 cid:4226053070 sid:146******588(L:10) mapsize:1
+[D][2026-10-22 21:39:11.454][6f958a68][task.cpp:34] HdcTaskBase type:0 cid:4226053070 sid:146******588(L:10)
+[I][2026-10-22 21:39:11.454][6f958a68][daemon_unity.cpp:414] Unity CommandDispatch command:1001 cid:4226053070 sid:146******588(L:10)
+[D][2026-10-22 21:39:11.455][6c436a68][async_cmd.cpp:225] Popen pipe fds[pipeRead]:24 fds[pipeWrite]:25, mode 1
+[D][2026-10-22 21:39:11.456][6f958a68][async_cmd.cpp:291] ExecuteCommand cmd:aa terminate -p com.ohjs.demo; echo __RC=$? fd:24 pid:85633
+[I][2026-10-22 21:39:11.457][6f958a68][daemon_unity.cpp:493] Unity CommandDispatch command:1001 finish cid:4226053070 sid:146******588(L:10)
+[D][2026-10-22 21:39:11.462][6c436a68][async_cmd.cpp:88] FinishShellProc finish pipeRead fd:24 pid:85633 count:1
+[D][2026-10-22 21:39:11.462][6c436a68][task.cpp:55] HdcTaskBase::TaskFinish notify begin type:0 cid:4226053070 sid:146******588(L:10)
+[D][2026-10-22 21:39:11.463][6c436a68][task.cpp:58] HdcTaskBase::TaskFinish notify end type:0 cid:4226053070 sid:146******588(L:10)
+[D][2026-10-22 21:39:11.501][6f958a68][daemon.cpp:1142] FetchCommand channelId:4226053070 command:2
+[W][2026-10-22 21:39:11.501][6f958a68][session.cpp:160] BeginRemoveTask taskType:0 channelId:4226053070
+[W][2026-10-22 21:39:11.502][6f958a68][session.cpp:190] ClearOwnTasks OP_CLEAR finish, sessionId:146******588(L:10) channelIDInput:4226053070
+[W][2026-10-22 21:39:11.502][6f958a68][session.cpp:115] taskClassDeleteRetry start clear task, taskType:0 cid:4226053070 sid:146******588(L:10)
+[I][2026-10-22 21:39:11.502][6f958a68][async_cmd.cpp:69] DoRelease rc:-3 pid:85633
+[D][2026-10-22 21:39:11.502][6f958a68][session.cpp:126] TaskDelay task remove retry count 0/30, taskType:0 channelId:4226053070, sessionId:146******588(L:10)
+[I][2026-10-22 21:39:11.503][6f958a68][daemon_unity.cpp:31] ~HdcDaemonUnity cid:4226053070 sid:146******588(L:10)
+[D][2026-10-22 21:39:11.503][6f958a68][task.cpp:40] ~HdcTaskBase type:0 cid:4226053070 sid:146******588(L:10)
+[W][2026-10-22 21:39:11.503][6f958a68][session.cpp:134] TaskDelay task remove finish, channelId:4226053070
+[D][2026-10-22 21:39:11.503][6f958a68][base.cpp:969] before uv handle close, the uv handle type is 13
+[D][2026-10-22 21:39:11.549][6f958a68][daemon.cpp:1142] FetchCommand channelId:4226053070 command:2
+[D][2026-10-22 21:39:11.549][6f958a68][daemon.cpp:1142] FetchCommand channelId:4138640364 command:1001
+[I][2026-10-22 21:39:11.549][6f958a68][session.cpp:1652] New HTaskInfo cid:4138640364 sid:146******588(L:10) command:1001
+[I][2026-10-22 21:39:11.550][6f958a68][session.cpp:891] AdminTask add task type:0 cid:4138640364 sid:146******588(L:10) mapsize:1
+[D][2026-10-22 21:39:11.550][6f958a68][task.cpp:34] HdcTaskBase type:0 cid:4138640364 sid:146******588(L:10)
+[I][2026-10-22 21:39:11.550][6f958a68][daemon_unity.cpp:414] Unity CommandDispatch command:1001 cid:4138640364 sid:146******588(L:10)
+[D][2026-10-22 21:39:11.551][6c436a68][async_cmd.cpp:225] Popen pipe fds[pipeRead]:24 fds[pipeWrite]:25, mode 1
+[D][2026-10-22 21:39:11.552][6f958a68][async_cmd.cpp:291] ExecuteCommand cmd:bm uninstall -n com.ohjs.demo; echo __RC=$? fd:24 pid:85645
+[I][2026-10-22 21:39:11.553][6f958a68][daemon_unity.cpp:493] Unity CommandDispatch command:1001 finish cid:4138640364 sid:146******588(L:10)
+[D][2026-10-22 21:39:11.560][6c436a68][async_cmd.cpp:88] FinishShellProc finish pipeRead fd:24 pid:85645 count:1
+[D][2026-10-22 21:39:11.560][6c436a68][task.cpp:55] HdcTaskBase::TaskFinish notify begin type:0 cid:4138640364 sid:146******588(L:10)
+[D][2026-10-22 21:39:11.560][6c436a68][task.cpp:58] HdcTaskBase::TaskFinish notify end type:0 cid:4138640364 sid:146******588(L:10)
+[D][2026-10-22 21:39:11.601][6f958a68][daemon.cpp:1142] FetchCommand channelId:4138640364 command:2
+[W][2026-10-22 21:39:11.601][6f958a68][session.cpp:160] BeginRemoveTask taskType:0 channelId:4138640364
+[W][2026-10-22 21:39:11.602][6f958a68][session.cpp:190] ClearOwnTasks OP_CLEAR finish, sessionId:146******588(L:10) channelIDInput:4138640364
+[W][2026-10-22 21:39:11.602][6f958a68][session.cpp:115] taskClassDeleteRetry start clear task, taskType:0 cid:4138640364 sid:146******588(L:10)
+[I][2026-10-22 21:39:11.602][6f958a68][async_cmd.cpp:69] DoRelease rc:-3 pid:85645
+[D][2026-10-22 21:39:11.602][6f958a68][session.cpp:126] TaskDelay task remove retry count 0/30, taskType:0 channelId:4138640364, sessionId:146******588(L:10)
+[I][2026-10-22 21:39:11.603][6f958a68][daemon_unity.cpp:31] ~HdcDaemonUnity cid:4138640364 sid:146******588(L:10)
+[D][2026-10-22 21:39:11.603][6f958a68][task.cpp:40] ~HdcTaskBase type:0 cid:4138640364 sid:146******588(L:10)
+[W][2026-10-22 21:39:11.603][6f958a68][session.cpp:134] TaskDelay task remove finish, channelId:4138640364
+[D][2026-10-22 21:39:11.603][6f958a68][base.cpp:969] before uv handle close, the uv handle type is 13
+[D][2026-10-22 21:39:11.645][6f958a68][daemon.cpp:1142] FetchCommand channelId:4138640364 command:2
+[D][2026-10-22 21:39:11.645][6f958a68][daemon.cpp:1142] FetchCommand channelId:1984695551 command:1001
+[I][2026-10-22 21:39:11.645][6f958a68][session.cpp:1652] New HTaskInfo cid:1984695551 sid:146******588(L:10) command:1001
+[I][2026-10-22 21:39:11.646][6f958a68][session.cpp:891] AdminTask add task type:0 cid:1984695551 sid:146******588(L:10) mapsize:1
+[D][2026-10-22 21:39:11.646][6f958a68][task.cpp:34] HdcTaskBase type:0 cid:1984695551 sid:146******588(L:10)
+[I][2026-10-22 21:39:11.646][6f958a68][daemon_unity.cpp:414] Unity CommandDispatch command:1001 cid:1984695551 sid:146******588(L:10)
+[D][2026-10-22 21:39:11.647][6c436a68][async_cmd.cpp:225] Popen pipe fds[pipeRead]:24 fds[pipeWrite]:25, mode 1
+[D][2026-10-22 21:39:11.648][6f958a68][async_cmd.cpp:291] ExecuteCommand cmd:aa start -p com.ohjs.demo -n MainAbility; echo __RC=$? fd:24 pid:85658
+[I][2026-10-22 21:39:11.649][6f958a68][daemon_unity.cpp:493] Unity CommandDispatch command:1001 finish cid:1984695551 sid:146******588(L:10)
+[D][2026-10-22 21:39:11.653][6c436a68][async_cmd.cpp:88] FinishShellProc finish pipeRead fd:24 pid:85658 count:1
+[D][2026-10-22 21:39:11.654][6c436a68][task.cpp:55] HdcTaskBase::TaskFinish notify begin type:0 cid:1984695551 sid:146******588(L:10)
+[D][2026-10-22 21:39:11.654][6c436a68][task.cpp:58] HdcTaskBase::TaskFinish notify end type:0 cid:1984695551 sid:146******588(L:10)
+[D][2026-10-22 21:39:11.693][6f958a68][daemon.cpp:1142] FetchCommand channelId:1984695551 command:2
+[W][2026-10-22 21:39:11.693][6f958a68][session.cpp:160] BeginRemoveTask taskType:0 channelId:1984695551
+[W][2026-10-22 21:39:11.694][6f958a68][session.cpp:190] ClearOwnTasks OP_CLEAR finish, sessionId:146******588(L:10) channelIDInput:1984695551
+[W][2026-10-22 21:39:11.694][6f958a68][session.cpp:115] taskClassDeleteRetry start clear task, taskType:0 cid:1984695551 sid:146******588(L:10)
+[I][2026-10-22 21:39:11.694][6f958a68][async_cmd.cpp:69] DoRelease rc:-3 pid:85658
+[D][2026-10-22 21:39:11.694][6f958a68][session.cpp:126] TaskDelay task remove retry count 0/30, taskType:0 channelId:1984695551, sessionId:146******588(L:10)
+[I][2026-10-22 21:39:11.695][6f958a68][daemon_unity.cpp:31] ~HdcDaemonUnity cid:1984695551 sid:146******588(L:10)
+[D][2026-10-22 21:39:11.695][6f958a68][task.cpp:40] ~HdcTaskBase type:0 cid:1984695551 sid:146******588(L:10)
+[W][2026-10-22 21:39:11.695][6f958a68][session.cpp:134] TaskDelay task remove finish, channelId:1984695551
+[D][2026-10-22 21:39:11.695][6f958a68][base.cpp:969] before uv handle close, the uv handle type is 13
+[D][2026-10-22 21:39:11.741][6f958a68][daemon.cpp:1142] FetchCommand channelId:1984695551 command:2
+[D][2026-10-22 21:39:12.715][6f958a68][daemon.cpp:1142] FetchCommand channelId:4119310825 command:1001
+[I][2026-10-22 21:39:12.715][6f958a68][session.cpp:1652] New HTaskInfo cid:4119310825 sid:146******588(L:10) command:1001
+[I][2026-10-22 21:39:12.715][6f958a68][session.cpp:891] AdminTask add task type:0 cid:4119310825 sid:146******588(L:10) mapsize:1
+[D][2026-10-22 21:39:12.715][6f958a68][task.cpp:34] HdcTaskBase type:0 cid:4119310825 sid:146******588(L:10)
+[I][2026-10-22 21:39:12.716][6f958a68][daemon_unity.cpp:414] Unity CommandDispatch command:1001 cid:4119310825 sid:146******588(L:10)
+[D][2026-10-22 21:39:12.716][6c436a68][async_cmd.cpp:225] Popen pipe fds[pipeRead]:24 fds[pipeWrite]:25, mode 1
+[D][2026-10-22 21:39:12.718][6f958a68][async_cmd.cpp:291] ExecuteCommand cmd:kill $(cat /tmp/ohjs/hilogcat.pid); cat /tmp/ohjs/hilog.cap fd:24 pid:85677
+[I][2026-10-22 21:39:12.718][6f958a68][daemon_unity.cpp:493] Unity CommandDispatch command:1001 finish cid:4119310825 sid:146******588(L:10)
+[D][2026-10-22 21:39:12.723][6c436a68][async_cmd.cpp:88] FinishShellProc finish pipeRead fd:24 pid:85677 count:1
+[D][2026-10-22 21:39:12.723][6c436a68][task.cpp:55] HdcTaskBase::TaskFinish notify begin type:0 cid:4119310825 sid:146******588(L:10)
+[D][2026-10-22 21:39:12.723][6c436a68][task.cpp:58] HdcTaskBase::TaskFinish notify end type:0 cid:4119310825 sid:146******588(L:10)
+[D][2026-10-22 21:39:12.765][6f958a68][daemon.cpp:1142] FetchCommand channelId:4119310825 command:2
+[W][2026-10-22 21:39:12.765][6f958a68][session.cpp:160] BeginRemoveTask taskType:0 channelId:4119310825
+[W][2026-10-22 21:39:12.765][6f958a68][session.cpp:190] ClearOwnTasks OP_CLEAR finish, sessionId:146******588(L:10) channelIDInput:4119310825
+[W][2026-10-22 21:39:12.765][6f958a68][session.cpp:115] taskClassDeleteRetry start clear task, taskType:0 cid:4119310825 sid:146******588(L:10)
+[I][2026-10-22 21:39:12.766][6f958a68][async_cmd.cpp:69] DoRelease rc:-3 pid:85677
+[D][2026-10-22 21:39:12.766][6f958a68][session.cpp:126] TaskDelay task remove retry count 0/30, taskType:0 channelId:4119310825, sessionId:146******588(L:10)
+[I][2026-10-22 21:39:12.766][6f958a68][daemon_unity.cpp:31] ~HdcDaemonUnity cid:4119310825 sid:146******588(L:10)
+[D][2026-10-22 21:39:12.766][6f958a68][task.cpp:40] ~HdcTaskBase type:0 cid:4119310825 sid:146******588(L:10)
+[W][2026-10-22 21:39:12.766][6f958a68][session.cpp:134] TaskDelay task remove finish, channelId:4119310825
+[D][2026-10-22 21:39:12.767][6f958a68][base.cpp:969] before uv handle close, the uv handle type is 13
+[D][2026-10-22 21:39:12.809][6f958a68][daemon.cpp:1142] FetchCommand channelId:4119310825 command:2
+[D][2026-10-22 21:39:12.809][6f958a68][daemon.cpp:1142] FetchCommand channelId:1392359831 command:1001
+[I][2026-10-22 21:39:12.809][6f958a68][session.cpp:1652] New HTaskInfo cid:1392359831 sid:146******588(L:10) command:1001
+[I][2026-10-22 21:39:12.809][6f958a68][session.cpp:891] AdminTask add task type:0 cid:1392359831 sid:146******588(L:10) mapsize:1
+[D][2026-10-22 21:39:12.810][6f958a68][task.cpp:34] HdcTaskBase type:0 cid:1392359831 sid:146******588(L:10)
+[I][2026-10-22 21:39:12.810][6f958a68][daemon_unity.cpp:414] Unity CommandDispatch command:1001 cid:1392359831 sid:146******588(L:10)
+[D][2026-10-22 21:39:12.811][6c436a68][async_cmd.cpp:225] Popen pipe fds[pipeRead]:24 fds[pipeWrite]:25, mode 1
+[D][2026-10-22 21:39:12.812][6f958a68][async_cmd.cpp:291] ExecuteCommand cmd:hilogcat fd:24 pid:85690
+[I][2026-10-22 21:39:12.812][6f958a68][daemon_unity.cpp:493] Unity CommandDispatch command:1001 finish cid:1392359831 sid:146******588(L:10)
+[D][2026-10-22 21:39:14.285][6f958a68][daemon.cpp:1142] FetchCommand channelId:2769537544 command:1001
+[I][2026-10-22 21:39:14.285][6f958a68][session.cpp:1652] New HTaskInfo cid:2769537544 sid:146******588(L:10) command:1001
+[I][2026-10-22 21:39:14.286][6f958a68][session.cpp:891] AdminTask add task type:0 cid:2769537544 sid:146******588(L:10) mapsize:2
+[D][2026-10-22 21:39:14.286][6f958a68][task.cpp:34] HdcTaskBase type:0 cid:2769537544 sid:146******588(L:10)
+[I][2026-10-22 21:39:14.286][6f958a68][daemon_unity.cpp:414] Unity CommandDispatch command:1001 cid:2769537544 sid:146******588(L:10)
+[D][2026-10-22 21:39:14.287][6c35ba68][async_cmd.cpp:225] Popen pipe fds[pipeRead]:26 fds[pipeWrite]:27, mode 1
+[D][2026-10-22 21:39:14.288][6f958a68][async_cmd.cpp:291] ExecuteCommand cmd:aa start -p x -n y fd:26 pid:85708
+[I][2026-10-22 21:39:14.289][6f958a68][daemon_unity.cpp:493] Unity CommandDispatch command:1001 finish cid:2769537544 sid:146******588(L:10)
+[D][2026-10-22 21:39:14.292][6c35ba68][async_cmd.cpp:88] FinishShellProc finish pipeRead fd:26 pid:85708 count:1
+[D][2026-10-22 21:39:14.293][6c35ba68][task.cpp:55] HdcTaskBase::TaskFinish notify begin type:0 cid:2769537544 sid:146******588(L:10)
+[D][2026-10-22 21:39:14.293][6c35ba68][task.cpp:58] HdcTaskBase::TaskFinish notify end type:0 cid:2769537544 sid:146******588(L:10)
+[D][2026-10-22 21:39:14.337][6f958a68][daemon.cpp:1142] FetchCommand channelId:2769537544 command:2
+[W][2026-10-22 21:39:14.337][6f958a68][session.cpp:160] BeginRemoveTask taskType:0 channelId:2769537544
+[W][2026-10-22 21:39:14.338][6f958a68][session.cpp:190] ClearOwnTasks OP_CLEAR finish, sessionId:146******588(L:10) channelIDInput:2769537544
+[W][2026-10-22 21:39:14.338][6f958a68][session.cpp:115] taskClassDeleteRetry start clear task, taskType:0 cid:2769537544 sid:146******588(L:10)
+[I][2026-10-22 21:39:14.338][6f958a68][async_cmd.cpp:69] DoRelease rc:-3 pid:85708
+[D][2026-10-22 21:39:14.338][6f958a68][session.cpp:126] TaskDelay task remove retry count 0/30, taskType:0 channelId:2769537544, sessionId:146******588(L:10)
+[I][2026-10-22 21:39:14.338][6f958a68][daemon_unity.cpp:31] ~HdcDaemonUnity cid:2769537544 sid:146******588(L:10)
+[D][2026-10-22 21:39:14.339][6f958a68][task.cpp:40] ~HdcTaskBase type:0 cid:2769537544 sid:146******588(L:10)
+[W][2026-10-22 21:39:14.339][6f958a68][session.cpp:134] TaskDelay task remove finish, channelId:2769537544
+[D][2026-10-22 21:39:14.339][6f958a68][base.cpp:969] before uv handle close, the uv handle type is 13
+[D][2026-10-22 21:39:14.385][6f958a68][daemon.cpp:1142] FetchCommand channelId:2769537544 command:2
+[D][2026-10-22 21:39:15.604][6f958a68][daemon.cpp:1142] FetchCommand channelId:0 command:5000
+[I][2026-10-22 21:39:15.606][6f958a68][daemon.cpp:1163] recv heartbeat count is 0 for session 146******588(L:10)
+[I][2026-10-22 21:39:15.612][6f958a68][session.cpp:1521] send heartbeat count is 0 and messages count is 35 for session 146******588(L:10)
+[D][2026-10-22 21:39:16.771][6f958a68][daemon.cpp:1142] FetchCommand channelId:1392359831 command:2
+[W][2026-10-22 21:39:16.771][6f958a68][session.cpp:160] BeginRemoveTask taskType:0 channelId:1392359831
+[W][2026-10-22 21:39:16.771][6f958a68][session.cpp:190] ClearOwnTasks OP_CLEAR finish, sessionId:146******588(L:10) channelIDInput:1392359831
+[W][2026-10-22 21:39:16.772][6f958a68][session.cpp:115] taskClassDeleteRetry start clear task, taskType:0 cid:1392359831 sid:146******588(L:10)
+[I][2026-10-22 21:39:16.772][6f958a68][async_cmd.cpp:69] DoRelease rc:0 pid:85690
+[D][2026-10-22 21:39:16.772][6f958a68][session.cpp:126] TaskDelay task remove retry count 0/30, taskType:0 channelId:1392359831, sessionId:146******588(L:10)
+[D][2026-10-22 21:39:16.772][6f958a68][daemon_unity.cpp:44] not ready for release channelId:1392359831
+[W][2026-10-22 21:39:16.773][6f958a68][session.cpp:131] TaskDelay TryRemoveTask false channelId:1392359831
+[D][2026-10-22 21:39:16.893][6f958a68][daemon_unity.cpp:44] not ready for release channelId:1392359831
+[W][2026-10-22 21:39:16.894][6f958a68][session.cpp:131] TaskDelay TryRemoveTask false channelId:1392359831
+[D][2026-10-22 21:39:17.014][6f958a68][daemon_unity.cpp:44] not ready for release channelId:1392359831
+[W][2026-10-22 21:39:17.014][6f958a68][session.cpp:131] TaskDelay TryRemoveTask false channelId:1392359831
+[D][2026-10-22 21:39:17.135][6f958a68][daemon_unity.cpp:44] not ready for release channelId:1392359831
+[W][2026-10-22 21:39:17.136][6f958a68][session.cpp:131] TaskDelay TryRemoveTask false channelId:1392359831
+[D][2026-10-22 21:39:17.257][6f958a68][daemon_unity.cpp:44] not ready for release channelId:1392359831
+[W][2026-10-22 21:39:17.257][6f958a68][session.cpp:131] TaskDelay TryRemoveTask false channelId:1392359831
+[D][2026-10-22 21:39:17.378][6f958a68][daemon_unity.cpp:44] not ready for release channelId:1392359831
+[W][2026-10-22 21:39:17.378][6f958a68][session.cpp:131] TaskDelay TryRemoveTask false channelId:1392359831
+[D][2026-10-22 21:39:17.498][6f958a68][daemon_unity.cpp:44] not ready for release channelId:1392359831
+[W][2026-10-22 21:39:17.499][6f958a68][session.cpp:131] TaskDelay TryRemoveTask false channelId:1392359831
+[D][2026-10-22 21:39:17.619][6f958a68][daemon_unity.cpp:44] not ready for release channelId:1392359831
+[W][2026-10-22 21:39:17.620][6f958a68][session.cpp:131] TaskDelay TryRemoveTask false channelId:1392359831
+[D][2026-10-22 21:39:17.740][6f958a68][daemon_unity.cpp:44] not ready for release channelId:1392359831
+[W][2026-10-22 21:39:17.741][6f958a68][session.cpp:131] TaskDelay TryRemoveTask false channelId:1392359831
+[D][2026-10-22 21:39:17.789][6f958a68][daemon.cpp:1142] FetchCommand channelId:2827387487 command:1001
+[I][2026-10-22 21:39:17.789][6f958a68][session.cpp:1652] New HTaskInfo cid:2827387487 sid:146******588(L:10) command:1001
+[I][2026-10-22 21:39:17.789][6f958a68][session.cpp:891] AdminTask add task type:0 cid:2827387487 sid:146******588(L:10) mapsize:1
+[D][2026-10-22 21:39:17.789][6f958a68][task.cpp:34] HdcTaskBase type:0 cid:2827387487 sid:146******588(L:10)
+[I][2026-10-22 21:39:17.789][6f958a68][daemon_unity.cpp:414] Unity CommandDispatch command:1001 cid:2827387487 sid:146******588(L:10)
+[D][2026-10-22 21:39:17.790][6c35ba68][async_cmd.cpp:225] Popen pipe fds[pipeRead]:26 fds[pipeWrite]:27, mode 1
+[D][2026-10-22 21:39:17.791][6f958a68][async_cmd.cpp:291] ExecuteCommand cmd:ps -ef | grep -c "[t]ail -n 0 -f" fd:26 pid:85727
+[I][2026-10-22 21:39:17.792][6f958a68][daemon_unity.cpp:493] Unity CommandDispatch command:1001 finish cid:2827387487 sid:146******588(L:10)
+[D][2026-10-22 21:39:17.806][6c35ba68][async_cmd.cpp:88] FinishShellProc finish pipeRead fd:26 pid:85727 count:1
+[D][2026-10-22 21:39:17.806][6c35ba68][task.cpp:55] HdcTaskBase::TaskFinish notify begin type:0 cid:2827387487 sid:146******588(L:10)
+[D][2026-10-22 21:39:17.806][6c35ba68][task.cpp:58] HdcTaskBase::TaskFinish notify end type:0 cid:2827387487 sid:146******588(L:10)
+[D][2026-10-22 21:39:17.807][6f958a68][daemon.cpp:1142] FetchCommand channelId:2827387487 command:2
+[W][2026-10-22 21:39:17.807][6f958a68][session.cpp:160] BeginRemoveTask taskType:0 channelId:2827387487
+[W][2026-10-22 21:39:17.807][6f958a68][session.cpp:190] ClearOwnTasks OP_CLEAR finish, sessionId:146******588(L:10) channelIDInput:2827387487
+[W][2026-10-22 21:39:17.807][6f958a68][session.cpp:115] taskClassDeleteRetry start clear task, taskType:0 cid:2827387487 sid:146******588(L:10)
+[I][2026-10-22 21:39:17.808][6f958a68][async_cmd.cpp:69] DoRelease rc:-3 pid:85727
+[D][2026-10-22 21:39:17.808][6f958a68][session.cpp:126] TaskDelay task remove retry count 0/30, taskType:0 channelId:2827387487, sessionId:146******588(L:10)
+[I][2026-10-22 21:39:17.808][6f958a68][daemon_unity.cpp:31] ~HdcDaemonUnity cid:2827387487 sid:146******588(L:10)
+[D][2026-10-22 21:39:17.808][6f958a68][task.cpp:40] ~HdcTaskBase type:0 cid:2827387487 sid:146******588(L:10)
+[W][2026-10-22 21:39:17.809][6f958a68][session.cpp:134] TaskDelay task remove finish, channelId:2827387487
+[D][2026-10-22 21:39:17.809][6f958a68][base.cpp:969] before uv handle close, the uv handle type is 13
+[D][2026-10-22 21:39:17.849][6f958a68][daemon.cpp:1142] FetchCommand channelId:2827387487 command:2
+[D][2026-10-22 21:39:17.849][6f958a68][daemon.cpp:1142] FetchCommand channelId:4038168547 command:1005
+[I][2026-10-22 21:39:17.849][6f958a68][session.cpp:1652] New HTaskInfo cid:4038168547 sid:146******588(L:10) command:1005
+[I][2026-10-22 21:39:17.850][6f958a68][session.cpp:891] AdminTask add task type:0 cid:4038168547 sid:146******588(L:10) mapsize:1
+[D][2026-10-22 21:39:17.850][6f958a68][task.cpp:34] HdcTaskBase type:0 cid:4038168547 sid:146******588(L:10)
+[I][2026-10-22 21:39:17.850][6f958a68][daemon_unity.cpp:414] Unity CommandDispatch command:1005 cid:4038168547 sid:146******588(L:10)
+[D][2026-10-22 21:39:17.851][6c35ba68][async_cmd.cpp:225] Popen pipe fds[pipeRead]:26 fds[pipeWrite]:27, mode 1
+[D][2026-10-22 21:39:17.852][6f958a68][async_cmd.cpp:291] ExecuteCommand cmd:hilog fd:26 pid:85737
+[I][2026-10-22 21:39:17.853][6f958a68][daemon_unity.cpp:493] Unity CommandDispatch command:1005 finish cid:4038168547 sid:146******588(L:10)
+[D][2026-10-22 21:39:17.855][6c35ba68][async_cmd.cpp:88] FinishShellProc finish pipeRead fd:26 pid:85737 count:1
+[D][2026-10-22 21:39:17.855][6c35ba68][task.cpp:55] HdcTaskBase::TaskFinish notify begin type:0 cid:4038168547 sid:146******588(L:10)
+[D][2026-10-22 21:39:17.856][6c35ba68][task.cpp:58] HdcTaskBase::TaskFinish notify end type:0 cid:4038168547 sid:146******588(L:10)
+[D][2026-10-22 21:39:17.860][6f958a68][daemon_unity.cpp:44] not ready for release channelId:1392359831
+[W][2026-10-22 21:39:17.861][6f958a68][session.cpp:131] TaskDelay TryRemoveTask false channelId:1392359831
+[D][2026-10-22 21:39:17.897][6f958a68][daemon.cpp:1142] FetchCommand channelId:4038168547 command:2
+[W][2026-10-22 21:39:17.897][6f958a68][session.cpp:160] BeginRemoveTask taskType:0 channelId:4038168547
+[W][2026-10-22 21:39:17.897][6f958a68][session.cpp:190] ClearOwnTasks OP_CLEAR finish, sessionId:146******588(L:10) channelIDInput:4038168547
+[W][2026-10-22 21:39:17.898][6f958a68][session.cpp:115] taskClassDeleteRetry start clear task, taskType:0 cid:4038168547 sid:146******588(L:10)
+[I][2026-10-22 21:39:17.898][6f958a68][async_cmd.cpp:69] DoRelease rc:-3 pid:85737
+[D][2026-10-22 21:39:17.898][6f958a68][session.cpp:126] TaskDelay task remove retry count 0/30, taskType:0 channelId:4038168547, sessionId:146******588(L:10)
+[I][2026-10-22 21:39:17.898][6f958a68][daemon_unity.cpp:31] ~HdcDaemonUnity cid:4038168547 sid:146******588(L:10)
+[D][2026-10-22 21:39:17.898][6f958a68][task.cpp:40] ~HdcTaskBase type:0 cid:4038168547 sid:146******588(L:10)
+[W][2026-10-22 21:39:17.899][6f958a68][session.cpp:134] TaskDelay task remove finish, channelId:4038168547
+[D][2026-10-22 21:39:17.899][6f958a68][base.cpp:969] before uv handle close, the uv handle type is 13
+[D][2026-10-22 21:39:17.905][6f958a68][daemon.cpp:1142] FetchCommand channelId:4038168547 command:2
+[I][2026-10-22 21:39:17.905][6f958a68][tcp.cpp:102] HdcTCPBase::ReadStream < 0 end of file sid:146******588(L:10)
+[I][2026-10-22 21:39:17.906][6f958a68][uv_status.cpp:121] FreeSession-146******588(L:10) loop[MainLoop] is idle
+[F][2026-10-22 21:39:17.906][6f958a68][uv_status.cpp:119] FreeSession-146******588(L:10) loop[ChildLoop] is busy for [HdcTCPBase::ReadStream] start[4750856] duration[1]
+[I][2026-10-22 21:39:17.907][6f958a68][base.cpp:2711] AddDeletedSessionId:146******588(L:10)
+[F][2026-10-22 21:39:17.908][4bf860][uv_status.cpp:119] FreeSession-146******588(L:10) loop[MainLoop] is busy for [HdcSessionBase::AsyncMainLoopTask] start[4750859] duration[0]
+[I][2026-10-22 21:39:17.908][4bf860][uv_status.cpp:121] FreeSession-146******588(L:10) loop[ChildLoop] is idle
+[I][2026-10-22 21:39:17.908][4bf860][base.cpp:2708] SessionId:146******588(L:10) is already in the cache

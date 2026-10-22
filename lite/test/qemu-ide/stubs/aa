@@ -1,0 +1,17 @@
+#!/bin/sh
+# STUB of OH 6.1-LTS small-system aa (ability_ability_lite tools/src/main.cpp, ability_tool.cpp). Always exit 0 like upstream.
+R=${OHJS_FAKEROOT:?}; L=$R/dev-hilog.log; B=$R/storage/app/etc/bundles
+cmd=$1; shift; P=; N=
+while [ $# -gt 0 ]; do case "$1" in -p) P=$2; shift;; -n) N=$2; shift;; esac; shift; done
+case "$cmd" in start|stopability|terminate|dump) echo "receive command: $cmd";;
+  *) echo "Unsupported this command. Try 'aa -h' for more information."; exit 0;; esac
+log(){ echo "$(date '+%m-%d %H:%M:%S.000') $$ 0 $1 D0100/AbilityMgr: $2" >> "$L"; }
+case "$cmd" in
+start) if [ -z "$P" ] || [ -z "$N" ]; then echo "ability name or bundle name is not entered"; echo "Failed to run the command. "
+       elif [ ! -f "$B/$P.json" ]; then log E "start $P.$N: bundle not installed"; echo "Failed to run the command. "
+       else echo "$P/$N" > "$R/running.$P"; log I "start $P.$N"; log I "[$P] app log: Hello from $N"; fi;;
+terminate) if [ -z "$P" ]; then echo "invalid argument"; echo "Failed to run the command. "; else rm -f "$R/running.$P"; log I "terminate $P"; fi;;
+stopability) log I "stopability $P.$N";;
+dump) for f in "$R"/running.*; do [ -f "$f" ] && echo "[$(cut -d/ -f1 "$f")][$(cut -d/ -f2 "$f")]"; done;;
+esac
+exit 0

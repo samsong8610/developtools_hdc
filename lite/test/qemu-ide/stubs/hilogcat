@@ -1,0 +1,6 @@
+#!/bin/sh
+# STUB of hilog_lite services/hilogcat: streams forever (upstream reads /dev/hilog in while(1)).
+# Line format upstream: "%02d-%02d %02d:%02d:%02d.%03d <pid> <taskId> <L> <DOMAIN>/<TAG>: msg"
+R=${OHJS_FAKEROOT:?}; L=$R/dev-hilog.log; touch "$L"
+case "$1" in -h|--help) echo "Usage: hilogcat [-h | --help] [-L <level> | --level=<level>] [--silence]"; exit 0;; esac
+exec tail -n 0 -f "$L"

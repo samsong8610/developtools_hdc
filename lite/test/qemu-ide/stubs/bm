@@ -1,0 +1,25 @@
+#!/bin/sh
+# STUB of OH 6.1-LTS small-system bm (bundlemanager_bundle_framework_lite tools/src/command_parser.cpp).
+# Output strings mirror upstream; real bm always exits 0 -> callers must parse text.
+R=${OHJS_FAKEROOT:?}; B=$R/storage/app/etc/bundles; L=$R/dev-hilog.log; mkdir -p "$B" "$R/storage/app/run"
+log(){ echo "$(date '+%m-%d %H:%M:%S.000') $$ 0 $1 D0100/BundleMgr: $2" >> "$L"; }
+case "$1" in
+install)
+  [ "$2" = -p ] || { echo "error option!"; exit 0; }
+  case "$3" in *.hap) ;; *) echo "resultMessage is ERR_APPEXECFWK_INSTALL_FAILED_INVALID_FILE_NAME"; exit 0;; esac
+  [ -f "$3" ] || { echo "error message: invalid path!"; echo; exit 0; }
+  n=$(unzip -p "$3" config.json 2>/dev/null | sed -n 's/.*"bundleName" *: *"\([^"]*\)".*/\1/p' | head -1)
+  [ -n "$n" ] || n=$(basename "$3" .hap)
+  mkdir -p "$R/storage/app/run/$n"; cp "$3" "$R/storage/app/run/$n/"; echo "$3" > "$B/$n.json"
+  log I "install $n ok"; echo "resultMessage is install success !";;
+uninstall)
+  [ "$2" = -n ] || { echo "error option!"; exit 0; }
+  if [ -f "$B/$3.json" ]; then rm -rf "$B/$3.json" "$R/storage/app/run/$3"; log I "uninstall $3 ok"; echo "resultMessage is uninstall success !"
+  else echo "resultMessage is ERR_APPEXECFWK_UNINSTALL_FAILED_BUNDLE_NOT_EXISTS"; fi;;
+set)
+  case "$3" in enable|disable) echo success;; *) echo "wrong param";; esac;;
+dump)
+  [ "$2" = -l ] && for f in "$B"/*.json; do [ -f "$f" ] && basename "$f" .json; done;;
+*) echo "error command!";;
+esac
+exit 0

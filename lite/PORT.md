@@ -88,6 +88,13 @@ everything else: new files under lite/
   **Not run** on LiteOS-A, and it was not built with a real LiteOS-A toolchain/sysroot (the ELF is Linux-ABI).
 - **v5.0.3:** lite-only, no conflict.
 
+### 8. test(lite): qemu-user IDE integration env (stub bm/aa/hilogcat)
+- **Files:** new `lite/test/qemu-ide/{run-qemu-hdcd.sh,verify.sh,stubs/{bm,aa,hilogcat}}`.
+- **What/why:** `run-qemu-hdcd.sh [start|stop|status]` runs the la64 static hdcd under qemu-loongarch64 on TCP 8710. It uses a fake root (`/tmp/ohjs-fakeroot`, param files via `HDC_OSAL_*_PARA`) and stub bm/aa/hilogcat, whose output strings mirror upstream 6.1-LTS, so IDE deploy/start/log flows can be exercised.
+  Run the host hdc server on another port (`OHOS_HDC_SERVER_PORT=8711`).
+  `verify.sh` covers tconn, shell with `__RC`, file send of a hap, bm set/install/uninstall, aa start/dump/terminate, and hilogcat streaming.
+- **v5.0.3:** lite-only.
+
 ## Known limitations
 
 ### `hdc shell` exit code is not propagated (upstream design, not a port bug)
