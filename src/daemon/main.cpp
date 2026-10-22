@@ -18,6 +18,9 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include "daemon_common.h"
+#ifdef HDC_LITE_OSAL
+#include "hdc_osal/service.h"
+#endif
 #if defined(SURPPORT_SELINUX)
 #include "selinux/selinux.h"
 #endif
@@ -35,6 +38,18 @@ static bool g_backgroundRun = false;
 namespace Hdc {
 bool RestartDaemon(bool forkchild)
 {
+#ifdef HDC_LITE_OSAL
+    char path[256] = "";
+    size_t nPathSize = 256;
+    uv_exepath(path, &nPathSize);
+    char *av[3] = { const_cast<char *>("hdcd"),
+                    forkchild ? const_cast<char *>("-forkchild") : nullptr, nullptr };
+    WRITE_LOG(LOG_INFO, "HDC_LITE_OSAL restart_self path=%s", path);
+    (void)hdc_osal_restart_self(path, av);
+    WRITE_LOG(LOG_FATAL, "restart_self failed, %s", strerror(errno));
+    _exit(0);
+    return true;
+#else
     char path[256] = "";
     size_t nPathSize = 256;
     uv_exepath(path, &nPathSize);
@@ -44,6 +59,7 @@ bool RestartDaemon(bool forkchild)
         _exit(0);
     }
     return true;
+#endif
 }
 
 void CheckTcpAndUSBSwitch(void)

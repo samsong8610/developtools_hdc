@@ -1,0 +1,39 @@
+# hdcd-port dependency lock — peeled OpenHarmony-v6.1-LTS commits
+# Verified 2026-10-22 Asia/Shanghai against GitHub samsong8610 mirrors (atomgit sync)
+# Clone: git clone --branch OpenHarmony-v6.1-LTS --depth 1 <url>
+version: 1
+tag: OpenHarmony-v6.1-LTS
+deps:
+  - name: developtools_hdc
+    tag: OpenHarmony-v6.1-LTS
+    commit: 51794b3efb6b8eaf2b06776403c30e1b91c6b4fd
+    url: https://github.com/samsong8610/developtools_hdc.git
+    path: deps/developtools_hdc
+  - name: third_party_libuv
+    tag: OpenHarmony-v6.1-LTS
+    commit: 0d918d0f3b1401c75c4a258974e9404a323775b4
+    url: https://github.com/samsong8610/third_party_libuv.git
+    path: deps/third_party_libuv
+  - name: third_party_bounds_checking_function
+    tag: OpenHarmony-v6.1-LTS
+    commit: 2ae82839ecaaa7d031e66ccbd2076d671acfd615
+    url: https://github.com/samsong8610/third_party_bounds_checking_function.git
+    path: deps/third_party_bounds_checking_function
+  - name: third_party_lz4
+    tag: OpenHarmony-v6.1-LTS
+    commit: cf560ea0757c6d839e48f959044f9e74b41b3817
+    url: https://github.com/samsong8610/third_party_lz4.git
+    path: deps/third_party_lz4
+  - name: third_party_openssl
+    tag: OpenHarmony-v6.1-LTS
+    commit: f0ee54afed3499ac74196d50c990a153f3506c28
+    url: https://github.com/samsong8610/third_party_openssl.git
+    path: deps/third_party_openssl
+  - name: third_party_musl
+    tag: OpenHarmony-v6.1-LTS
+    commit: 7c9a99aae096ace2a88255923d59cda7a2326a9a
+    url: https://github.com/samsong8610/third_party_musl.git
+    path: deps/third_party_musl
+notes:
+  sysroot_temporary: /workspace/hdcd-feas/sysroot-ohos-la64
+  toolchain: /workspace/ohos-clang/clang_linux-x86_64-feef13-20251209

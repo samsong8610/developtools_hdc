@@ -24,7 +24,7 @@ envirments
 */
 #include "system_depend.h"
 #include "base.h"
-#if defined(HARMONY_PROJECT)
+#if defined(HARMONY_PROJECT) || defined(HDC_LITE_OSAL)
 extern "C" {
 #include "init_reboot.h"
 #include "parameter.h"
@@ -36,13 +36,13 @@ namespace SystemDepend {
 bool SetDevItem(const char *key, const char *value)
 {
     bool ret = true;
-#ifdef HARMONY_PROJECT
+#if defined(HARMONY_PROJECT) || defined(HDC_LITE_OSAL)
     ret = SetParameter(key, value) == 0;
 #else
     char outBuf[256] = "";
     string stringBuf = Base::StringFormat("param set %s %s", key, value);
     Base::RunPipeComand(stringBuf.c_str(), outBuf, sizeof(outBuf), true);
-#endif  // HARMONY_PROJECT
+#endif  // HARMONY_PROJECT || HDC_LITE_OSAL
     return ret;
 }
 
@@ -50,7 +50,7 @@ bool GetDevItem(const char *key, string &out, const char *preDefine)
 {
     bool ret = true;
     char tmpStringBuf[BUF_SIZE_MEDIUM] = "";
-#ifdef HARMONY_PROJECT
+#if defined(HARMONY_PROJECT) || defined(HDC_LITE_OSAL)
     auto res = GetParameter(key, preDefine, tmpStringBuf, BUF_SIZE_MEDIUM);
     if (res <= 0) {
         return false;
@@ -68,7 +68,11 @@ uint32_t GetDevUint(const char *key, uint32_t defaultValue)
 bool CallDoReboot(const char *reason)
 {
     string rebootCtrl = "ohos.startup.powerctrl";
-#ifdef HARMONY_PROJECT
+#if defined(HDC_LITE_OSAL)
+    /* Lite: map to OSAL reboot (also records reason via param for init scripts). */
+    SetDevItem(rebootCtrl.c_str(), reason);
+    return DoReboot(reason) == 0;
+#elif defined(HARMONY_PROJECT)
     return SetDevItem(rebootCtrl.c_str(), reason);
 #else
     return false;

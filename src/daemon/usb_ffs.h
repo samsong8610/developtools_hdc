@@ -29,7 +29,17 @@ constexpr auto HDC_SUBCLASS = 0x50;
 constexpr auto HDC_FSPKT_SIZE_MAX = 64;
 constexpr auto HDC_HSPKT_SIZE_MAX = 512;
 constexpr uint16_t HDC_SSPKT_SIZE_MAX = 1024;
+#ifdef HDC_LITE_OSAL
+#include "hdc_osal/usb.h"
+/* Runtime-configurable FunctionFS base (default /dev/usb-ffs/). */
+inline const char *HdcUsbFfsBase()
+{
+    return hdc_osal_usb_get_ffs_base();
+}
+#define USB_FFS_BASE HdcUsbFfsBase()
+#else
 constexpr auto USB_FFS_BASE = "/dev/usb-ffs/";
+#endif
 constexpr auto HDC_USBTF_DEV = 0x01;
 constexpr auto HDC_USBTF_CFG = 0x02;
 constexpr auto HDC_USBTF_STR = 0x03;
