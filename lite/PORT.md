@@ -7,7 +7,7 @@ Hand-port target noted below: **OpenHarmony-v5.0.3-Release** (`3575a53`).
 Rule: all new code lives under `lite/`. Upstream files are only touched with
 `#ifdef HDC_LITE_OSAL` (or `|| defined(HDC_LITE_OSAL)`), so builds without that macro are unchanged.
 
-## Total diff (51794b3..aea2705, 5 commits)
+## Total diff (51794b3..aea2705, 5 code commits; later commits are docs + liteos_a backend, lite/ only)
 
 ```
 37 files changed, 1395 insertions(+), 6 deletions(-)
@@ -68,6 +68,25 @@ everything else: new files under lite/
   Passed: enumerate, `list targets` USB Connected, shell, and 20 MB file send/recv.
   `build-native.sh` adds `-include cstdlib`, because upstream `memory_pool.cpp` needs it with libstdc++.
 - **v5.0.3:** lite-only, no conflict (the cstdlib workaround may be unnecessary there).
+
+### 6. `146cc07` docs(lite): PORT.md per-commit change list, v5.0.3 notes, known limitations
+- **Files:** new `lite/PORT.md`. Docs only.
+
+### 7. feat(osal): LiteOS-A OSAL backend (stubs + POSIX fallbacks), CMake HDC_OSAL_TARGET
+- **Files:** `lite/osal/liteos_a/{param,proc,priv,pty,service,usb}.c` (replaces the `#error` placeholders), `lite/CMakeLists.txt`, `lite/osal/README.md`, `lite/PORT.md`.
+- **What/why:** `-DHDC_OSAL_TARGET=linux|liteos_a` (default `linux`) picks `osal/<target>/*.c`. `liteos_a` adds the PUBLIC defines `HDC_OSAL_LITEOS_A __LITEOS_A__`.
+  Backend behaviour:
+  - param: reuses the POSIX file-KV (`#include "../linux/param.c"`).
+  - proc: POSIX. `exepath` tries `HDC_OSAL_EXEPATH`, then `/proc/self/exe`, then `/bin/hdcd`.
+  - priv: drop/restore root are no-ops.
+  - pty: `ENOSYS`.
+  - service: `execv` re-exec. Reboot returns `ENOSYS`.
+  - usb: configurable FFS base. `on_ffs_ready` is a no-op (no configfs).
+- **Verified:** the full daemon compiles and links (static) with the OHOS clang loongarch64 toolchain, build dir `b/liteos_a`. All 25 OSAL symbols are defined.
+  The Linux build is byte-identical (sha256 `780d2b3f…63d5`), and TCP e2e passes.
+  Upstream `src/` has no `__LITEOS*` conditionals, so the define changes no daemon code.
+  **Not run** on LiteOS-A, and it was not built with a real LiteOS-A toolchain/sysroot (the ELF is Linux-ABI).
+- **v5.0.3:** lite-only, no conflict.
 
 ## Known limitations
 

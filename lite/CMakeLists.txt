@@ -17,9 +17,20 @@ add_compile_definitions(
   OPENSSL_SUPPRESS_DEPRECATED JS_JDWP_CONNECT HDC_SUPPORT_ENCRYPT_TCP MEMORY_POOL_ENABLE
 )
 
+set(HDC_OSAL_TARGET "linux" CACHE STRING "OSAL backend: linux | liteos_a")
+set_property(CACHE HDC_OSAL_TARGET PROPERTY STRINGS linux liteos_a)
+if(NOT HDC_OSAL_TARGET MATCHES "^(linux|liteos_a)$")
+  message(FATAL_ERROR "HDC_OSAL_TARGET must be linux or liteos_a")
+endif()
+set(OSAL_DIR osal/${HDC_OSAL_TARGET})
 add_library(hdc_osal STATIC
-  osal/linux/param.c osal/linux/service.c osal/linux/usb.c
-  osal/linux/pty.c osal/linux/proc.c osal/linux/priv.c)
+  ${OSAL_DIR}/param.c ${OSAL_DIR}/service.c ${OSAL_DIR}/usb.c
+  ${OSAL_DIR}/pty.c ${OSAL_DIR}/proc.c ${OSAL_DIR}/priv.c)
+if(HDC_OSAL_TARGET STREQUAL "liteos_a")
+  # liteos-like defines (compile/link check; real LiteOS-A toolchain TBD)
+  target_compile_definitions(hdc_osal PUBLIC HDC_OSAL_LITEOS_A __LITEOS_A__)
+endif()
+message(STATUS "hdcd OSAL backend: ${HDC_OSAL_TARGET}")
 target_include_directories(hdc_osal PUBLIC
   ${CMAKE_CURRENT_LIST_DIR}/osal/include
   ${CMAKE_CURRENT_LIST_DIR}/osal/include/shim)
