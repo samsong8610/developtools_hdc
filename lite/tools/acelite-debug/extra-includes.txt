@@ -1,0 +1,17 @@
+${OH61SRC}/arkui_ace_engine_lite/frameworks/targets/linux
+${OH61SRC}/arkui_ui_lite/interfaces/kits
+${OH61SRC}/arkui_ui_lite/interfaces/innerkits
+${OH61SRC}/arkui_ui_lite/interfaces/frameworks
+${OH61SRC}/graphic_graphic_utils_lite/interfaces/kits
+${OH61SRC}/graphic_graphic_utils_lite/interfaces/innerkits
+${OH61SRC}/ability_ability_lite/interfaces/kits/ability_lite
+${OH61SRC}/ability_ability_lite/interfaces/kits/want_lite
+${OH61SRC}/ability_ability_lite/interfaces/inner_api/abilitymgr_lite
+${OH61SRC}/third_party_jerryscript/jerry-ext/include
+${OH61SRC}/systemabilitymgr_samgr_lite/interfaces/kits/samgr
+${OH61SRC}/systemabilitymgr_samgr_lite/interfaces/kits/registry
+${OH61SRC}/commonlibrary_utils_lite/include
+${OH61SRC}/hiviewdfx_hilog_lite/interfaces/native/innerkits
+${OH61SRC}/hiviewdfx_hilog_lite/interfaces/native/innerkits/hilog
+${OH61SRC}/bundlemanager_bundle_framework_lite/interfaces/kits/bundle_lite
+${OH61SRC}/startup_init/interfaces/innerkits/include/syspara

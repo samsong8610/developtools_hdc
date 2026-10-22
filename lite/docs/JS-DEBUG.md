@@ -58,3 +58,105 @@ hilogcat | grep -m1 'please connect to debugger server'       # (Ctrl-C) expecte
 ```
 Expected on stock 6.1-LTS: `0` and `NO_5001`.
 If the image is a debug ACE build, there is a listener on `0.0.0.0:5001`. Then run the `hdc fport` and `jerry_client.py` steps above. The client prints `Connected to JerryScript` and the app proceeds.
+
+---
+
+## G4 status (2026-10-22 22:00 Asia/Shanghai)
+
+### A. Emulated end-to-end debug session: PASS
+`lite/test/qemu-ide/verify-jsdebug.sh` (log: `test/qemu-jsdebug.log`).
+- **Debuggee:** `jerry` 2.3.0 (6.1-LTS `third_party_jerryscript`) built static for loongarch64 with `JERRY_DEBUGGER=ON` (`lite/test/qemu-ide/build-jerry.sh`).
+  It runs under qemu-loongarch64: `jerry --start-debug-server --debug-port 5001 sample.js`.
+- **Isolation:** `run-qemu-hdcd.sh jsdebug` puts hdcd and jerry in a **network namespace that has only loopback**.
+  The host reaches hdcd only through a socat bridge (`127.0.0.1:18710` → netns `127.0.0.1:8710`), and the script asserts that host `127.0.0.1:5001` is closed.
+  So the debugger traffic provably goes **through hdcd fport**. jerry logs `Connected from: 127.0.0.1` inside the netns.
+- **Flow:** `hdc -s 127.0.0.1:8711 tconn 127.0.0.1:18710` → `fport tcp:19001 tcp:5001` → `python2 jerry_client.py --non-interactive localhost:19001`.
+  Then `b sample.js:3`, `c`, `bt`, `e a+b`, `c`. Output:
+```
+Stopped at sample.js:1
+Breakpoint 1 at sample.js:3 (in add() at line:2, col:1)
+Stopped at breakpoint:1 sample.js:3 (in add() at line:2, col:1)
+Frame 0: sample.js:3 (in add() at line:2, col:1)
+Frame 1: sample.js:7
+(jerry-debugger) e a+b
+10
+out: done counter=33
+```
+- **Client note:** the 6.1-LTS `jerry_client.py` is **python2-only**; under python3 it fails on `ord()` and bytes/str.
+  Upstream jerryscript v2.4.0's client is also py2, with the same protocol version 9. Here python 2.7.18 was built at `/workspace/py27/inst`.
+  The IDE needs a py2 runtime or a py3 port of the client.
+
+### B. Debug ACE lite + Jerry libs for loongarch64: compiled and linked, NOT validated
+`lite/tools/acelite-debug/build.sh` (+ `ace_engine_lite-debugger.patch`).
+
+**Patch:** `ENGINE_DEBUGGER=1` via `-DACE_LITE_FORCE_ENGINE_DEBUGGER`, and `startDebuggerServer=true` via `-DACE_LITE_DEBUGGER_AUTOSTART` in `js_debugger_config.h`. Both are opt-in macros, so default builds are unchanged.
+
+**Result:**
+- All 99 ACE core sources from `ace_lite.gni` compile with the OHOS clang `--target=loongarch64-linux-ohos`.
+- `libace_lite.so` links and contains `please connect to debugger server`.
+- `libjerry-core.so`, `libjerry-ext.so` and `libjerry-port-default.so` are built with debugger + external context.
+
+**Output:** `/workspace/hdcd-port/b/acelite-la64/`.
+
+| file | sha256 |
+|---|---|
+| `libace_lite.so` | `c5454bdd7258917269817f7c217f73574bb74abd82d1d087bafc0af5d177d941` |
+| `libjerry-core.so` | `3cb9d344b41101a6ba42ac7de00f61dd8398114d36fd99603ac89ba12103c9a2` |
+| `libjerry-ext.so` | `e3dec500b9df2ca38eb0a7eb2b6708b458fe06adb6136e3470a6a551be12dd1d` |
+| `libjerry-port-default.so` | `fcb9ce04d2f4d39c32a923e5baaf880feb5666d17e9a72680f8d01c409a3e70b` |
+
+**What is missing or unverified (do not deploy blindly):**
+1. **No libc.so in the temporary sysroot** (static musl only). The libs link against a `libc.so` soname stub and the clang `libc++.so`. Real musl/libc++ ABI on the board is unverified.
+2. **396 undefined symbols** (`b/acelite-la64/ace_undefined.txt`) are expected to come from board libs:
+   - ui_lite (`OHOS::UIView`…), graphic_utils, ability_lite;
+   - `libace_native_engine.so` (JSI) and `libace_module_manager.so`;
+   - hilog, samgr, and the platform adapter (`ace_malloc`, `Terminate`, `SetEngineSnapshotMode`…).
+
+   Our `.so` has **no DT_NEEDED for them**. Pass `BOARD_NEEDED="<exact NEEDED list from board>"` to relink with soname stubs.
+3. **Feature-flag mismatch risk:** the board's ACE/jerry build flags are unknown.
+   - Examples: `ace_lite_common_defines` (netstack/battery/kv/media/camera), product `acelite_config.h` (we used `targets/linux`), and jerry `JERRY_ES2015`, `JERRY_SNAPSHOT_*`, `JERRY_CPOINTER_32_BIT`, heap size.
+   - A mismatch can corrupt the external-context layout, or break **snapshot (.bc) compatibility**, which ACE lite uses for app JS.
+4. **Other libs use jerry too.** Board `libace_native_engine.so` / `libace_module_manager.so` link the board's jerry, so replacing jerry libs affects them. Replace all three jerry libs together, and only if the board's jerry exports the same API.
+5. The sources were shallow GitHub mirrors of the tag. The board image may carry vendor patches.
+
+**Required from the board before any swap** (paste back):
+```sh
+for f in $(find / \( -name 'libace_lite*.so' -o -name 'libjerry*.so' -o -name 'libace_native_engine.so' -o -name 'libace_module_manager.so' \) 2>/dev/null); do
+  echo "== $f"; ls -l "$f"; sha256sum "$f"
+  readelf -d "$f" | grep -E 'NEEDED|SONAME'          # or llvm-readelf on host after hdc file recv
+  readelf -h "$f" | grep -E 'Flags|Machine'
+  strings "$f" | grep -m3 -E 'JERRY|please connect to debugger server|GCC|clang version'
+done
+# then on host: hdc file recv <path> ./board-libs/ ; llvm-nm -D --defined-only ./board-libs/libace_lite.so > board_exports.txt
+# compare: our exports (llvm-nm -D --defined-only b/acelite-la64/libace_lite.so) must be a superset of board_exports.txt
+```
+
+### C. Replace / backup / rollback (board; only after B checks pass)
+```sh
+# 0) record & backup
+L=$(find / -name libace_lite.so 2>/dev/null | head -1); D=$(dirname $L); echo $D
+mount | grep -E " $(df $D | tail -1 | awk '{print $NF}') "         # ro?
+mkdir -p /data/ohjs-bak && cp -a $D/libace_lite.so $D/libjerry-*.so /data/ohjs-bak/ && sha256sum /data/ohjs-bak/*
+# 1) make writable (system partition is usually ro; may be dm-verity/signed -> remount can fail or boot can fail later)
+mount -o remount,rw $(df $D | tail -1 | awk '{print $NF}')
+# 2) push (host)
+#    hdc file send b/acelite-la64/libace_lite.so /data/ohjs-new/libace_lite.so   (same for libjerry-*.so)
+cp /data/ohjs-new/*.so $D/ && sync
+# 3) restart app & verify
+aa terminate -p <bundle>; aa start -p <bundle> -n <ability>
+strings $D/libace_lite.so | grep -c 'please connect to debugger server'   # 1
+netstat -ltn | grep ':5001'                                              # LISTEN (app now BLOCKS until a client connects)
+#    host: hdc fport tcp:19001 tcp:5001 ; python2 jerry_client.py localhost:19001
+# 4) rollback
+mount -o remount,rw <mnt>; cp -a /data/ohjs-bak/*.so $D/ && sync; mount -o remount,ro <mnt>
+aa terminate -p <bundle>; netstat -ltn | grep -c ':5001'   # 0 after restart
+```
+If the device does not boot or the app crashes at load (`hilogcat` shows dlopen/undefined-symbol errors), roll back.
+If the system will not boot, recovery means reflashing the system image. Keep that image at hand before step 1.
+
+### D. Risks (summary)
+- **ABI / feature-flag mismatch:** libc/libc++, jerry config, external context, snapshot version (see B.1–B.4). This is the highest risk, and it can only be checked against the board's original libs.
+- **Signed / verified system partition:** dm-verity or a signed image may reject a modified `/system` (remount fails, or boot fails), and a release build may refuse it.
+- **Read-only system partition:** needs `remount,rw`, which may be impossible on production firmware.
+- **The app blocks** at launch until a debugger client connects (`jerryx_debugger_tcp_create` accept). With `ACE_LITE_DEBUGGER_AUTOSTART`, **every** JS app is affected. Use this only on a dedicated debug image, or gate it by a parameter (follow-up: read e.g. `persist.ace.debugger` in `ConfigEngineDebugger` instead of a compile-time default).
+- **Exposure:** the debugger binds `INADDR_ANY:5001` with no authentication. Firewall the board or use hdc fport only.

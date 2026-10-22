@@ -1,0 +1,29 @@
+diff --git a/frameworks/include/base/js_config.h b/frameworks/include/base/js_config.h
+index f16ac97..85c3d32 100644
+--- a/frameworks/include/base/js_config.h
++++ b/frameworks/include/base/js_config.h
+@@ -59,7 +59,7 @@
+  *
+  * Default: 0 on real device and 1 on PC simulator
+  */
+-#if (TARGET_SIMULATOR == 1)
++#if (TARGET_SIMULATOR == 1) || defined(ACE_LITE_FORCE_ENGINE_DEBUGGER)
+ #define ENGINE_DEBUGGER 1
+ #else
+ #define ENGINE_DEBUGGER 0
+diff --git a/frameworks/include/base/js_debugger_config.h b/frameworks/include/base/js_debugger_config.h
+index 0289560..93c3e44 100644
+--- a/frameworks/include/base/js_debugger_config.h
++++ b/frameworks/include/base/js_debugger_config.h
+@@ -138,7 +138,11 @@ private:
+     void *engineContext_ = nullptr;
+ #endif // JS_ENGINE_EXTERNAL_CONTEXT
+     bool debuggerStarted_ = false;
++#ifdef ACE_LITE_DEBUGGER_AUTOSTART
++    DebuggerConfig debuggerConfig_ = {TCP, WEBSOCKET, 0, DEFAULT_PORT, true, false};
++#else
+     DebuggerConfig debuggerConfig_ = {TCP, WEBSOCKET, 0, DEFAULT_PORT, false, false};
++#endif
+ #endif // ENABLED(ENGINE_DEBUGGER)
+ };
+ } // namespace ACELite

@@ -107,6 +107,12 @@ everything else: new files under lite/
 ### 10. docs(lite): JS-DEBUG.md (ace_engine_lite/JerryScript debugger research)
 - **Files:** new `lite/docs/JS-DEBUG.md`. Docs only.
 
+### 11. test/tools(lite): G4 JS debug — jerry debugger via hdc fport (netns), ACE lite debug build
+- **Files:** `lite/test/qemu-ide/{run-qemu-hdcd.sh (jsdebug mode), verify-jsdebug.sh, build-jerry.sh, sample.js}`, `lite/tools/acelite-debug/{build.sh, ace_engine_lite-debugger.patch, extra-includes.txt}`, `lite/docs/JS-DEBUG.md`.
+- **What/why:** an emulated JerryScript debug session goes only through hdcd fport (netns isolation): breakpoint, backtrace and eval pass.
+  There is also an experimental loongarch64 ACE lite + jerry debug build: compile/link only, ABI not verified.
+- **v5.0.3:** lite-only.
+
 ## Known limitations
 
 ### `hdc shell` exit code is not propagated (upstream design, not a port bug)
