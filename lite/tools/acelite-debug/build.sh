@@ -1,6 +1,7 @@
 #!/bin/bash
 # EXPERIMENTAL: debug build of ACE lite core (libace_lite.so) + JerryScript shared libs for loongarch64,
-# ENGINE_DEBUGGER=1 and startDebuggerServer=true (port 5001). Compile/link only; NOT ABI-verified vs board.
+# ENGINE_DEBUGGER=1; debugger server gated at runtime (default OFF; param/flag file/env, see js_debugger_gate.h),
+# binds 127.0.0.1:5001 by default. Compile/link only; NOT ABI-verified vs board.
 # Needs: OH 6.1-LTS sources under $OH61SRC (arkui_ace_engine_lite, arkui_ui_lite, graphic_graphic_utils_lite,
 # ability_ability_lite, commonlibrary_utils_lite, global_*_lite, hiviewdfx_hilog_lite, startup_init,
 # communication_ipc, systemabilitymgr_samgr_lite, third_party_{jerryscript,cJSON,bounds_checking_function}),
@@ -12,8 +13,10 @@ OH61SRC=${OH61SRC:-/workspace/oh61src}; TREE=${OH61TREE:-/workspace/oh61tree}; O
 CR=${OHOS_CLANG_ROOT:-/workspace/ohos-clang/clang_linux-x86_64-feef13-20251209}; C=$CR/bin
 SR=${OHOS_SYSROOT:-/workspace/hdcd-feas/sysroot-ohos-la64}; T="--target=loongarch64-linux-ohos --sysroot=$SR"
 A=$OH61SRC/arkui_ace_engine_lite
-# 1) patch ACE (idempotent)
-git -C $A apply --check "$H/ace_engine_lite-debugger.patch" 2>/dev/null && git -C $A apply "$H/ace_engine_lite-debugger.patch" || echo "patch already applied"
+# 1) patch ACE + jerry-ext (idempotent)
+J=$OH61SRC/third_party_jerryscript
+git -C $A apply --check "$H/ace_engine_lite-debugger.patch" 2>/dev/null && git -C $A apply "$H/ace_engine_lite-debugger.patch" || echo "ACE patch already applied"
+git -C $J apply --check "$H/jerryscript-debugger-bind.patch" 2>/dev/null && git -C $J apply "$H/jerryscript-debugger-bind.patch" || echo "jerry patch already applied"
 # 2) OH-style // tree via symlinks
 mkdir -p $TREE/{foundation/arkui,foundation/graphic,foundation/ability,foundation/communication,foundation/systemabilitymgr,base/global,base/hiviewdfx,base/startup,commonlibrary,third_party}
 L(){ [ -e "$TREE/$2" ] || ln -s "$OH61SRC/$1" "$TREE/$2"; }
@@ -61,7 +64,7 @@ for n in core ext port-default; do
   $C/clang $T -shared -o $O/libjerry-$n.so -Wl,--whole-archive $JB/lib/libjerry-$n.a -Wl,--no-whole-archive -Wl,-soname,libjerry-$n.so $LS -L$O $([ $n != core ] && echo -ljerry-core)
 done
 # 5) ACE core objects + libace_lite.so
-F="$T -std=c++17 -fPIC -O2 -w -fno-exceptions -fno-rtti -DACE_LITE_FORCE_ENGINE_DEBUGGER -DACE_LITE_DEBUGGER_AUTOSTART -DJERRY_DEBUGGER=1 -DJERRY_EXTERNAL_CONTEXT=1"
+F="$T -std=c++17 -fPIC -O2 -w -fno-exceptions -fno-rtti -DACE_LITE_FORCE_ENGINE_DEBUGGER -DACE_LITE_DEBUGGER_GATE -DJERRY_DEBUGGER=1 -DJERRY_EXTERNAL_CONTEXT=1"
 n=0; rm -f $O/obj/*.o
 while read f; do n=$((n+1)); $C/clang++ $F $I -c "$f" -o $O/obj/$n-$(basename "$f").o & [ $((n%8)) = 0 ] && wait; done < $O/src.txt; wait
 EXTRA=$(for so in ${BOARD_NEEDED:-}; do echo -l:$so; done)
@@ -69,3 +72,8 @@ $C/clang++ $T -shared -o $O/libace_lite.so -Wl,-soname,libace_lite.so $O/obj/*.o
 $C/llvm-nm -D --undefined-only $O/libace_lite.so | awk '{print $2}' > $O/ace_undefined.txt
 echo "objs=$(ls $O/obj | wc -l) undefined=$(wc -l < $O/ace_undefined.txt) debugger_string=$(strings $O/libace_lite.so | grep -c 'please connect to debugger server')"
 sha256sum $O/*.so
+# 6) gate harness (static, same jerry PIC libs) for the qemu jsdebug env
+$C/clang $T -O2 -static -o $O/acedbg-harness $H/acedbg-harness.c -I$A/frameworks/include/base \
+  -I$J/jerry-core/include -I$J/jerry-ext/include -I$J/jerry-port/default/include \
+  $JB/lib/libjerry-ext.a $JB/lib/libjerry-core.a $JB/lib/libjerry-port-default.a -lm
+echo "harness: $O/acedbg-harness"

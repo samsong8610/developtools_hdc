@@ -87,9 +87,9 @@ out: done counter=33
   The IDE needs a py2 runtime or a py3 port of the client.
 
 ### B. Debug ACE lite + Jerry libs for loongarch64: compiled and linked, NOT validated
-`lite/tools/acelite-debug/build.sh` (+ `ace_engine_lite-debugger.patch`).
+`lite/tools/acelite-debug/build.sh` (+ `ace_engine_lite-debugger.patch`, `jerryscript-debugger-bind.patch`).
 
-**Patch:** `ENGINE_DEBUGGER=1` via `-DACE_LITE_FORCE_ENGINE_DEBUGGER`, and `startDebuggerServer=true` via `-DACE_LITE_DEBUGGER_AUTOSTART` in `js_debugger_config.h`. Both are opt-in macros, so default builds are unchanged.
+**Patch:** `ENGINE_DEBUGGER=1` via `-DACE_LITE_FORCE_ENGINE_DEBUGGER`, plus a **runtime gate** for starting the server via `-DACE_LITE_DEBUGGER_GATE`. The gate is default off and binds 127.0.0.1 (see E). Both are opt-in macros, so default builds are unchanged. (The earlier `ACE_LITE_DEBUGGER_AUTOSTART`, which made every app wait, has been removed.)
 
 **Result:**
 - All 99 ACE core sources from `ace_lite.gni` compile with the OHOS clang `--target=loongarch64-linux-ohos`.
@@ -100,14 +100,15 @@ out: done counter=33
 
 | file | sha256 |
 |---|---|
-| `libace_lite.so` | `c5454bdd7258917269817f7c217f73574bb74abd82d1d087bafc0af5d177d941` |
+| `libace_lite.so` | `b85a5416703d72ebe1368586deebe129c95ff787e185cc8a989a587261a7919c` |
 | `libjerry-core.so` | `3cb9d344b41101a6ba42ac7de00f61dd8398114d36fd99603ac89ba12103c9a2` |
-| `libjerry-ext.so` | `e3dec500b9df2ca38eb0a7eb2b6708b458fe06adb6136e3470a6a551be12dd1d` |
+| `libjerry-ext.so` | `35f522de2b6d6ee2ce150bfccb900b7a65f2517de42b97d91b7dc83fa3c44641` (adds `jerryx_debugger_tcp_create_bind`) |
+| `acedbg-harness` (test only, static) | `b14e2b4717a8f019cebbf5ae9677712dc3675a8752869ec69da3af36cf7ef696` |
 | `libjerry-port-default.so` | `fcb9ce04d2f4d39c32a923e5baaf880feb5666d17e9a72680f8d01c409a3e70b` |
 
 **What is missing or unverified (do not deploy blindly):**
 1. **No libc.so in the temporary sysroot** (static musl only). The libs link against a `libc.so` soname stub and the clang `libc++.so`. Real musl/libc++ ABI on the board is unverified.
-2. **396 undefined symbols** (`b/acelite-la64/ace_undefined.txt`) are expected to come from board libs:
+2. **404 undefined symbols** (`b/acelite-la64/ace_undefined.txt`) are expected to come from board libs:
    - ui_lite (`OHOS::UIView`…), graphic_utils, ability_lite;
    - `libace_native_engine.so` (JSI) and `libace_module_manager.so`;
    - hilog, samgr, and the platform adapter (`ace_malloc`, `Terminate`, `SetEngineSnapshotMode`…).
@@ -145,7 +146,8 @@ cp /data/ohjs-new/*.so $D/ && sync
 # 3) restart app & verify
 aa terminate -p <bundle>; aa start -p <bundle> -n <ability>
 strings $D/libace_lite.so | grep -c 'please connect to debugger server'   # 1
-netstat -ltn | grep ':5001'                                              # LISTEN (app now BLOCKS until a client connects)
+netstat -ltn | grep ':5001'                                              # nothing: the gate is off by default
+#    enable for one bundle (see E): touch /data/ohjs/debug.<bundle> ; aa start ... ; netstat -> 127.0.0.1:5001 LISTEN (app blocks)
 #    host: hdc fport tcp:19001 tcp:5001 ; python2 jerry_client.py localhost:19001
 # 4) rollback
 mount -o remount,rw <mnt>; cp -a /data/ohjs-bak/*.so $D/ && sync; mount -o remount,ro <mnt>
@@ -158,5 +160,47 @@ If the system will not boot, recovery means reflashing the system image. Keep th
 - **ABI / feature-flag mismatch:** libc/libc++, jerry config, external context, snapshot version (see B.1–B.4). This is the highest risk, and it can only be checked against the board's original libs.
 - **Signed / verified system partition:** dm-verity or a signed image may reject a modified `/system` (remount fails, or boot fails), and a release build may refuse it.
 - **Read-only system partition:** needs `remount,rw`, which may be impossible on production firmware.
-- **The app blocks** at launch until a debugger client connects (`jerryx_debugger_tcp_create` accept). With `ACE_LITE_DEBUGGER_AUTOSTART`, **every** JS app is affected. Use this only on a dedicated debug image, or gate it by a parameter (follow-up: read e.g. `persist.ace.debugger` in `ConfigEngineDebugger` instead of a compile-time default).
-- **Exposure:** the debugger binds `INADDR_ANY:5001` with no authentication. Firewall the board or use hdc fport only.
+- **The app blocks** at launch until a debugger client connects (accept in `jerryx_debugger_tcp_create_bind`). This happens **only** when the gate is on for that bundle (E). A stale flag file or param makes the app hang at start, so the IDE must remove it when the debug session ends.
+- **Exposure:** the server binds `127.0.0.1:5001` by default, so it is reachable only on the device, i.e. through hdc fport. There is no authentication. `bind=0.0.0.0` (flag file, `ace.debugger.bind`, or `ACE_DEBUGGER_BIND`) re-exposes it on all interfaces.
+- **New symbol dependency:** the debug `libace_lite.so` needs `jerryx_debugger_tcp_create_bind`, which only the patched `libjerry-ext.so` provides. Always deploy them together. It also now imports `dlsym`, `getenv`, `fopen`, `fgets`, `inet_pton`, `snprintf` and `strtol` (all libc).
+
+### E. Runtime wait-for-debugger gate + loopback bind (`ACE_LITE_DEBUGGER_GATE`)
+`frameworks/include/base/js_debugger_gate.h` (added by `ace_engine_lite-debugger.patch`) is called from
+`Debugger::StartDebugger()` (after the framework loads, before app JS runs) with the current bundle name.
+**Default: off.** The server is not started and the app does not wait. The gate turns on only through one of the
+sources below. Later sources override earlier ones.
+
+| # | source | enable | port / bind |
+|---|---|---|---|
+| 1 | param `const.ace.debugger.wait` (product default), then `ace.debugger.wait` (runtime: `param set`) | `1`/`true`/`all`/`on` = every bundle; a comma list of bundle names = those bundles; `0`/`false`/`off` = off | `ace.debugger.port`, `ace.debugger.bind` |
+| 2 | flag file `/data/ohjs/debug.<bundle>` (the dir can be overridden with env `ACE_DEBUGGER_FLAG_DIR`) | the file exists | optional lines `port=N`, `bind=A.B.C.D` |
+| 3 | env `ACE_DEBUGGER_WAIT` | `1` forces on, `0` forces off (or a bundle list) | `ACE_DEBUGGER_PORT`, `ACE_DEBUGGER_BIND` |
+
+- **Defaults.** The port defaults to 5001 and the bind address to **127.0.0.1**. An invalid port or address is
+  ignored and the default is kept.
+- **Param reads.** Params are read through `dlsym(RTLD_DEFAULT, "GetParameter")`. If no loaded library exports
+  it, the param source is skipped, so the library gets no new DT_NEEDED.
+- **Logs.** The decision is logged to hilog as `js debugger on|off for <bundle> (<reason>)`. When the gate is on,
+  stdout also shows `[ace] js debugger waiting on 127.0.0.1:5001`.
+- **Recommended IDE flow (per launch):**
+  ```sh
+  hdc shell "mkdir -p /data/ohjs && touch /data/ohjs/debug.<bundle>"
+  aa start -p <bundle> -n <ability>   # app blocks in accept on 127.0.0.1:5001
+  hdc fport tcp:19001 tcp:5001        # then attach @ohjs/jerry-debug-client to 127.0.0.1:19001
+  hdc shell rm /data/ohjs/debug.<bundle>   # right after attach, so the next normal launch does not wait
+  ```
+
+**Emulated verification:** `lite/test/qemu-ide/verify-acedbg-gate.sh`, log in `test/qemu-acedbg-gate.log`.
+- It runs `b/acelite-la64/acedbg-harness`, a static la64 binary that uses the same `js_debugger_gate.h` and the
+  same patched jerry-ext as `libace_lite.so`. It runs in the jsdebug netns through
+  `run-qemu-hdcd.sh jsdebug` (new env `JERRY_BIN`/`JERRY_ARGS`/`JERRY_ENV`).
+- All of these checks PASS:
+  - Default: no listener, and the app runs to completion.
+  - `ACE_DEBUGGER_WAIT=1`: the app waits, and the listener is **`127.0.0.1:5001` only**.
+  - The full `@ohjs/jerry-debug-client` e2e runs through `hdc fport` against the loopback-bound server: breakpoint, backtrace, eval `a+b=10`, step, and run to end.
+  - The flag file gates its own bundle only.
+  - A `bind=0.0.0.0` override is honoured, both from the flag file and from env.
+
+**Not verified:**
+- The param source. The static harness has no `GetParameter`, so the param path is only compile-checked.
+- `libace_lite.so` itself on a board: same ABI caveats as B.

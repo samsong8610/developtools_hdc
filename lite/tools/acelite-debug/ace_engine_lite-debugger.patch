@@ -11,19 +11,259 @@ index f16ac97..85c3d32 100644
  #define ENGINE_DEBUGGER 1
  #else
  #define ENGINE_DEBUGGER 0
-diff --git a/frameworks/include/base/js_debugger_config.h b/frameworks/include/base/js_debugger_config.h
-index 0289560..93c3e44 100644
---- a/frameworks/include/base/js_debugger_config.h
-+++ b/frameworks/include/base/js_debugger_config.h
-@@ -138,7 +138,11 @@ private:
-     void *engineContext_ = nullptr;
- #endif // JS_ENGINE_EXTERNAL_CONTEXT
-     bool debuggerStarted_ = false;
-+#ifdef ACE_LITE_DEBUGGER_AUTOSTART
-+    DebuggerConfig debuggerConfig_ = {TCP, WEBSOCKET, 0, DEFAULT_PORT, true, false};
-+#else
-     DebuggerConfig debuggerConfig_ = {TCP, WEBSOCKET, 0, DEFAULT_PORT, false, false};
+diff --git a/frameworks/include/base/js_debugger_gate.h b/frameworks/include/base/js_debugger_gate.h
+new file mode 100644
+index 0000000..d90596b
+--- /dev/null
++++ b/frameworks/include/base/js_debugger_gate.h
+@@ -0,0 +1,187 @@
++/*
++ * Copyright (c) 2026 ohos-lite-js-ide contributors
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *     http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++/*
++ * Runtime gate for the JS debugger server (ohjs debug build, ACE_LITE_DEBUGGER_GATE).
++ * Default: do NOT start the debugger / do NOT block app startup.  Wait-for-debugger is enabled only when
++ * the IDE asks for it, per bundle.  Sources, lowest to highest precedence:
++ *   1. system params  const.ace.debugger.wait  (product default)   then  ace.debugger.wait  (runtime, param set)
++ *        value: "1"/"true"/"all" = every bundle, "0"/"false"/"" = off, otherwise a comma list of bundle names
++ *      ace.debugger.port (default 5001), ace.debugger.bind (default 127.0.0.1)
++ *   2. flag file  <dir>/debug.<bundle>   (dir = /data/ohjs, env ACE_DEBUGGER_FLAG_DIR overrides)
++ *        presence enables; optional lines "port=N" / "bind=A.B.C.D"
++ *   3. env  ACE_DEBUGGER_WAIT=1|0 (forces), ACE_DEBUGGER_PORT, ACE_DEBUGGER_BIND
++ * Params are read through dlsym("GetParameter") so the library gets no new hard dependency.
++ * Plain C so the same code is used by the harness in tools/acelite-debug.
++ */
++#ifndef ACE_LITE_JS_DEBUGGER_GATE_H
++#define ACE_LITE_JS_DEBUGGER_GATE_H
++
++#include <arpa/inet.h>
++#include <dlfcn.h>
++#include <stdint.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
++
++#define ACE_DBG_DEFAULT_BIND "127.0.0.1"
++#define ACE_DBG_FLAG_DIR "/data/ohjs"
++
++typedef struct {
++    int wait;            /* 1 = start debugger server and block until a client connects */
++    uint16_t port;
++    char bind[48];       /* IPv4 dotted address; "0.0.0.0" = all interfaces */
++    const char *reason;  /* which source decided "wait" (for logs) */
++} AceDbgGate;
++
++typedef int (*AceDbgGetParameterFn)(const char *key, const char *def, char *value, uint32_t len);
++
++static inline int AceDbgGetParam(const char *key, char *out, uint32_t len)
++{
++    static AceDbgGetParameterFn fn = NULL;
++    static int looked = 0;
++    if (!looked) {
++        looked = 1;
++        fn = (AceDbgGetParameterFn)dlsym(RTLD_DEFAULT, "GetParameter");
++    }
++    if (fn == NULL || len == 0) {
++        return 0;
++    }
++    out[0] = '\0';
++    int r = fn(key, "", out, len);
++    out[len - 1] = '\0';
++    return (r > 0 && out[0] != '\0') ? 1 : 0;
++}
++
++static inline int AceDbgTruthy(const char *v)
++{
++    return strcmp(v, "1") == 0 || strcmp(v, "true") == 0 || strcmp(v, "all") == 0 || strcmp(v, "on") == 0;
++}
++
++/* "1|true|all|on" -> 1, "0|false|off|" -> 0, else 1 iff bundle is in the comma list */
++static inline int AceDbgWaitValueMatches(const char *v, const char *bundle)
++{
++    if (AceDbgTruthy(v)) {
++        return 1;
++    }
++    if (v[0] == '\0' || strcmp(v, "0") == 0 || strcmp(v, "false") == 0 || strcmp(v, "off") == 0) {
++        return 0;
++    }
++    if (bundle == NULL || bundle[0] == '\0') {
++        return 0;
++    }
++    size_t bl = strlen(bundle);
++    const char *p = v;
++    while (*p != '\0') {
++        while (*p == ',' || *p == ' ') {
++            p++;
++        }
++        const char *e = p;
++        while (*e != '\0' && *e != ',' && *e != ' ') {
++            e++;
++        }
++        if ((size_t)(e - p) == bl && strncmp(p, bundle, bl) == 0) {
++            return 1;
++        }
++        p = e;
++    }
++    return 0;
++}
++
++static inline void AceDbgSetPort(AceDbgGate *g, const char *v)
++{
++    char *end = NULL;
++    long n = strtol(v, &end, 10);
++    if (end != v && n > 0 && n < 65536) {
++        g->port = (uint16_t)n;
++    }
++}
++
++static inline void AceDbgSetBind(AceDbgGate *g, const char *v)
++{
++    struct in_addr in;
++    if (inet_pton(AF_INET, v, &in) == 1) {
++        snprintf(g->bind, sizeof(g->bind), "%s", v);
++    }
++}
++
++static inline void AceDbgTrim(char *s)
++{
++    size_t n = strlen(s);
++    while (n > 0 && (s[n - 1] == '\n' || s[n - 1] == '\r' || s[n - 1] == ' ' || s[n - 1] == '\t')) {
++        s[--n] = '\0';
++    }
++}
++
++static inline void AceDbgGateResolve(const char *bundle, uint16_t defaultPort, AceDbgGate *g)
++{
++    char v[128];
++    g->wait = 0;
++    g->port = defaultPort;
++    snprintf(g->bind, sizeof(g->bind), "%s", ACE_DBG_DEFAULT_BIND);
++    g->reason = "default off";
++
++    /* 1. params */
++    if (AceDbgGetParam("const.ace.debugger.wait", v, sizeof(v)) && AceDbgWaitValueMatches(v, bundle)) {
++        g->wait = 1;
++        g->reason = "param const.ace.debugger.wait";
++    }
++    if (AceDbgGetParam("ace.debugger.wait", v, sizeof(v))) {
++        g->wait = AceDbgWaitValueMatches(v, bundle);
++        g->reason = g->wait ? "param ace.debugger.wait" : "param ace.debugger.wait=off";
++    }
++    if (AceDbgGetParam("ace.debugger.port", v, sizeof(v))) {
++        AceDbgSetPort(g, v);
++    }
++    if (AceDbgGetParam("ace.debugger.bind", v, sizeof(v))) {
++        AceDbgSetBind(g, v);
++    }
++
++    /* 2. flag file */
++    if (bundle != NULL && bundle[0] != '\0' && strchr(bundle, '/') == NULL) {
++        const char *dir = getenv("ACE_DEBUGGER_FLAG_DIR");
++        char path[256];
++        snprintf(path, sizeof(path), "%s/debug.%s", (dir != NULL && dir[0] != '\0') ? dir : ACE_DBG_FLAG_DIR, bundle);
++        FILE *f = fopen(path, "r");
++        if (f != NULL) {
++            g->wait = 1;
++            g->reason = "flag file";
++            char line[128];
++            while (fgets(line, sizeof(line), f) != NULL) {
++                AceDbgTrim(line);
++                if (strncmp(line, "port=", 5) == 0) {
++                    AceDbgSetPort(g, line + 5);
++                } else if (strncmp(line, "bind=", 5) == 0) {
++                    AceDbgSetBind(g, line + 5);
++                }
++            }
++            fclose(f);
++        }
++    }
++
++    /* 3. env */
++    const char *e = getenv("ACE_DEBUGGER_WAIT");
++    if (e != NULL && e[0] != '\0') {
++        g->wait = AceDbgWaitValueMatches(e, bundle);
++        g->reason = g->wait ? "env ACE_DEBUGGER_WAIT" : "env ACE_DEBUGGER_WAIT=off";
++    }
++    if ((e = getenv("ACE_DEBUGGER_PORT")) != NULL) {
++        AceDbgSetPort(g, e);
++    }
++    if ((e = getenv("ACE_DEBUGGER_BIND")) != NULL) {
++        AceDbgSetBind(g, e);
++    }
++}
++
++#endif /* ACE_LITE_JS_DEBUGGER_GATE_H */
+diff --git a/frameworks/src/core/base/js_debugger_config.cpp b/frameworks/src/core/base/js_debugger_config.cpp
+index 0a8bbe0..38da52c 100644
+--- a/frameworks/src/core/base/js_debugger_config.cpp
++++ b/frameworks/src/core/base/js_debugger_config.cpp
+@@ -20,6 +20,10 @@
+ #include "jerryscript-port-default.h"
+ #include "jerryscript-port.h"
+ #include "js_fwk_common.h"
++#ifdef ACE_LITE_DEBUGGER_GATE
++#include "js_app_context.h"
++#include "js_debugger_gate.h"
 +#endif
- #endif // ENABLED(ENGINE_DEBUGGER)
- };
- } // namespace ACELite
+ 
+ namespace OHOS {
+ namespace ACELite {
+@@ -40,8 +44,29 @@ void Debugger::ConfigEngineDebugger(DebuggerConfig &config)
+     debuggerConfig_ = config;
+ }
+ 
++#ifdef ACE_LITE_DEBUGGER_GATE
++// bind address chosen by the gate; nullptr = upstream behaviour (INADDR_ANY)
++static char g_debuggerBind[48] = "";
++#endif
++
+ void Debugger::StartDebugger()
+ {
++#ifdef ACE_LITE_DEBUGGER_GATE
++    if (!debuggerConfig_.startDebuggerServer && !debuggerStarted_) {
++        // ohjs: wait-for-debugger is opt-in at runtime (param / flag file / env), default off
++        const char *bundle = JsAppContext::GetInstance()->GetCurrentBundleName();
++        AceDbgGate gate;
++        AceDbgGateResolve(bundle, debuggerConfig_.port, &gate);
++        if (!gate.wait) {
++            HILOG_INFO(HILOG_MODULE_ACE, "js debugger off for %{public}s (%{public}s)", bundle ? bundle : "", gate.reason);
++            return;
++        }
++        HILOG_INFO(HILOG_MODULE_ACE, "js debugger on for %{public}s (%{public}s)", bundle ? bundle : "", gate.reason);
++        debuggerConfig_.startDebuggerServer = true;
++        debuggerConfig_.port = gate.port;
++        (void)snprintf(g_debuggerBind, sizeof(g_debuggerBind), "%s", gate.bind);
++    }
++#endif
+     if ((!debuggerConfig_.startDebuggerServer) || !(jerry_is_feature_enabled(JERRY_FEATURE_DEBUGGER))) {
+         return;
+     }
+@@ -53,8 +78,17 @@ void Debugger::StartDebugger()
+     // increase jerry log level to see the Waiting for client connection message
+     jerry_port_default_set_log_level(JERRY_LOG_LEVEL_DEBUG);
+     // currently, only support tcp::websocket
++#ifdef ACE_LITE_DEBUGGER_GATE
++    const char *bindAddr = (g_debuggerBind[0] != '\0') ? g_debuggerBind : ACE_DBG_DEFAULT_BIND;
++    HILOG_INFO(HILOG_MODULE_ACE, "please connect to debugger server with %{public}s:%{public}d (waiting)", bindAddr,
++               debuggerConfig_.port);
++    printf("[ace] js debugger waiting on %s:%d\n", bindAddr, debuggerConfig_.port);
++    fflush(stdout);
++    bool protocol = jerryx_debugger_tcp_create_bind(bindAddr, debuggerConfig_.port);
++#else
+     HILOG_INFO(HILOG_MODULE_ACE, "please connect to debugger server with localhost:%{public}d", debuggerConfig_.port);
+     bool protocol = jerryx_debugger_tcp_create(debuggerConfig_.port);
++#endif
+     bool connected = jerryx_debugger_ws_create();
+     jerryx_debugger_after_connect(protocol && connected);
+     debuggerStarted_ = true;

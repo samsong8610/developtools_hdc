@@ -1,0 +1,111 @@
+diff --git a/jerry-ext/debugger/debugger-tcp.c b/jerry-ext/debugger/debugger-tcp.c
+index a12ac91..0f5ee01 100644
+--- a/jerry-ext/debugger/debugger-tcp.c
++++ b/jerry-ext/debugger/debugger-tcp.c
+@@ -248,13 +248,14 @@ jerryx_debugger_tcp_receive (jerry_debugger_transport_header_t *header_p, /**< t
+  */
+ static bool
+ jerryx_debugger_tcp_configure_socket (jerryx_socket server_socket, /** < socket to configure */
++                                      uint32_t bind_addr, /** < IPv4 address, network byte order */
+                                       uint16_t port) /** < port number to be used for the socket */
+ {
+   struct sockaddr_in addr;
+ 
+   addr.sin_family = AF_INET;
+   addr.sin_port = htons (port);
+-  addr.sin_addr.s_addr = INADDR_ANY;
++  addr.sin_addr.s_addr = bind_addr;
+ 
+ #ifdef _WIN32
+   char opt_value = 1;
+@@ -289,6 +290,32 @@ jerryx_debugger_tcp_configure_socket (jerryx_socket server_socket, /** < socket
+ bool
+ jerryx_debugger_tcp_create (uint16_t port) /**< listening port */
+ {
++  return jerryx_debugger_tcp_create_bind (NULL, port);
++} /* jerryx_debugger_tcp_create */
++
++/**
++ * Create a tcp connection listening on a given IPv4 address
++ * (NULL or "" = INADDR_ANY, same as jerryx_debugger_tcp_create).
++ *
++ * @return true if successful,
++ *         false otherwise
++ */
++bool
++jerryx_debugger_tcp_create_bind (const char *bind_addr, /**< IPv4 dotted address or NULL */
++                                 uint16_t port) /**< listening port */
++{
++  uint32_t addr_be = INADDR_ANY;
++  if (bind_addr != NULL && bind_addr[0] != '\0')
++  {
++    struct in_addr in;
++    if (inet_pton (AF_INET, bind_addr, &in) != 1)
++    {
++      JERRYX_ERROR_MSG ("Invalid debugger bind address: %s\n", bind_addr);
++      return false;
++    }
++    addr_be = in.s_addr;
++  }
++
+ #ifdef _WIN32
+   WSADATA wsaData;
+   int wsa_init_status = WSAStartup (MAKEWORD (2, 2), &wsaData);
+@@ -306,7 +333,7 @@ jerryx_debugger_tcp_create (uint16_t port) /**< listening port */
+     return false;
+   }
+ 
+-  if (!jerryx_debugger_tcp_configure_socket (server_socket, port))
++  if (!jerryx_debugger_tcp_configure_socket (server_socket, addr_be, port))
+   {
+     int error = jerryx_debugger_tcp_get_errno ();
+     jerryx_debugger_tcp_close_socket (server_socket);
+@@ -314,7 +341,8 @@ jerryx_debugger_tcp_create (uint16_t port) /**< listening port */
+     return false;
+   }
+ 
+-  JERRYX_DEBUG_MSG ("Waiting for client connection\n");
++  JERRYX_DEBUG_MSG ("Waiting for client connection on %s:%u\n",
++                    (bind_addr != NULL && bind_addr[0] != '\0') ? bind_addr : "0.0.0.0", (unsigned) port);
+ 
+   struct sockaddr_in addr;
+   socklen_t sin_size = sizeof (struct sockaddr_in);
+@@ -379,7 +407,7 @@ jerryx_debugger_tcp_create (uint16_t port) /**< listening port */
+                                 JERRY_DEBUGGER_TRANSPORT_MAX_BUFFER_SIZE);
+ 
+   return true;
+-} /* jerryx_debugger_tcp_create */
++} /* jerryx_debugger_tcp_create_bind */
+ 
+ #else /* !(defined (JERRY_DEBUGGER) && (JERRY_DEBUGGER == 1)) */
+ 
+@@ -395,4 +423,17 @@ jerryx_debugger_tcp_create (uint16_t port)
+   return false;
+ } /* jerryx_debugger_tcp_create */
+ 
++/**
++ * Dummy function when debugger is disabled.
++ *
++ * @return false
++ */
++bool
++jerryx_debugger_tcp_create_bind (const char *bind_addr, uint16_t port)
++{
++  JERRYX_UNUSED (bind_addr);
++  JERRYX_UNUSED (port);
++  return false;
++} /* jerryx_debugger_tcp_create_bind */
++
+ #endif /* defined (JERRY_DEBUGGER) && (JERRY_DEBUGGER == 1) */
+diff --git a/jerry-ext/include/jerryscript-ext/debugger.h b/jerry-ext/include/jerryscript-ext/debugger.h
+index e229e25..e5e28a4 100644
+--- a/jerry-ext/include/jerryscript-ext/debugger.h
++++ b/jerry-ext/include/jerryscript-ext/debugger.h
+@@ -30,6 +30,7 @@ void jerryx_debugger_after_connect (bool success);
+  * Message transmission interfaces.
+  */
+ bool jerryx_debugger_tcp_create (uint16_t port);
++bool jerryx_debugger_tcp_create_bind (const char *bind_addr, uint16_t port);
+ bool jerryx_debugger_serial_create (const char *config);
+ 
+ /*

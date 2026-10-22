@@ -113,6 +113,22 @@ everything else: new files under lite/
   There is also an experimental loongarch64 ACE lite + jerry debug build: compile/link only, ABI not verified.
 - **v5.0.3:** lite-only.
 
+### 12. feat(tools/lite): ACE lite debugger — runtime wait gate (default off) + 127.0.0.1 bind
+- **Files:**
+  - `lite/tools/acelite-debug/ace_engine_lite-debugger.patch`: adds `js_debugger_gate.h` and the `StartDebugger` hook under `ACE_LITE_DEBUGGER_GATE`, and removes `ACE_LITE_DEBUGGER_AUTOSTART`.
+  - New `lite/tools/acelite-debug/jerryscript-debugger-bind.patch`: `jerryx_debugger_tcp_create_bind`.
+  - New `lite/tools/acelite-debug/acedbg-harness.c`.
+  - `lite/tools/acelite-debug/build.sh`.
+  - `lite/test/qemu-ide/run-qemu-hdcd.sh`: jsdebug `JERRY_ARGS`/`JERRY_ENV`.
+  - New `lite/test/qemu-ide/verify-acedbg-gate.sh`.
+  - `lite/docs/JS-DEBUG.md` (B/C/D updated, new E).
+- **What/why:**
+  - Wait-for-debugger is now enabled per bundle at runtime, only when the IDE starts a debug session: param `ace.debugger.wait` / `const.ace.debugger.wait`, flag file `/data/ohjs/debug.<bundle>`, or env `ACE_DEBUGGER_WAIT`.
+  - The server binds 127.0.0.1 by default, so it is reachable only through hdc fport. This is configurable.
+  - The debug libs in `b/acelite-la64` were rebuilt. The gate was verified in the qemu jsdebug netns (`verify-acedbg-gate.sh`: all PASS), including the TS client e2e through fport.
+  - The ACE patch and the jerry patch touch only the scratch OH sources, not hdc `src/`.
+- **v5.0.3:** lite-only.
+
 ## Known limitations
 
 ### `hdc shell` exit code is not propagated (upstream design, not a port bug)
