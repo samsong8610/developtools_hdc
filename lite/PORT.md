@@ -104,6 +104,9 @@ everything else: new files under lite/
 - **Verified:** qemu-ide `hdc hilog` streams stub hilogcat lines and `hdc hilog -h` shows the hilogcat usage. TCP e2e passes, and the liteos_a backend still links.
 - **v5.0.3:** `GetHiLog` in v5 `daemon_unity.cpp` has the same body (low risk). Copy the hunk.
 
+### 10. docs(lite): JS-DEBUG.md (ace_engine_lite/JerryScript debugger research)
+- **Files:** new `lite/docs/JS-DEBUG.md`. Docs only.
+
 ## Known limitations
 
 ### `hdc shell` exit code is not propagated (upstream design, not a port bug)
