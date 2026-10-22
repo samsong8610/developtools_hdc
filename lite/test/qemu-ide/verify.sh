@@ -28,5 +28,8 @@ o=$($H $T shell 'kill $(cat /tmp/ohjs/hilogcat.pid); cat /tmp/ohjs/hilog.cap' 2>
 echo "$o" | grep -q 'Hello from MainAbility' && pass "hilogcat stream captured app log" || fail "hilogcat"
 o=$(timeout 4 $H $T shell 'hilogcat' 2>&1 & sleep 1.5; $H $T shell 'aa start -p x -n y' >/dev/null 2>&1; wait); echo "$o" | grep -q 'start x.y' && pass "hilogcat foreground stream (stop = kill hdc client)" || fail "hilogcat fg: $o"
 sleep 1; o=$($H $T shell 'ps -ef | grep -c "[t]ail -n 0 -f"' 2>&1); echo "leftover hilogcat procs: $o"
-o=$($H $T hilog 2>&1 | head -3); echo "hdc hilog: $o"
+o=$(timeout 4 $H $T hilog 2>&1 & sleep 1.5; $H $T shell 'aa start -p hilogfb -n z' >/dev/null 2>&1; wait); echo "hdc hilog: $o"
+echo "$o" | grep -q 'start hilogfb.z' && pass "hdc hilog -> hilogcat fallback" || fail "hdc hilog fallback"
+o=$($H $T hilog -h 2>&1); echo "hdc hilog -h: $o"; echo "$o" | grep -q 'Usage: hilogcat' && pass "hdc hilog -h -> hilogcat -h" || fail "hilog -h"
+sleep 1; $H $T shell 'pkill -f "tail -n 0 -f" ; true' >/dev/null 2>&1
 echo "RESULT=$R"; exit $R

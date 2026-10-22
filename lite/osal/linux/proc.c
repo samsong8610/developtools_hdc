@@ -7,6 +7,7 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
 #include <unistd.h>
@@ -106,4 +107,16 @@ int hdc_osal_write_file(const char *path, const char *data, unsigned len)
         return -1;
     }
     return 0;
+}
+
+const char *hdc_osal_hilog_cmd(int help)
+{
+    const char *env = getenv("HDC_OSAL_HILOG_CMD");
+    if (env != NULL && env[0] != '\0') {
+        return env;
+    }
+    if (help) {
+        return "if command -v hilog >/dev/null 2>&1; then hilog -h; else hilogcat -h; fi";
+    }
+    return "if command -v hilog >/dev/null 2>&1; then exec hilog; else exec hilogcat; fi";
 }

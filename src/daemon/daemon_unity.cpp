@@ -13,6 +13,9 @@
  * limitations under the License.
  */
 #include "daemon_unity.h"
+#ifdef HDC_LITE_OSAL
+#include "hdc_osal/proc.h"
+#endif
 #include <cstdlib>
 #include <sys/mount.h>
 #include <sys/wait.h>
@@ -355,10 +358,15 @@ bool HdcDaemonUnity::SetDeviceRunMode(const char *cmd)
 
 inline bool HdcDaemonUnity::GetHiLog(const char *cmd)
 {
+#ifdef HDC_LITE_OSAL
+    /* Small system has no `hilog`; OSAL picks hilog or falls back to hilogcat. */
+    string cmdDo = hdc_osal_hilog_cmd(cmd && !strcmp(cmd, "h"));
+#else
     string cmdDo = "hilog";
     if (cmd && !strcmp(const_cast<char *>(cmd), "h")) {
         cmdDo += " -h";
     }
+#endif
     if (ExecuteShell(cmdDo.c_str()) == -1) {
         HdcStatisticReporter::GetInstance().IncrCommandInfo(STATISTIC_ITEM::HILOG_FAIL_COUNT);
     }

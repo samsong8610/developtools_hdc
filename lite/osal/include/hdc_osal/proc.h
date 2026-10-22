@@ -23,6 +23,13 @@ int hdc_osal_read_file(const char *path, char *buf, unsigned size);
 /* Write value atomically (tmp + rename). Returns 0 on success. */
 int hdc_osal_write_file(const char *path, const char *data, unsigned len);
 
+/*
+ * Shell command for `hdc hilog` (help != 0 => help text). Small system ships
+ * hilogcat, not hilog: returns a sh snippet that runs `hilog` when present,
+ * else `hilogcat` (help: `hilogcat -h`). Override with env HDC_OSAL_HILOG_CMD.
+ */
+const char *hdc_osal_hilog_cmd(int help);
+
 #ifdef __cplusplus
 }
 #endif

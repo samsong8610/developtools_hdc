@@ -95,6 +95,15 @@ everything else: new files under lite/
   `verify.sh` covers tconn, shell with `__RC`, file send of a hap, bm set/install/uninstall, aa start/dump/terminate, and hilogcat streaming.
 - **v5.0.3:** lite-only.
 
+### 9. feat(osal): `hdc hilog` falls back to hilogcat on small system
+- **Files:** upstream `src/daemon/daemon_unity.cpp` (+8, `#ifdef HDC_LITE_OSAL` in `GetHiLog` + include), `lite/osal/include/hdc_osal/proc.h`, `lite/osal/{linux,liteos_a}/proc.c`, `lite/test/qemu-ide/verify.sh`.
+- **What/why:** the small system ships `hilogcat` (hilog_lite) but not `hilog`, so upstream `hdc hilog` failed with `hilog: not found`.
+  `hdc_osal_hilog_cmd()` returns a sh snippet that runs `hilog` if present, else `exec hilogcat`. `-h` maps to `hilogcat -h`, and env `HDC_OSAL_HILOG_CMD` overrides.
+  The host only forwards `-h` (`src/host/translate.cpp` CMDSTR_HILOG), so no other args can be mapped.
+  Stop streaming by killing the host client.
+- **Verified:** qemu-ide `hdc hilog` streams stub hilogcat lines and `hdc hilog -h` shows the hilogcat usage. TCP e2e passes, and the liteos_a backend still links.
+- **v5.0.3:** `GetHiLog` in v5 `daemon_unity.cpp` has the same body (low risk). Copy the hunk.
+
 ## Known limitations
 
 ### `hdc shell` exit code is not propagated (upstream design, not a port bug)

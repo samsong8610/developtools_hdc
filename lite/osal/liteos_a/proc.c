@@ -98,3 +98,15 @@ int hdc_osal_write_file(const char *path, const char *data, unsigned len)
     close(fd);
     return (n == (ssize_t)len) ? 0 : -1;
 }
+
+const char *hdc_osal_hilog_cmd(int help)
+{
+    const char *env = getenv("HDC_OSAL_HILOG_CMD");
+    if (env != NULL && env[0] != '\0') {
+        return env;
+    }
+    if (help) {
+        return "if command -v hilog >/dev/null 2>&1; then hilog -h; else hilogcat -h; fi";
+    }
+    return "if command -v hilog >/dev/null 2>&1; then exec hilog; else exec hilogcat; fi";
+}
