@@ -96,9 +96,12 @@ target_link_libraries(hdcd PRIVATE hdc_osal
   ${HDCD_PREFIX}/lib/liblz4.a
   ${HDCD_PREFIX}/lib/libsec.a
 )
-if(EXISTS "${PORT_ROOT}/b/uvx_log_unix.o")
+if(NOT DEFINED HDCD_UVX_DIR)
+  set(HDCD_UVX_DIR "${PORT_ROOT}/b")
+endif()
+if(EXISTS "${HDCD_UVX_DIR}/uvx_log_unix.o")
   target_link_libraries(hdcd PRIVATE
-    ${PORT_ROOT}/b/uvx_log_unix.o ${PORT_ROOT}/b/uvx_trace_unix.o)
+    ${HDCD_UVX_DIR}/uvx_log_unix.o ${HDCD_UVX_DIR}/uvx_trace_unix.o)
 endif()
 set_target_properties(hdcd PROPERTIES LINK_FLAGS "-static")
 install(TARGETS hdcd RUNTIME DESTINATION bin)
