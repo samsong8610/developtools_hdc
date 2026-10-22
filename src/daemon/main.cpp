@@ -16,10 +16,12 @@
 #include <grp.h>
 #include <pwd.h>
 #include <unistd.h>
+#include <cstdlib>
 #include <sys/types.h>
 #include "daemon_common.h"
 #ifdef HDC_LITE_OSAL
 #include "hdc_osal/service.h"
+#include "hdc_osal/param.h"
 #endif
 #if defined(SURPPORT_SELINUX)
 #include "selinux/selinux.h"
@@ -42,9 +44,12 @@ bool RestartDaemon(bool forkchild)
     char path[256] = "";
     size_t nPathSize = 256;
     uv_exepath(path, &nPathSize);
-    char *av[3] = { const_cast<char *>("hdcd"),
+    /* argc==1 path → ForkChildCheck reads persist.hdc.mode/port after tmode. */
+    char *av[3] = { path,
                     forkchild ? const_cast<char *>("-forkchild") : nullptr, nullptr };
-    WRITE_LOG(LOG_INFO, "HDC_LITE_OSAL restart_self path=%s", path);
+    WRITE_LOG(LOG_INFO, "HDC_LITE_OSAL restart_self path=%s forkchild=%d wrapper=%s",
+              path, forkchild ? 1 : 0,
+              getenv("HDC_OSAL_REEXEC_WRAPPER") ? getenv("HDC_OSAL_REEXEC_WRAPPER") : "");
     (void)hdc_osal_restart_self(path, av);
     WRITE_LOG(LOG_FATAL, "restart_self failed, %s", strerror(errno));
     _exit(0);
@@ -316,6 +321,9 @@ int main(int argc, const char *argv[])
 #ifdef CONFIG_USE_JEMALLOC_DFX_INIF
     mallopt(M_DELAYED_FREE, M_DELAYED_FREE_DISABLE);
     mallopt(M_SET_THREAD_CACHE, M_THREAD_CACHE_DISABLE);
+#endif
+#ifdef HDC_LITE_OSAL
+    (void)hdc_osal_param_init();
 #endif
 #ifndef UPDATER_MODE
     string developerMode;

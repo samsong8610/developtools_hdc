@@ -435,7 +435,14 @@ bool HdcDaemonUnity::CommandDispatch(const uint16_t command, uint8_t *payload, c
         }
         case CMD_UNITY_RUNMODE: {
             ret = false;
-            SetDeviceRunMode(strPayload.c_str());
+            if (!SetDeviceRunMode(strPayload.c_str())) {
+                break;
+            }
+#ifdef HDC_LITE_OSAL
+            /* Standard OH relies on init watching persist.hdc.*; lite re-execs. */
+            WRITE_LOG(LOG_INFO, "HDC_LITE_OSAL tmode → PostStopInstanceMessage(restart)");
+            daemon->PostStopInstanceMessage(true);
+#endif
             break;
         }
         case CMD_UNITY_HILOG: {

@@ -1,0 +1,9 @@
+# hdcd lite defaults — /etc/hdcd/hdcd.para
+# persist overrides live in /data/hdcd/persist.para
+const.security.developermode.state=true
+const.hdc.secure=0
+const.debuggable=1
+persist.hdc.root=1
+persist.hdc.mode=tcp
+persist.hdc.mode.tcp=enable
+persist.hdc.port=8710
