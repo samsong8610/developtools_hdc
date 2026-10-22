@@ -4,6 +4,7 @@
  */
 #include "hdc_osal/param.h"
 #include "hdc_osal/proc.h"
+#include "hdc_osal/usb.h"
 
 #include <errno.h>
 #include <stdio.h>
@@ -225,6 +226,13 @@ int SetParameter(const char *key, const char *value)
     }
     if (!g_inited) {
         hdc_osal_param_init();
+    }
+    if (strcmp(key, "sys.usb.ffs.ready") == 0) {
+        /* Volatile trigger (OH init: bind UDC). Do not persist. */
+        if (strcmp(value, "1") == 0) {
+            return hdc_osal_usb_on_ffs_ready() == 0 ? 0 : -1;
+        }
+        return 0;
     }
     klen = strlen(key);
     dirname_of(g_persist_path, dir, sizeof(dir));
