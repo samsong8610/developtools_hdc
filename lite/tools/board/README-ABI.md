@@ -70,14 +70,19 @@ Board UAT/ABI may be paused (hardware). Pipeline stays **runnable offline**:
 | Goal | Command |
 |---|---|
 | Syntax / help | `./pack-debug-libs.sh --help`; `./from-board-results.sh --help` |
-| Offline smoke (synthetic libs) | `./smoke-abi-compare.sh`; `./smoke-pack-debug-libs.sh`; `./smoke-from-board-results.sh` |
-| Placeholder | Until a real `board-results-*.zip` arrives, keep `b/acelite-la64` (or `--ours`) built; do **not** ship swap-libs without a YES/CONDITIONAL-after-relink report |
+| **One-shot offline smoke** | `./smoke-abi-offline.sh` (chains compare + pack + from-board-results; RESULT=0) |
+| Individual smokes | `./smoke-abi-compare.sh`; `./smoke-pack-debug-libs.sh`; `./smoke-from-board-results.sh` |
+| Placeholder | Keep `b/acelite-la64` (or `OURS=`) built; do **not** ship swap-libs without YES / CONDITIONAL-after-relink |
 
-When the zip arrives:
+### When board HW unblocks (no further prep)
 
 ```sh
+# 1) Confirm offline pipeline still green (synthetic fixtures)
+./smoke-abi-offline.sh
+# 2) Drop real board-results zip from board-check.ps1
 ./from-board-results.sh board-results-….zip
-# → abi-report + optional relink + debug-libs-*.zip + NEXT STEPS
+# → abi-report + optional BOARD_NEEDED relink + debug-libs-*.zip + NEXT STEPS
 ```
 
-**ABI wait is OK** — docs and smokes do not require 2K0300 hardware.
+**ABI wait is OK** — docs and smokes do not require 2K0300 hardware until step 2.
+

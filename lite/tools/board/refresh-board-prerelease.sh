@@ -81,6 +81,7 @@ cp -a "$LITE/docs/IDE-CONTRACT.md" "$LITE/docs/CHANGELOG-ohjs-6.1-lite.md" \
   "$LITE/docs/ide-contract.manifest.json" \
   "$LITE/docs/SOAK-FAILURE-ARCHIVE.md" \
   "$LITE/docs/IDE-ERROR-CODES-FIELD-MAPPING.md" \
+  "$LITE/docs/IDE-ERROR-CODES-PIN-SYNC.md" \
   "$REPO_ROOT/lite/PORT.md" \
   "$H/"
 # Recovery handbook if present
@@ -91,6 +92,11 @@ if [ ! -f "$H/BOARD-CHECKLIST.md" ] && [ -f "$PORT_ROOT/$HAND_NAME/BOARD-CHECKLI
 fi
 # Prefer repo copy if we add one later
 [ -f "$LITE/docs/BOARD-CHECKLIST.md" ] && cp -a "$LITE/docs/BOARD-CHECKLIST.md" "$H/"
+if [ -d "$LITE/docs/examples/soak-last-failure" ]; then
+  mkdir -p "$H/examples"
+  cp -a "$LITE/docs/examples/soak-last-failure" "$H/examples/"
+fi
+[ -f "$LITE/docs/IDE-ERROR-CODES-PIN-SYNC.md" ] && cp -a "$LITE/docs/IDE-ERROR-CODES-PIN-SYNC.md" "$H/"
 [ -f "$LITE/tools/board/BOARD-CHECKLIST.md" ] && cp -a "$LITE/tools/board/BOARD-CHECKLIST.md" "$H/"
 
 # --- board tools ---
@@ -99,7 +105,7 @@ cp -a "$LITE/tools/board/README.md" "$LITE/tools/board/README-ABI.md" \
   "$LITE/tools/board/README-USB-GADGET.md" "$H/tools/" 2>/dev/null || true
 # Root convenience copies (package layout)
 for f in board-check.ps1 abi-compare.sh abi-compare.ps1 from-board-results.sh from-board-results.ps1 \
-         pack-debug-libs.sh relink-board-needed.sh unpack-board-results.sh setup-usb-gadget.sh \
+         pack-debug-libs.sh smoke-abi-offline.sh smoke-abi-compare.sh smoke-pack-debug-libs.sh smoke-from-board-results.sh relink-board-needed.sh unpack-board-results.sh setup-usb-gadget.sh \
          check-host-hdc-ver.sh check-ide-contract-drift.sh refresh-board-prerelease.sh \
          run-qemu-ide-ci.sh; do
   [ -f "$LITE/tools/board/$f" ] && cp -a "$LITE/tools/board/$f" "$H/"

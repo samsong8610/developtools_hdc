@@ -15,6 +15,7 @@ on:
       - 'lite/docs/BOARD-CHECKLIST.md'
       - 'lite/docs/SOAK-FAILURE-ARCHIVE.md'
       - 'lite/docs/IDE-ERROR-CODES-FIELD-MAPPING.md'
+      - 'lite/docs/IDE-ERROR-CODES-PIN-SYNC.md'
       - 'lite/docs/examples/**'
       - 'lite/tools/board/README-USB-GADGET.md'
       - 'lite/tools/board/usb-gadget-fsm.sh'
@@ -34,6 +35,7 @@ on:
       - 'lite/docs/BOARD-CHECKLIST.md'
       - 'lite/docs/SOAK-FAILURE-ARCHIVE.md'
       - 'lite/docs/IDE-ERROR-CODES-FIELD-MAPPING.md'
+      - 'lite/docs/IDE-ERROR-CODES-PIN-SYNC.md'
       - 'lite/docs/examples/**'
       - 'lite/tools/board/README-USB-GADGET.md'
       - 'lite/tools/board/usb-gadget-fsm.sh'
@@ -56,12 +58,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Validate ide-error-codes.json vs schema
-        run: bash lite/ci/validate-ide-error-codes.sh
-      - name: Field mapping ↔ vendor JSON
-        run: bash lite/ci/check-ide-error-codes-mapping.sh
-      - name: BOARD-RECOVERY ↔ verify entry cross-check
-        run: bash lite/tools/board/check-board-recovery-refs.sh
+      - name: Lite docs regression oneshot
+        run: bash lite/ci/run-lite-docs-regression.sh
 
   usb-gadget-fsm:
     runs-on: ubuntu-latest

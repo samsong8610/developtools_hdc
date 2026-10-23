@@ -2,6 +2,7 @@
 
 Machine-readable companion: [`ide-error-codes.json`](ide-error-codes.json).  
 IDE field mapping (draft, 1.0.0): [`IDE-ERROR-CODES-FIELD-MAPPING.md`](IDE-ERROR-CODES-FIELD-MAPPING.md) — 全栈 after #7.  
+Pin / vendor sync checklist: [`IDE-ERROR-CODES-PIN-SYNC.md`](IDE-ERROR-CODES-PIN-SYNC.md) (after IDE #9 pin advances; keep 1.0.0 fields stable until then).
 Normative ports/paths: [`IDE-CONTRACT.md`](IDE-CONTRACT.md). Host Ver gate: [`../tools/board/check-host-hdc-ver.sh`](../tools/board/check-host-hdc-ver.sh).
 
 IDE / 全栈: match `pattern` (substring) on hdc stdout/stderr; prefer `code` when `[E00…]` present.
