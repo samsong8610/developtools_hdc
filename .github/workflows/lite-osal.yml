@@ -9,6 +9,8 @@ on:
       - 'lite/osal/**'
       - 'lite/CMakeLists.txt'
       - 'lite/ci/**'
+      - 'lite/docs/ide-error-codes.json'
+      - 'lite/docs/ide-error-codes.schema.json'
       - 'lite/toolchain/**'
       - '.github/workflows/lite-osal.yml'
   pull_request:
@@ -16,6 +18,8 @@ on:
       - 'lite/osal/**'
       - 'lite/CMakeLists.txt'
       - 'lite/ci/**'
+      - 'lite/docs/ide-error-codes.json'
+      - 'lite/docs/ide-error-codes.schema.json'
       - 'lite/toolchain/**'
       - '.github/workflows/lite-osal.yml'
   workflow_dispatch:
@@ -27,3 +31,10 @@ jobs:
       - uses: actions/checkout@v4
       - name: OSAL matrix (host gcc) linux + liteos_a
         run: bash lite/ci/build-osal-matrix.sh host-cc
+
+  ide-error-codes:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate ide-error-codes.json vs schema
+        run: bash lite/ci/validate-ide-error-codes.sh

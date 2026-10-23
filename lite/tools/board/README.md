@@ -27,3 +27,8 @@ Also: [host/README.md](host/README.md) (host hdc 3.2.0c), [README-ABI.md](README
 ## Host hdc Ver gate
 
 `./check-host-hdc-ver.sh` — requires `Ver: 3.2.0c`; on mismatch prints Linux `host/hdc-linux-x86_64` and Windows DevEco `toolchains\hdc.exe` copy-paste paths. Used by `board-check.ps1` H0 and qemu-ide `verify*.sh`.
+
+## Board recovery (HW OK)
+
+- Handbook: [`../../docs/BOARD-RECOVERY.md`](../../docs/BOARD-RECOVERY.md) — USB collect, ABI zip, G2/G4 UC entry.
+- One-click prerelease: `./refresh-board-prerelease.sh` (tip → tar → sha → clobber `ohjs-board-2026-10-29`).

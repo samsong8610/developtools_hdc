@@ -1,12 +1,18 @@
 {
-  "$schema_comment": "Machine-readable IDE↔hdc common failure map. Aligns with lite/docs/IDE-CONTRACT.md channels (tconn/file/bm/aa/fport). Codes from host/daemon MSG_FAIL strings (Ver 3.2.0c).",
+  "$schema": "ide-error-codes.schema.json",
+  "version": "1.0.0",
+  "description": "Machine-readable IDE↔hdc common failure map. Aligns with lite/docs/IDE-CONTRACT.md channels (tconn/file/bm/aa/fport). Codes from host/daemon MSG_FAIL strings (Ver 3.2.0c).",
   "protocol": "Ver 3.2.0c",
   "hdc_msg_hash": "7fdbc1aa8c5fefaa",
   "ide_contract": "lite/docs/IDE-CONTRACT.md",
   "channels": {
     "tconn": {
       "description": "TCP connect host hdc server → device hdcd",
-      "success_patterns": ["Connect OK", "already connected", "is connected"],
+      "success_patterns": [
+        "Connect OK",
+        "already connected",
+        "is connected"
+      ],
       "failures": [
         {
           "code": null,
@@ -48,7 +54,9 @@
     },
     "file": {
       "description": "hdc file send/recv",
-      "success_patterns": ["FileTransfer finish"],
+      "success_patterns": [
+        "FileTransfer finish"
+      ],
       "failures": [
         {
           "code": "E005102",
@@ -141,7 +149,10 @@
     },
     "fport": {
       "description": "hdc fport / rport forward (jsdebug uses fport to jerry :5001)",
-      "success_patterns": ["Forwardport result:OK", "OK"],
+      "success_patterns": [
+        "Forwardport result:OK",
+        "OK"
+      ],
       "failures": [
         {
           "code": null,
@@ -165,7 +176,9 @@
     },
     "shell": {
       "description": "hdc shell (exit code not propagated)",
-      "success_patterns": ["__RC=0"],
+      "success_patterns": [
+        "__RC=0"
+      ],
       "failures": [
         {
           "code": "E003004",

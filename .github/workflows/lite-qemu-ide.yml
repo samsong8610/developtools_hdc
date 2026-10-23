@@ -10,6 +10,8 @@ on:
       - 'lite/ci/**'
       - 'lite/docs/IDE-CONTRACT.md'
       - 'lite/docs/ide-contract.manifest.json'
+      - 'lite/docs/ide-error-codes.json'
+      - 'lite/docs/ide-error-codes.schema.json'
       - '.github/workflows/lite-qemu-ide.yml'
       - '.github/workflows/lite-osal.yml'
   pull_request:
@@ -18,6 +20,8 @@ on:
       - 'lite/ci/**'
       - 'lite/docs/IDE-CONTRACT.md'
       - 'lite/docs/ide-contract.manifest.json'
+      - 'lite/docs/ide-error-codes.json'
+      - 'lite/docs/ide-error-codes.schema.json'
       - '.github/workflows/lite-qemu-ide.yml'
   workflow_dispatch:
 
@@ -27,6 +31,9 @@ jobs:
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
+
+      - name: Validate ide-error-codes.json vs schema
+        run: bash lite/ci/validate-ide-error-codes.sh
 
       - name: Install qemu-user-static (loongarch64)
         id: qemu

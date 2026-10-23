@@ -119,7 +119,7 @@ CONTRACT=1 lite/test/qemu-ide/verify.sh                  # 可选
 
 ## 错误码 / IDE channel failures
 
-机器可读表：[`ide-error-codes.json`](ide-error-codes.json) · 说明：[`IDE-ERROR-CODES.md`](IDE-ERROR-CODES.md)。
+机器可读表：[`ide-error-codes.json`](ide-error-codes.json)（`$schema` / `version` **1.0.0**，字段名 1.x 稳定）· schema：[`ide-error-codes.schema.json`](ide-error-codes.schema.json) · 说明：[`IDE-ERROR-CODES.md`](IDE-ERROR-CODES.md)。字段稳定后通知全栈 vendor（IDE #6/#7 后）。
 
 覆盖 **tconn / file / bm / aa / fport**（及 shell `__RC`）常见 `[E00…]` 与 stdout 匹配串；与上文端口/路径约定配套。主机 Ver 门禁：`lite/tools/board/check-host-hdc-ver.sh`。
 

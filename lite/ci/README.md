@@ -32,3 +32,11 @@ Entry: `lite/ci/run-qemu-ide-ci.sh` — runs `smoke-qemu-edges` + `soak-ide-cont
 - **Skip** (exit 0) if `qemu-loongarch64`, `HDCD_BIN`, or host `HDC` unavailable.
 - **Must PASS** when those are present (workflow fetches `ohjs-board-2026-10-29` assets when possible).
 - Local: `HDCD_BIN=… HDC=… bash lite/ci/run-qemu-ide-ci.sh`
+
+## ide-error-codes schema
+
+```bash
+bash lite/ci/validate-ide-error-codes.sh
+```
+
+Fails CI if `version` / required channels / failure fields drift from `ide-error-codes.schema.json`.

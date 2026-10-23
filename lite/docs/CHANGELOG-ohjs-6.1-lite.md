@@ -110,6 +110,13 @@ v5.0.3 CMake must **drop** 6.1-only sources (`memory_pool`, SSL, heartbeat, …)
 - `lite/tools/board/check-host-hdc-ver.sh` — Ver 3.2.0c gate with DevEco / Linux path hints; hooked into board-check H0 + verify*.
 - `lite/docs/ide-error-codes.json` + `IDE-ERROR-CODES.md` — tconn/file/bm/aa/fport failure map (cross-link IDE-CONTRACT).
 
+
+### Schema / one-click prerelease / board recovery
+
+- `ide-error-codes.schema.json` + `version: 1.0.0` — CI `validate-ide-error-codes.sh`; **1.x field names stable for IDE vendor** (notify 全栈 after IDE #6/#7).
+- `refresh-board-prerelease.sh` — tip→pack→sha→clobber prerelease tag.
+- `BOARD-RECOVERY.md` — USB / ABI zip / G2·G4 UC checklist when 2K0300 HW OK.
+
 ## 6. Protocol / ports / IDE-CONTRACT
 
 **PORT.md:** conventions + §16–§17 · **Docs:** `IDE-CONTRACT.md` · **Commits:** `6dcfcc5`, `5c42ddd`, `df0e5c3`

@@ -5,6 +5,19 @@ Normative ports/paths: [`IDE-CONTRACT.md`](IDE-CONTRACT.md). Host Ver gate: [`..
 
 IDE / 全栈: match `pattern` (substring) on hdc stdout/stderr; prefer `code` when `[E00…]` present.
 
+## Schema / version / IDE vendor
+
+| Item | Value |
+|---|---|
+| Document | [`ide-error-codes.json`](ide-error-codes.json) |
+| Schema | [`ide-error-codes.schema.json`](ide-error-codes.schema.json) |
+| `version` | **1.0.0** (semver of this map; field names frozen for 1.x) |
+| CI | `lite/ci/validate-ide-error-codes.sh` (also in `lite-osal.yml` / `lite-qemu-ide.yml`) |
+
+**Stable fields (do not rename in 1.x):** `version`, `protocol`, `hdc_msg_hash`, `ide_contract`, `channels`, per-channel `description` / `success_patterns` / `failures`, per-failure `code` / `pattern` / `when` / `ide_hint`. Optional: `note`, `host_version_gate`, `description` (doc blurb).
+
+**全栈 / IDE:** when this schema is accepted as stable, **notify 全栈 to vendor** the JSON (after IDE issues **#6 / #7**). Prefer vendoring `ide-error-codes.json` + checking `version`; do not fork field names so #7 contract vendor stays compatible. Breaking renames → bump to **2.0.0** and call out in CHANGELOG.
+
 ## tconn
 
 | Code | Pattern | When | IDE hint |
