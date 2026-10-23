@@ -113,6 +113,11 @@ v5.0.3 CMake must **drop** 6.1-only sources (`memory_pool`, SSL, heartbeat, …)
 
 ### Schema / one-click prerelease / board recovery
 
+- `IDE-ERROR-CODES.md`: 1.x additive-only policy + version history from 1.0.0.
+- `smoke-qemu-edges.sh`: NEG port 18710 / wrong path / leftover `debug.*` (CI via run-qemu-ide-ci).
+- `check-board-recovery-refs.sh`: BOARD-RECOVERY ↔ verify / checklist / package README asserts.
+
+
 - `ide-error-codes.schema.json` + `version: 1.0.0` — CI `validate-ide-error-codes.sh`; **1.x field names stable for IDE vendor** (notify 全栈 after IDE #6/#7).
 - `refresh-board-prerelease.sh` — tip→pack→sha→clobber prerelease tag.
 - `BOARD-RECOVERY.md` — USB / ABI zip / G2·G4 UC checklist when 2K0300 HW OK.

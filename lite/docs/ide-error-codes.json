@@ -1,7 +1,7 @@
 {
   "$schema": "ide-error-codes.schema.json",
   "version": "1.0.0",
-  "description": "Machine-readable IDE↔hdc common failure map. Aligns with lite/docs/IDE-CONTRACT.md channels (tconn/file/bm/aa/fport). Codes from host/daemon MSG_FAIL strings (Ver 3.2.0c).",
+  "description": "Machine-readable IDE↔hdc common failure map. Aligns with lite/docs/IDE-CONTRACT.md channels (tconn/file/bm/aa/fport). Codes from host/daemon MSG_FAIL strings (Ver 3.2.0c). Compat: 1.x additive-only; see IDE-ERROR-CODES.md version history.",
   "protocol": "Ver 3.2.0c",
   "hdc_msg_hash": "7fdbc1aa8c5fefaa",
   "ide_contract": "lite/docs/IDE-CONTRACT.md",
@@ -206,5 +206,10 @@
     "required": "Ver: 3.2.0c",
     "check_script": "lite/tools/board/check-host-hdc-ver.sh",
     "mismatch_hint_doc": "lite/tools/board/host/README.md"
+  },
+  "compat": {
+    "policy": "1.x-additive-only",
+    "doc": "lite/docs/IDE-ERROR-CODES.md#1x-compatibility-policy",
+    "history_starts_at": "1.0.0"
   }
 }

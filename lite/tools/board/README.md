@@ -32,3 +32,4 @@ Also: [host/README.md](host/README.md) (host hdc 3.2.0c), [README-ABI.md](README
 
 - Handbook: [`../../docs/BOARD-RECOVERY.md`](../../docs/BOARD-RECOVERY.md) — USB collect, ABI zip, G2/G4 UC entry.
 - One-click prerelease: `./refresh-board-prerelease.sh` (tip → tar → sha → clobber `ohjs-board-2026-10-29`).
+- Ref check: `./check-board-recovery-refs.sh` (BOARD-RECOVERY ↔ verify / package README).

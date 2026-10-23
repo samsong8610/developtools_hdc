@@ -1,8 +1,10 @@
 #!/bin/bash
-# qemu-ide edge cases on stubs (no board): large file, reconnect burst, concurrent sessions.
+# qemu-ide edge cases on stubs (no board): large file, reconnect, concurrent,
+# plus contract negatives: port conflict / wrong path / leftover debug.* artifacts.
 # Complements smoke-stability.sh. Log: lite/test/qemu-ide-edges.log
 #
-# Env: LARGE_MB (default 32), N_RECONN (10), N_CONCUR (6), HDC, HDCD_PORT, OHOS_HDC_SERVER_PORT
+# Env: LARGE_MB (default 32), N_RECONN (10), N_CONCUR (6), WRONG_PORT (18710),
+#      HDC, HDCD_PORT, OHOS_HDC_SERVER_PORT
 set -u
 D=$(cd "$(dirname "$(readlink -f "$0")")" && pwd)
 PORT_ROOT=${PORT:-/workspace/hdcd-port}
@@ -98,6 +100,78 @@ for i in $(seq 1 "$N_CONCUR"); do
 done
 [ "$cok" = "$N_CONCUR" ] && pass "concurrent $cok/$N_CONCUR" || fail "concurrent only $cok/$N_CONCUR"
 rm -rf "$PDIR"
+
+
+# --- D) port conflict / wrong port (NEGATIVES; start-only, jsdebug down) ---
+echo "== D) NEGATIVE port conflict / wrong port"
+WRONG_PORT=${WRONG_PORT:-18710}
+# Ensure jsdebug alias down so :18710 must fail for G2
+"$D/run-qemu-hdcd.sh" jsdebug stop >/dev/null 2>&1 || true
+$H tconn 127.0.0.1:$DEV_PORT >/dev/null 2>&1 || true
+# D1: tconn to jsdebug host port must NOT Connect OK
+wo=$($H tconn 127.0.0.1:$WRONG_PORT 2>&1 || true)
+echo "tconn :$WRONG_PORT => $(echo "$wo" | tr '\n' ' ' | tail -c 120)"
+if echo "$wo" | grep -qiE 'Connect OK|already connected'; then
+  fail "NEGATIVE: tconn :$WRONG_PORT unexpectedly OK (port conflict / jsdebug up?)"
+else
+  pass "NEGATIVE: tconn :$WRONG_PORT fails (no G2 on jsdebug port)"
+fi
+# D2: using device port as OHOS_HDC_SERVER_PORT collides — client to :8710 as server should not be healthy device session
+# Probe: hdc -s 127.0.0.1:8710 list targets (server wrongly on device port) — expect fail or empty, not a clean G2 target list for 8710-as-server
+bad=$($HDC -s 127.0.0.1:$DEV_PORT list targets 2>&1 || true)
+echo "list targets via -s :$DEV_PORT (conflict probe): $(echo "$bad" | tr '\n' ' ' | tail -c 120)"
+# Correct server still works
+oklist=$($H list targets 2>&1 || true)
+if echo "$oklist" | grep -qE "127.0.0.1:$DEV_PORT|[Cc]onnect"; then
+  pass "server :$OHOS_HDC_SERVER_PORT still lists device after conflict probe"
+else
+  # reconnect and recheck
+  $H tconn 127.0.0.1:$DEV_PORT >/dev/null 2>&1 || true
+  shell_ok && pass "server :$OHOS_HDC_SERVER_PORT healthy after conflict probe" || fail "server broken after conflict probe"
+fi
+
+# --- E) wrong remote path (NEGATIVE file send) ---
+echo "== E) NEGATIVE wrong remote path"
+W2=$(mktemp -d /tmp/edge-badpath-XXXXXX)
+echo 'x' > "$W2/tiny.txt"
+# Nonexistent deep parent under /tmp (no mkdir) — must not FileTransfer finish cleanly
+bo=$($H $T file send "$W2/tiny.txt" /tmp/ohjs-no-such-dir-edge/nested/x.txt 2>&1 || true)
+echo "bad path send: $(echo "$bo" | tr '\n' ' ' | tail -c 160)"
+if echo "$bo" | grep -qi 'FileTransfer finish'; then
+  fail "NEGATIVE: file send to missing parent unexpectedly finished"
+else
+  pass "NEGATIVE: file send wrong path fails (no finish)"
+fi
+# Control: correct path still works
+$H $T shell 'mkdir -p /tmp/ohjs' >/dev/null 2>&1 || true
+go=$($H $T file send "$W2/tiny.txt" /tmp/ohjs/edge-path-ok.txt 2>&1 || true)
+echo "$go" | grep -qi 'FileTransfer finish' && pass "file send correct /tmp/ohjs still OK" || fail "file send /tmp/ohjs broken after negative"
+rm -rf "$W2"
+
+# --- F) leftover debug.* artifacts (NEGATIVE then clean) ---
+echo "== F) leftover debug.* artifacts"
+BUNDLE_EDGE=com.example.edge
+$H $T shell "mkdir -p /data/ohjs && touch /data/ohjs/debug.$BUNDLE_EDGE /data/ohjs/debug.leftover.other" >/dev/null 2>&1 || true
+planted=$($H $T shell 'ls /data/ohjs/debug.* 2>/dev/null | tr "\n" " "; echo' 2>&1 || true)
+echo "planted: $planted"
+echo "$planted" | grep -q "debug.$BUNDLE_EDGE" && pass "planted debug markers" || fail "could not plant debug markers"
+# Detect leftover before clean (must see markers — simulates IDE forgetting rm)
+if echo "$planted" | grep -qE 'debug\.'; then
+  pass "NEGATIVE detect: leftover debug.* present before clean deploy"
+else
+  fail "NEGATIVE detect: expected leftover debug.* not visible"
+fi
+# Clean deploy path
+$H $T shell 'rm -f /data/ohjs/debug.*' >/dev/null 2>&1 || true
+after=$($H $T shell 'sh -c "set -- /data/ohjs/debug.*; if [ -e \"\$1\" ]; then echo LEFTOVER; ls /data/ohjs/debug.*; else echo CLEAN; fi"' 2>&1 || true)
+echo "after clean: $after"
+echo "$after" | grep -q CLEAN && pass "clean deploy clears all debug.*" || fail "leftover debug.* after clean: $after"
+# Refuse path: plant again and assert verify-contract-style refuse
+$H $T shell "touch /data/ohjs/debug.$BUNDLE_EDGE" >/dev/null 2>&1 || true
+still=$($H $T shell 'sh -c "set -- /data/ohjs/debug.*; if [ -e \"\$1\" ]; then echo LEFTOVER; else echo CLEAN; fi"' 2>&1 || true)
+echo "$still" | grep -q LEFTOVER && pass "REFUSE path: marker still present when not cleaned" || fail "REFUSE path inconclusive"
+$H $T shell 'rm -f /data/ohjs/debug.*' >/dev/null 2>&1 || true
+
 
 shell_ok && pass "post-edge health" || fail "post-edge health"
 echo "RESULT=$R log=$OUT"

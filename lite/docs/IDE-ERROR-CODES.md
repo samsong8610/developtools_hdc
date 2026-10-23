@@ -18,6 +18,30 @@ IDE / 全栈: match `pattern` (substring) on hdc stdout/stderr; prefer `code` wh
 
 **全栈 / IDE:** when this schema is accepted as stable, **notify 全栈 to vendor** the JSON (after IDE issues **#6 / #7**). Prefer vendoring `ide-error-codes.json` + checking `version`; do not fork field names so #7 contract vendor stays compatible. Breaking renames → bump to **2.0.0** and call out in CHANGELOG.
 
+
+## 1.x compatibility policy
+
+**Additive only within 1.x.** Allowed without a major bump:
+
+- Add a new channel, failure row, `success_patterns` entry, or optional top-level key.
+- Clarify `when` / `ide_hint` text (same `code` + `pattern` meaning).
+- Patch bumps: `1.0.0` → `1.0.1` (doc/typo); minor: `1.1.0` (new rows/channels).
+
+**Not allowed in 1.x** (requires **2.0.0** + explicit callout):
+
+- Rename or remove a field (`channels`, `failures`, `code`, `pattern`, `when`, `ide_hint`, …).
+- Remove a published `code` or change its semantic meaning / primary `pattern`.
+- Repurpose an existing channel name.
+
+IDE / 全栈 vendors should pin on `version` major `1` and treat unknown keys as ignorable. Manifest / IDE-CONTRACT field names stay independent unless a coordinated bump is required.
+
+## Version history
+
+| version | Date (Asia/Shanghai) | Notes |
+|---|---|---|
+| **1.0.0** | 2026-10-23 | Initial map: tconn / file / bm / aa / fport / shell; `$schema` + CI validate. Field names frozen for 1.x. Ready to vendor after IDE #6/#7 notify. |
+
+
 ## tconn
 
 | Code | Pattern | When | IDE hint |

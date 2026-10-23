@@ -142,3 +142,14 @@ lite/test/qemu-ide/verify-jsdebug-marker.sh
 **Errors:** [`ide-error-codes.json`](ide-error-codes.json) / [`IDE-ERROR-CODES.md`](IDE-ERROR-CODES.md) (tconn/file/bm/aa/fport).
 
 **Refresh package from tip:** `lite/tools/board/refresh-board-prerelease.sh`
+
+---
+
+## Doc / verify self-check
+
+```bash
+lite/tools/board/check-board-recovery-refs.sh
+```
+
+Asserts this handbook (and BOARD-CHECKLIST USB U1–U8) still names real verify/board scripts and that package README keeps `BOARD-RECOVERY` / oneshot / soak / edges entry points. CI runs it with the ide-error-codes job.
+

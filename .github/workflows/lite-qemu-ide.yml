@@ -34,6 +34,8 @@ jobs:
 
       - name: Validate ide-error-codes.json vs schema
         run: bash lite/ci/validate-ide-error-codes.sh
+      - name: BOARD-RECOVERY ↔ verify entry cross-check
+        run: bash lite/tools/board/check-board-recovery-refs.sh
 
       - name: Install qemu-user-static (loongarch64)
         id: qemu
