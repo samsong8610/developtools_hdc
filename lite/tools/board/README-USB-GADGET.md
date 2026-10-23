@@ -34,3 +34,21 @@ See also: `lite/test/usb-vm/` (QEMU FunctionFS e2e), OSAL `hdc_osal_usb_on_ffs_r
 ```
 
 Logic lives in `usb-gadget-fsm.sh` (sourced by setup + tests). Placeholder VID:PID is never written to hardware in these tests.
+
+## Board recovery (U1–U8)
+
+Before binding gadget on hardware, collect read-only probes **U1–U8** in
+[`BOARD-RECOVERY.md` §1](../../docs/BOARD-RECOVERY.md#1-usb-collection-items-read-only-first)
+(and package `BOARD-CHECKLIST.md` §6). Summary:
+
+| ID | Why it matters for this script / FSM |
+|---|---|
+| U1 | Board identity (loongarch / 2K0300) |
+| U2 | UDC present — empty list → do not bind; FSM stays pre-UDC_BOUND |
+| U3 | Kernel `CONFIG_USB_CONFIGFS` / `FUNCTIONFS` / `LIBCOMPOSITE` |
+| U4/U5 | configfs + `usb_gadget` writable |
+| U6 | `/dev/usb-ffs/hdc` after setup |
+| U7 | hdc USB props / `hdcd.para` |
+| U8 | modules if built `=m` |
+
+CI: `test-usb-gadget-fsm.sh` (job `usb-gadget-fsm` in `lite-osal.yml`) exercises happy + NEG paths with a fake configfs root — no board required. Cross-check with recovery refs: `check-board-recovery-refs.sh`.

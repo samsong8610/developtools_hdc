@@ -126,5 +126,29 @@ fi
 # --- F) ide-error-codes linked from recovery ---
 grep -q 'ide-error-codes' "$REC" && pass "RECOVERY links ide-error-codes" || fail "RECOVERY missing ide-error-codes link"
 
+
+# --- G) USB FSM ↔ BOARD-RECOVERY U1–U8 bidirectional links ---
+USB_README=$LITE/tools/board/README-USB-GADGET.md
+FSM_TEST=$LITE/tools/board/test-usb-gadget-fsm.sh
+if [ -f "$USB_README" ]; then
+  grep -qE 'BOARD-RECOVERY' "$USB_README" && pass "USB README links BOARD-RECOVERY" || fail "USB README missing BOARD-RECOVERY link"
+  for u in U1 U2 U3 U4 U5 U6 U7 U8; do
+    grep -qE "\\b$u\\b" "$USB_README" && pass "USB README has $u" || fail "USB README missing $u"
+  done
+else
+  fail "missing $USB_README"
+fi
+grep -q 'test-usb-gadget-fsm' "$REC" && pass "RECOVERY mentions test-usb-gadget-fsm" || fail "RECOVERY omits test-usb-gadget-fsm"
+grep -qE 'README-USB-GADGET|usb-gadget-fsm' "$REC" && pass "RECOVERY links USB gadget README/FSM" || fail "RECOVERY missing USB gadget README/FSM link"
+grep -qE 'FSM ↔ U1|U1–U8|U1-U8' "$REC" && pass "RECOVERY has FSM↔U mapping" || fail "RECOVERY missing FSM↔U mapping note"
+if [ -f "$FSM_TEST" ]; then
+  # header or body should point at recovery U section (soft: warn if only README carries it)
+  if grep -qE 'BOARD-RECOVERY|U1–U8|U1-U8' "$FSM_TEST"; then
+    pass "FSM test mentions BOARD-RECOVERY / U1–U8"
+  else
+    warn "FSM test has no BOARD-RECOVERY mention (README carries reverse link)"
+  fi
+fi
+
 echo "RESULT=$R"
 exit $R

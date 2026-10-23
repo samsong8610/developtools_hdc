@@ -1,0 +1,19 @@
+# Soak failure repro — drop this directory into bug reports
+failed_at_iter=3
+N=20
+log=iter.log
+OUT_DIR=lite/test/qemu-ide-soak
+FAIL_DIR=…/failures/fail-iter-003
+HDC=/path/to/hdc-linux-x86_64
+OHOS_HDC_SERVER_PORT=8711
+HDCD_PORT=8710
+SKIP_START=1
+date=2026-10-23 13:25:18 +0800
+tip=2ed51682
+
+## Minimal repro
+1. Ensure qemu-ide G2 up: lite/test/qemu-ide/run-qemu-hdcd.sh start
+2. export OHOS_HDC_SERVER_PORT=8711 HDC=... HDCD_BIN=...
+3. SKIP_START=1 OUT_LOG=/tmp/repro-oneshot.log lite/test/qemu-ide/verify-ide-contract-oneshot.sh
+4. Or re-run soak: N=1 SKIP_START=1 lite/test/qemu-ide/soak-ide-contract.sh
+5. Attach this FAIL_DIR (iter.log + REPRO.txt + SUMMARY.txt)

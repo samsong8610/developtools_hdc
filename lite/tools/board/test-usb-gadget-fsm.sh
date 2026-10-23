@@ -1,5 +1,6 @@
 #!/bin/bash
 # Unit tests for usb-gadget-fsm.sh — fake filesystem, no real VID/PID / kernel.
+# Cross-link: board probes U1–U8 in lite/docs/BOARD-RECOVERY.md §1; see README-USB-GADGET.md.
 set -eu
 HERE=$(cd "$(dirname "$0")" && pwd)
 R=0

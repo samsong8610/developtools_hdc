@@ -18,6 +18,31 @@ When `soak-ide-contract.sh` fail-fasts, it writes a **minimal repro bundle** und
 
 Override root: `OUT_DIR=/path/to/drop ./soak-ide-contract.sh`.
 
+
+## Concrete sample (`LAST_FAILURE` layout)
+
+Checked-in example (synthetic): [`examples/soak-last-failure/`](examples/soak-last-failure/).
+
+```text
+examples/soak-last-failure/
+├── SUMMARY.txt
+├── LAST_FAILURE → failures/fail-iter-003/
+└── failures/
+    └── fail-iter-003/
+        ├── iter.log      # failing oneshot log
+        ├── SUMMARY.txt   # soak summary at fail-fast
+        └── REPRO.txt     # env + minimal repro steps
+```
+
+After a real soak fail:
+
+```bash
+ls -la lite/test/qemu-ide-soak/LAST_FAILURE
+cat lite/test/qemu-ide-soak/LAST_FAILURE/REPRO.txt
+# zip for bug report:
+#   cd lite/test/qemu-ide-soak && zip -r /tmp/soak-fail.zip LAST_FAILURE failures/fail-iter-*
+```
+
 ## What to attach in a bug report
 
 Drop or zip **`failures/fail-iter-NNN/`** (or follow `LAST_FAILURE`). Include tip from `REPRO.txt`.

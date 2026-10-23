@@ -1,0 +1,5 @@
+==== verify-ide-contract-oneshot (sample truncated) ====
+[PASS] hdc -v Ver 3.2.0c (gate)
+[PASS] tconn :8710
+[FAIL] marker create (example failure for archive layout demo)
+RESULT=1

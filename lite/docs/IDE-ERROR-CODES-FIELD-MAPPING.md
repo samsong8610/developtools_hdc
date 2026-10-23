@@ -65,3 +65,7 @@ Do **not** trust hdc process exit alone for `bm` / `aa` / `shell` (see channel `
 ## 全栈 / #7
 
 After IDE issue **#7** (contract vendor) lands, 全栈 should vendor `ide-error-codes.json` @ **1.0.0** and implement the match algorithm against this field mapping. hdc will not open an IDE PR.
+
+## CI self-check
+
+`lite/ci/check-ide-error-codes-mapping.sh` asserts this document names the same `channels` / `success_patterns` / `failures` field keys as `ide-error-codes.json` (baseline **1.0.0**). Wired in `.github/workflows/lite-osal.yml` job `ide-error-codes`. Does **not** rename JSON fields (IDE #9 pins an older tip — keep 1.0.0 stable).

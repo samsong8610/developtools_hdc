@@ -58,6 +58,17 @@ Goal: know whether FunctionFS gadget can bind before changing anything.
 ./test-usb-gadget-fsm.sh
 ```
 
+**FSM ↔ U1–U8:** Host-side state machine (`usb-gadget-fsm.sh`, tested by `test-usb-gadget-fsm.sh`) covers ABSENT→…→UDC_BOUND. Map board probes to FSM expectations:
+
+| U ID | Relates to FSM |
+|---|---|
+| U2 (UDC list) | empty → stay ABSENT / no bind (NEG covered in FSM tests) |
+| U4/U5 (configfs / usb_gadget) | configfs missing → FSM abort before bind |
+| U6 (`/dev/usb-ffs/hdc`) | after FunctionFS mount; before setup may be absent |
+| U8 (modules) | `=m` kernels need modules before setup |
+
+Full gadget README + FSM notes: [`../tools/board/README-USB-GADGET.md`](../tools/board/README-USB-GADGET.md) (links back here §1 U1–U8).
+
 **Return:** paste U1–U8 block **or** rely on `board-check.ps1` zip (`sysinfo/`, USB section).  
 If U2 empty → stop USB path; stay on **TCP :8710** until OTG/device mode is fixed.
 

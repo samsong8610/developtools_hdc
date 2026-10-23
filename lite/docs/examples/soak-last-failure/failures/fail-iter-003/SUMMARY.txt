@@ -1,0 +1,9 @@
+==== soak-ide-contract N=20 2026-10-23 13:25:18 +0800 ====
+---- soak iter 1/20 → …/iter-001.log ----
+[PASS] iter 1/20
+---- soak iter 2/20 → …/iter-002.log ----
+[PASS] iter 2/20
+---- soak iter 3/20 → …/iter-003.log ----
+[FAIL] iter 3/20 — fail-fast; see …/iter-003.log
+RESULT=1 passed=2/20 failed_at=3 log=…/iter-003.log
+failure archive: …/failures/fail-iter-003 (see lite/docs/SOAK-FAILURE-ARCHIVE.md)
