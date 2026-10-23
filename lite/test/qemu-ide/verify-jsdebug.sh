@@ -3,6 +3,9 @@
 set -u
 D=$(cd "$(dirname "$(readlink -f "$0")")" && pwd)
 HDC=${HDC:-/workspace/hdcd-port/hdc-host}; HP=${HOST_PORT:-18710}
+# Plain jerry (not acedbg-harness). Clear leftover marker-test env that would skip wait-for-client.
+unset JERRY_ARGS JERRY_ENV ACE_DEBUGGER_WAIT ACE_DEBUGGER_BIND ACE_DEBUGGER_PORT ACE_DEBUGGER_FLAG_DIR || true
+export JERRY_BIN=${JERRY_BIN:-/workspace/hdcd-port/b/jerry-la64/bin/jerry}
 CLIENT=${JERRY_CLIENT:-/workspace/oh61src/third_party_jerryscript/jerry-debugger/jerry_client.py}
 # jerry_client.py of JerryScript 2.3 (6.1-LTS) is python2-only
 PY2=${PY2:-$(command -v python2 || echo /workspace/py27/inst/bin/python2)}

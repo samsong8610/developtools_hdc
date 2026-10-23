@@ -32,4 +32,8 @@ o=$(timeout 4 $H $T hilog 2>&1 & sleep 1.5; $H $T shell 'aa start -p hilogfb -n 
 echo "$o" | grep -q 'start hilogfb.z' && pass "hdc hilog -> hilogcat fallback" || fail "hdc hilog fallback"
 o=$($H $T hilog -h 2>&1); echo "hdc hilog -h: $o"; echo "$o" | grep -q 'Usage: hilogcat' && pass "hdc hilog -h -> hilogcat -h" || fail "hilog -h"
 sleep 1; $H $T shell 'pkill -f "tail -n 0 -f" ; true' >/dev/null 2>&1
+# Optional IDE-CONTRACT regression (CONTRACT=1)
+if [ "${CONTRACT:-0}" = 1 ]; then
+  if "$D/verify-contract.sh"; then pass "verify-contract"; else fail "verify-contract"; fi
+fi
 echo "RESULT=$R"; exit $R

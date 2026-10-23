@@ -79,6 +79,7 @@ lite/test/qemu-ide/verify-jsdebug.sh         # jerry 经 fport
 lite/test/qemu-ide/verify-acedbg-gate.sh     # ACE gate
 lite/test/qemu-ide/verify-jsdebug-marker.sh  # /data/ohjs/debug.<bundle>
 lite/test/qemu-ide/smoke-stability.sh        # 重连 / 连续 file send / 并行 shell
+lite/test/qemu-ide/verify-contract.sh        # 端口/路径/标记 residual 回归（负例必须失败）
 ```
 
 ## 5. 禁止事项（摘要）
@@ -87,3 +88,26 @@ lite/test/qemu-ide/smoke-stability.sh        # 重连 / 连续 file send / 并�
 - 依赖 `hdc shell` 的进程退出码而不带 `__RC`。
 - 依赖 `hdc hilog` 而不准备 `hilogcat`。
 - 留下 `/data/ohjs/debug.*` 过完 debug 会话（下次 `aa start` 会阻塞）。
+
+## 6. 验收 / 回归（verification）
+
+```sh
+# 独立跑合同回归（G2 start 模式；会 stop jsdebug 别名以便负例成立）
+lite/test/qemu-ide/verify-contract.sh
+
+# 挂到既有入口
+SKIP_CONTRACT=0 lite/test/qemu-ide/smoke-stability.sh   # 默认会调 verify-contract
+CONTRACT=1 lite/test/qemu-ide/verify.sh                  # 可选
+```
+
+`verify-contract.sh` 断言：
+
+| 项 | 期望 |
+|---|---|
+| 主机 `hdc -v` | `Ver: 3.2.0c` |
+| `tconn 127.0.0.1:8710` + shell | **PASS** |
+| `tconn 127.0.0.1:18710`（仅 `start`、无 jsdebug） | **FAIL**（负例；若意外 Connect OK → 脚本 FAIL） |
+| `test -d /data/ohjs`（及 `/tmp/ohjs`） | **PASS** |
+| 种植 `/data/ohjs/debug.<bundle>` 后执行 `rm -f /data/ohjs/debug.*` | 标记清除；残留 → **FAIL / REFUSE** |
+
+日志：`lite/test/qemu-ide-contract.log`。

@@ -149,5 +149,15 @@ else
   fi
 fi
 
+# IDE-CONTRACT regression (SKIP_CONTRACT=1 to skip)
+if [ "${SKIP_CONTRACT:-0}" != 1 ]; then
+  echo "== 4) verify-contract"
+  if "$D/verify-contract.sh"; then
+    pass "verify-contract"
+  else
+    fail "verify-contract"
+  fi
+fi
+
 echo "RESULT=$R log=$OUT"
 exit $R

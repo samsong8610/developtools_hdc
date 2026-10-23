@@ -19,7 +19,7 @@
 .PARAMETER Port
   hdcd TCP port on the board. Default 8710.
 .PARAMETER Hdc
-  Path to hdc.exe. Default: hdc / hdc.exe found on PATH.
+  Path to hdc.exe. Default: hdc / hdc.exe found on PATH. Must be 6.1-LTS Ver 3.2.0c (see host/README.md).
 .PARAMETER ServerPort
   Host hdc server port. Default 8710. (This only conflicts with hdcd when hdcd runs on the same host,
   e.g. the qemu test environment; then use 8711.)

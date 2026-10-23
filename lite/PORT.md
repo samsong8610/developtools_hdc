@@ -152,6 +152,12 @@ everything else: new files under lite/
 - **What/why:** normative IDE↔device ports/paths/`__RC`/bm-aa/hilogcat/marker contract for the team; board-side configfs+FunctionFS setup (dry-run/check without UDC); qemu-ide reconnect / multi file-send / parallel shell smoke.
 - **v5.0.3:** lite-only.
 
+
+### 17. test/docs(lite): IDE-CONTRACT verify-contract + host hdc package notes
+- **Files:** `lite/test/qemu-ide/verify-contract.sh` (hooked from `smoke-stability.sh`; `CONTRACT=1` in `verify.sh`); `IDE-CONTRACT.md` §6; handoff `host/hdc-linux-x86_64` + `host/README.md`; README 主机 hdc section.
+- **What/why:** regression that wrong port 18710 fails in start-only mode, `/data/ohjs` + clean `debug.*`, host Ver 3.2.0c gate docs; ship Linux host bin in prerelease.
+- **v5.0.3:** lite-only.
+
 ## Known limitations
 
 ### `hdc shell` exit code is not propagated (upstream design, not a port bug)
