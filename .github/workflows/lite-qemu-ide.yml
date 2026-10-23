@@ -1,0 +1,90 @@
+# qemu-ide soak (≥20) + smoke-qemu-edges on GitHub Actions.
+# Skips cleanly if qemu-user / board binaries cannot be obtained; must PASS when available.
+name: lite-qemu-ide
+
+on:
+  push:
+    branches: [ohjs/6.1-lite, 'ohjs/**']
+    paths:
+      - 'lite/test/qemu-ide/**'
+      - 'lite/ci/**'
+      - 'lite/docs/IDE-CONTRACT.md'
+      - 'lite/docs/ide-contract.manifest.json'
+      - '.github/workflows/lite-qemu-ide.yml'
+      - '.github/workflows/lite-osal.yml'
+  pull_request:
+    paths:
+      - 'lite/test/qemu-ide/**'
+      - 'lite/ci/**'
+      - 'lite/docs/IDE-CONTRACT.md'
+      - 'lite/docs/ide-contract.manifest.json'
+      - '.github/workflows/lite-qemu-ide.yml'
+  workflow_dispatch:
+
+jobs:
+  qemu-ide-soak-edges:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install qemu-user-static (loongarch64)
+        id: qemu
+        continue-on-error: true
+        run: |
+          set -eux
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq qemu-user-static
+          command -v qemu-loongarch64
+          qemu-loongarch64 -version | head -2
+
+      - name: Fetch board package binaries (hdcd + host hdc)
+        id: board
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -eux
+          TAG=${BOARD_TAG:-ohjs-board-2026-10-29}
+          DEST=/tmp/ohjs-board
+          mkdir -p "$DEST"
+          # Prefer release asset from this repo
+          if gh release download "$TAG" -R "${{ github.repository }}" \
+              -p 'handoff-*.tar.gz' -D /tmp 2>/dev/null; then
+            tar xzf /tmp/handoff-*.tar.gz -C /tmp
+            # handoff dir name
+            HDIR=$(echo /tmp/handoff-2026-* | awk '{print $1}')
+            cp -a "$HDIR/hdcd.stripped" "$DEST/"
+            mkdir -p "$DEST/host"
+            cp -a "$HDIR/host/hdc-linux-x86_64" "$DEST/host/"
+            chmod +x "$DEST/hdcd.stripped" "$DEST/host/hdc-linux-x86_64"
+            echo "board_ok=1" >> "$GITHUB_OUTPUT"
+            ls -la "$DEST" "$DEST/host"
+          else
+            echo "board_ok=0" >> "$GITHUB_OUTPUT"
+            echo "could not download $TAG — run-qemu-ide-ci will skip"
+          fi
+
+      - name: Soak + edges (skip if qemu env unavailable)
+        env:
+          HDCD_BIN: /tmp/ohjs-board/hdcd.stripped
+          HDC: /tmp/ohjs-board/host/hdc-linux-x86_64
+          PORT: /tmp/ohjs-board-port
+          SOAK_N: '20'
+          LARGE_MB: '16'
+        run: |
+          mkdir -p /tmp/ohjs-board-port
+          # Symlink layout expected by some scripts (optional)
+          ln -sfn /tmp/ohjs-board/host/hdc-linux-x86_64 /tmp/ohjs-board-port/hdc-host 2>/dev/null || true
+          bash lite/ci/run-qemu-ide-ci.sh
+
+      - name: Upload soak / edge logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: qemu-ide-ci-logs
+          path: |
+            lite/test/qemu-ide-soak/
+            lite/test/qemu-ide-edges.log
+            lite/test/qemu-ide-contract*.log
+          if-no-files-found: ignore

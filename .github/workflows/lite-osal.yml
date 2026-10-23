@@ -1,6 +1,7 @@
 # Compile gate: default linux OSAL + liteos_a stub must both build.
 # Public runners: host-cc (gcc) only. Self-hosted / local: lite/ci/build-osal-matrix.sh la64-osal
 name: lite-osal-matrix
+# Companion: .github/workflows/lite-qemu-ide.yml (soak ≥20 + smoke-qemu-edges; skips if no qemu).
 on:
   push:
     branches: [ohjs/6.1-lite, 'ohjs/**']

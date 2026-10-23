@@ -23,3 +23,7 @@ Also: [host/README.md](host/README.md) (host hdc 3.2.0c), [README-ABI.md](README
 - Manifest: [`../../docs/ide-contract.manifest.json`](../../docs/ide-contract.manifest.json) (ports 8710/8711/18710, paths `/data/ohjs` `/tmp/ohjs`, marker `debug.<bundle>`).
 - Check: `./check-ide-contract-drift.sh` — compares manifest ↔ local `IDE-CONTRACT.md` ↔ IDE repo `docs/IDE-CONTRACT.md` (fetch via `gh`; no IDE PR from hdc).
 - **全栈:** add IDE-side half against this manifest after PR #4 sync.
+
+## Host hdc Ver gate
+
+`./check-host-hdc-ver.sh` — requires `Ver: 3.2.0c`; on mismatch prints Linux `host/hdc-linux-x86_64` and Windows DevEco `toolchains\hdc.exe` copy-paste paths. Used by `board-check.ps1` H0 and qemu-ide `verify*.sh`.

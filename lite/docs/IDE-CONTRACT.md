@@ -116,6 +116,13 @@ CONTRACT=1 lite/test/qemu-ide/verify.sh                  # 可选
 
 日志：`lite/test/qemu-ide-contract.log`。
 
+
+## 错误码 / IDE channel failures
+
+机器可读表：[`ide-error-codes.json`](ide-error-codes.json) · 说明：[`IDE-ERROR-CODES.md`](IDE-ERROR-CODES.md)。
+
+覆盖 **tconn / file / bm / aa / fport**（及 shell `__RC`）常见 `[E00…]` 与 stdout 匹配串；与上文端口/路径约定配套。主机 Ver 门禁：`lite/tools/board/check-host-hdc-ver.sh`。
+
 ## 机器可读契约 / 防漂移（hdc 侧）
 
 | 产物 | 路径 |

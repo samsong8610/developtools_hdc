@@ -103,6 +103,13 @@ v5.0.3 CMake must **drop** 6.1-only sources (`memory_pool`, SSL, heartbeat, …)
 - `lite/test/qemu-ide/soak-ide-contract.sh` — oneshot ×N≥20 fail-fast.
 - `lite/test/qemu-ide/smoke-qemu-edges.sh` — large send / reconnect / concurrent sessions.
 
+
+### CI qemu-ide / host Ver gate / error map
+
+- `.github/workflows/lite-qemu-ide.yml` + `lite/ci/run-qemu-ide-ci.sh` — soak ≥20 + smoke-qemu-edges (skip if no qemu/board bins).
+- `lite/tools/board/check-host-hdc-ver.sh` — Ver 3.2.0c gate with DevEco / Linux path hints; hooked into board-check H0 + verify*.
+- `lite/docs/ide-error-codes.json` + `IDE-ERROR-CODES.md` — tconn/file/bm/aa/fport failure map (cross-link IDE-CONTRACT).
+
 ## 6. Protocol / ports / IDE-CONTRACT
 
 **PORT.md:** conventions + §16–§17 · **Docs:** `IDE-CONTRACT.md` · **Commits:** `6dcfcc5`, `5c42ddd`, `df0e5c3`

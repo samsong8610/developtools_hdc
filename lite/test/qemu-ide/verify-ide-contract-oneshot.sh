@@ -43,8 +43,13 @@ $H start >/dev/null 2>&1 || true
 sleep 0.3
 
 # --- 0) host version (contract companion) ---
-vo=$($HDC -v 2>&1 || true)
-echo "$vo" | grep -qE 'Ver:\s*3\.2\.0c' && pass "hdc -v Ver 3.2.0c" || fail "hdc -v ($vo)"
+GATE=$D/../../tools/board/check-host-hdc-ver.sh
+if [ -x "$GATE" ]; then
+  if HDC="$HDC" "$GATE"; then pass "hdc -v Ver 3.2.0c (gate)"; else fail "hdc Ver gate (see hints above)"; fi
+else
+  vo=$($HDC -v 2>&1 || true)
+  echo "$vo" | grep -qE 'Ver:\s*3\.2\.0c' && pass "hdc -v Ver 3.2.0c" || fail "hdc -v ($vo)"
+fi
 
 # --- 1) tconn correct / wrong ---
 o=$($H tconn 127.0.0.1:$DEV_PORT 2>&1 || true)

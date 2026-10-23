@@ -35,9 +35,14 @@ $H start >/dev/null 2>&1 || true
 sleep 0.3
 
 # --- host version gate (contract companion) ---
-vo=$($HDC -v 2>&1 || true)
-echo "hdc -v: $vo"
-echo "$vo" | grep -qE 'Ver:\s*3\.2\.0c' && pass "host hdc Ver 3.2.0c" || fail "host hdc must be Ver 3.2.0c (got: $vo)"
+GATE=$D/../../tools/board/check-host-hdc-ver.sh
+if [ -x "$GATE" ]; then
+  if HDC="$HDC" "$GATE"; then pass "host hdc Ver 3.2.0c (gate)"; else fail "host hdc Ver gate (see install/path hints)"; fi
+else
+  vo=$($HDC -v 2>&1 || true)
+  echo "hdc -v: $vo"
+  echo "$vo" | grep -qE 'Ver:\s*3\.2\.0c' && pass "host hdc Ver 3.2.0c" || fail "host hdc must be Ver 3.2.0c (got: $vo)"
+fi
 
 # --- ports: correct PASS ---
 o=$($H tconn 127.0.0.1:$DEV_PORT 2>&1 || true)

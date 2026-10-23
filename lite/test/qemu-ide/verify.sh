@@ -8,6 +8,15 @@ H="$HDC -s 127.0.0.1:$OHOS_HDC_SERVER_PORT"; T="-t 127.0.0.1:$PORT"; R=0
 pass(){ echo "[PASS] $*"; }; fail(){ echo "[FAIL] $*"; R=1; }
 sh_rc(){ $H $T shell "$1; echo __RC=\$?" 2>&1; }
 "$D/run-qemu-hdcd.sh" start || exit 1
+GATE=$D/../../tools/board/check-host-hdc-ver.sh
+if [ -x "$GATE" ]; then
+  HDC="$HDC" "$GATE" || { echo "[FAIL] host hdc Ver gate"; exit 1; }
+  pass "host hdc Ver 3.2.0c (gate)"
+else
+  vo=$($HDC -v 2>&1 || true)
+  echo "$vo" | grep -qE 'Ver:\s*3\.2\.0c' || { echo "[FAIL] hdc -v ($vo)"; exit 1; }
+  pass "host hdc Ver 3.2.0c"
+fi
 trap '$H kill >/dev/null 2>&1; "$D/run-qemu-hdcd.sh" stop >/dev/null' EXIT
 o=$($H tconn 127.0.0.1:$PORT 2>&1); echo "tconn: $o"; echo "$o" | grep -q 'Connect OK' && pass tconn || fail tconn
 o=$(sh_rc 'echo hello'); echo "$o"; echo "$o" | grep -q '__RC=0' && pass "shell + __RC" || fail shell

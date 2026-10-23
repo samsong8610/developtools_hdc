@@ -209,7 +209,20 @@ Write-Host "results: $ResDir"
 Write-Host ''
 
 # ---------------------------------------------------------------- host + connect
-$null = Invoke-HostCheck 'H0' 'host hdc version' @('-v') { param($o) if ($o -match 'Ver:\s*3\.2\.0c') { @('PASS', 'Ver 3.2.0c') } else { @('FAIL', 'host hdc must be 6.1-LTS (Ver: 3.2.0c)') } }
+
+function Write-HostHdcHints([string]$Got) {
+    Write-Host ""
+    Write-Host "──── host hdc must be Ver: 3.2.0c (got: $Got) ────" -ForegroundColor Yellow
+    Write-Host "Linux (package):  .\host\hdc-linux-x86_64 -v"
+    Write-Host "Windows DevEco:   {DevEco}\sdk\default\openharmony\toolchains\hdc.exe"
+    Write-Host "  e.g. C:\Program Files\Huawei\DevEco Studio\sdk\default\openharmony\toolchains\hdc.exe"
+    Write-Host "  e.g. D:\Program Files\Huawei\DevEco Studio\sdk\default\openharmony\toolchains\hdc.exe"
+    Write-Host "  (some installs: ...\sdk\default\hms\toolchains\hdc.exe — prefer openharmony\toolchains)"
+    Write-Host "Pass -Hdc <full-path> or add toolchains to PATH. See host\README.md"
+    Write-Host ""
+}
+
+$h0 = Invoke-HostCheck 'H0' 'host hdc version' @('-v') { param($o) if ($o -match 'Ver:\s*3\.2\.0c') { @('PASS', 'Ver 3.2.0c') } else { Write-HostHdcHints $o; @('FAIL', 'host hdc must be 6.1-LTS (Ver: 3.2.0c) — see hints / host/README.md') } }
 $tc = Invoke-HostCheck 'T1' 'tconn' @('tconn', $Target) { param($o) J ($o -match '(?i)Connect OK|already|is connected') 'Connect OK' 'no Connect OK (hdcd not running / firewall / IP?)' } 30
 $null = Invoke-HostCheck 'T2' 'list targets -v' @('list', 'targets', '-v') { param($o) J ($o -match [regex]::Escape($Target) -and $o -match '(?i)Connected') 'target Connected' 'target not listed as Connected' }
 
