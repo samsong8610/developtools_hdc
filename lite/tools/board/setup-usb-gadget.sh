@@ -11,6 +11,9 @@
 #
 # Idempotent: re-run cleans previous gadget of the same name then recreates.
 # Does not start hdcd. Next step (printed): HDC_OSAL_USB_GADGET=... hdcd -u
+# Exit codes: 0 = ok/dry-run; 1 = --check missing configfs/UDC (expected off-board);
+#             2 = usage/error.
+# Off-board: prefer --dry-run / --check. Full bind needs root + configfs + UDC.
 set -eu
 
 UDC=${HDC_USB_UDC:-}

@@ -42,7 +42,18 @@ if command -v cc >/dev/null 2>&1; then
   echo 'int x;' | cc -shared -o "$BAD/libace_lite.so" -x c - 2>/dev/null || \
     echo 'int x;' | cc -m64 -shared -o "$BAD/libace_lite.so" -x c - 2>/dev/null || true
 fi
-if ! file "$BAD/libace_lite.so" | grep -qi 'loongarch'; then
+arch_ok=0
+if command -v llvm-readelf >/dev/null 2>&1; then
+  llvm-readelf -h "$BAD/libace_lite.so" 2>/dev/null | grep -qi loongarch && arch_ok=1
+elif command -v readelf >/dev/null 2>&1; then
+  readelf -h "$BAD/libace_lite.so" 2>/dev/null | grep -qi loongarch && arch_ok=1
+elif command -v file >/dev/null 2>&1; then
+  file "$BAD/libace_lite.so" | grep -qi loongarch && arch_ok=1
+else
+  # No arch probe tool — still exercise NO path via abi-compare
+  arch_ok=1
+fi
+if [ "$arch_ok" != 1 ]; then
   :
 else
   # force non-match: truncate / replace with text

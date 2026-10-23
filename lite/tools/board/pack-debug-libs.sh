@@ -9,6 +9,8 @@
 #   pack-debug-libs.sh --report DIR/abi-report.json --after-relink   # allow CONDITIONAL (BOARD_NEEDED)
 #
 # Exit 0 = zip written; 1 = refused (NO / unhandled CONDITIONAL); 2 = usage/tooling.
+# Offline / ABI wait: no board-results required for docs — use smoke-pack-debug-libs.sh
+# with synthetic fixtures; see README-ABI.md "Offline / ABI wait".
 set -eu
 HERE=$(cd "$(dirname "$0")" && pwd)
 PORT=${PORT:-/workspace/hdcd-port}

@@ -8,6 +8,7 @@
 #
 # Exit 0 = packed (or YES with pack); non-zero = stopped at a stage (work dir kept).
 # Intermediates always left under --work (default /tmp/from-board-results-<ts>).
+# Offline / ABI wait: without a real zip, run smoke-from-board-results.sh (synthetic).
 set -eu
 HERE=$(cd "$(dirname "$0")" && pwd)
 PORT=${PORT:-/workspace/hdcd-port}

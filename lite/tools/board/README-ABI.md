@@ -62,3 +62,22 @@ When the verdict is **YES** (or CONDITIONAL after a successful relink), pack pus
 | **NO — do not replace** | Machine/class/ELF mismatch, missing board lib, or defined-export regression (FAIL). | Do **not** replace. Re-pull libs or rebuild. `pack-debug-libs.sh` refuses to pack. |
 
 Always keep a system image for recovery. Details: `JS-DEBUG.md` §B–§D in this package / repo.
+
+## Offline / ABI wait (no board-results yet)
+
+Board UAT/ABI may be paused (hardware). Pipeline stays **runnable offline**:
+
+| Goal | Command |
+|---|---|
+| Syntax / help | `./pack-debug-libs.sh --help`; `./from-board-results.sh --help` |
+| Offline smoke (synthetic libs) | `./smoke-abi-compare.sh`; `./smoke-pack-debug-libs.sh`; `./smoke-from-board-results.sh` |
+| Placeholder | Until a real `board-results-*.zip` arrives, keep `b/acelite-la64` (or `--ours`) built; do **not** ship swap-libs without a YES/CONDITIONAL-after-relink report |
+
+When the zip arrives:
+
+```sh
+./from-board-results.sh board-results-….zip
+# → abi-report + optional relink + debug-libs-*.zip + NEXT STEPS
+```
+
+**ABI wait is OK** — docs and smokes do not require 2K0300 hardware.

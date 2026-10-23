@@ -1,6 +1,9 @@
 #!/bin/bash
-# qemu-ide stability: reconnect, consecutive file send, parallel shell.
-# Log: lite/test/qemu-ide-stability.log (also tee). Keeps run-qemu-hdcd healthy (no server kill).
+# qemu-ide stability: reconnect, consecutive file send, parallel shell (+ optional verify-contract).
+# Host-only — no real board. Requires run-qemu-hdcd.sh start (qemu-user hdcd on :8710).
+# Log: lite/test/qemu-ide-stability.log. Keeps run-qemu-hdcd healthy (no server kill).
+# Stub aa/bm limits: see lite/test/qemu-ide/README.md (this smoke does not call aa).
+# Env: N_RECONN N_SEND N_PARALLEL SKIP_CONTRACT=1 HDC HDCD_PORT OHOS_HDC_SERVER_PORT
 set -u
 D=$(cd "$(dirname "$(readlink -f "$0")")" && pwd)
 PORT_ROOT=${PORT:-/workspace/hdcd-port}

@@ -5,7 +5,8 @@
 **Hand-port target:** OpenHarmony-**v5.0.3**-Release (`3575a53` per `PORT.md`)  
 **Authoring rule:** new code under `lite/`; upstream `src/` only via `#ifdef HDC_LITE_OSAL`.
 
-This file is organized **by theme** for Sam’s manual backport. Per-commit detail and v5.0.3 risk notes live in [`../PORT.md`](../PORT.md) (§1–§18). Protocol for IDE/全栈: [`IDE-CONTRACT.md`](IDE-CONTRACT.md). JS debug research: [`JS-DEBUG.md`](JS-DEBUG.md).
+This file is organized **by theme** for Sam’s manual backport. Per-commit detail and v5.0.3 risk notes live in [`../PORT.md`](../PORT.md) (§1–§18).
+**Concrete file/diff checklist + order:** [`BACKPORT-v5.0.3.md`](BACKPORT-v5.0.3.md). Protocol for IDE/全栈: [`IDE-CONTRACT.md`](IDE-CONTRACT.md). JS debug research: [`JS-DEBUG.md`](JS-DEBUG.md).
 
 ---
 
@@ -31,7 +32,7 @@ v5.0.3 CMake must **drop** 6.1-only sources (`memory_pool`, SSL, heartbeat, …)
 
 - Skeleton: Param / Service / USB / PTY / Proc / Priv + shim `parameter.h` / `parameters.h` / `init_reboot.h`.
 - **Linux** backend: file-KV (`/etc/hdcd/hdcd.para` + `/data/hdcd/persist.para`), `HDCD_PARAM_*` env override, `restart_self` (+ optional `HDC_OSAL_REEXEC_WRAPPER` for qemu-user).
-- **LiteOS-A** backend (`-DHDC_OSAL_TARGET=liteos_a`): POSIX param include, stub pty/reboot, USB FFS base only (no configfs bind). Compiles with OHOS clang la64; **not** run on real LiteOS-A.
+- **LiteOS-A** backend (`-DHDC_OSAL_TARGET=liteos_a`): **stub/skeleton** — POSIX param include, stub pty/reboot, USB FFS base only (no configfs bind). Compiles with OHOS clang la64; **not** run on real LiteOS-A. Matrix: `lite/osal/README.md`. Default remains **`linux`** (static musl LA64).
 - Upstream hooks (medium risk on v5): `system_depend.cpp` Set/GetParameter; `main.cpp` `param_init` + `RestartDaemon`; `daemon_unity.cpp` tmode → `PostStopInstanceMessage(true)`.
 
 **Backport focus:** copy `lite/osal/**`, apply three upstream hunks by hand on v5 indentation/namespaces.

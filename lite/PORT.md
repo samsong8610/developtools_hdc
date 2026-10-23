@@ -4,6 +4,7 @@ Branch `ohjs/6.1-lite` on `samsong8610/developtools_hdc`.
 Upstream base: **`51794b3`** (OpenHarmony-v6.1-LTS, see `lite/deps.lock`).
 Hand-port target noted below: **OpenHarmony-v5.0.3-Release** (`3575a53`).
 Thematic backport guide: [`docs/CHANGELOG-ohjs-6.1-lite.md`](docs/CHANGELOG-ohjs-6.1-lite.md).
+Concrete v5.0.3 file checklist: [`docs/BACKPORT-v5.0.3.md`](docs/BACKPORT-v5.0.3.md).
 Board package doc index: [`tools/board/README.md`](tools/board/README.md).
 
 Rule: all new code lives under `lite/`. Upstream files are only touched with
@@ -164,6 +165,12 @@ everything else: new files under lite/
 ### 18. docs(lite): Windows host hdc paths (no win binary in package)
 - **Files:** `lite/tools/board/host/README.md` (+ handoff `host/README.md` / board README).
 - **What/why:** box has no redistributable `hdc.exe`; document DevEco `{DevEco}\sdk\default\openharmony\toolchains\hdc.exe` and `hdc -v` → `Ver: 3.2.0c`.
+- **v5.0.3:** lite-only.
+
+
+### 19. docs/osal(lite): LiteOS-A stub matrix + BACKPORT checklist + smoke/pack offline notes
+- **Files:** `lite/osal/{README.md,liteos_a/README.md}`, `lite/docs/BACKPORT-v5.0.3.md`, qemu-ide / USB / ABI doc hardenings (see commit).
+- **What/why:** clarify linux=default vs liteos_a stub; Sam hand-port file order; host-side scripts without board.
 - **v5.0.3:** lite-only.
 
 ## Known limitations

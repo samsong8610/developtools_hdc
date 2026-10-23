@@ -27,10 +27,12 @@ add_library(hdc_osal STATIC
   ${OSAL_DIR}/param.c ${OSAL_DIR}/service.c ${OSAL_DIR}/usb.c
   ${OSAL_DIR}/pty.c ${OSAL_DIR}/proc.c ${OSAL_DIR}/priv.c)
 if(HDC_OSAL_TARGET STREQUAL "liteos_a")
-  # liteos-like defines (compile/link check; real LiteOS-A toolchain TBD)
+  # Stub/skeleton backend: compile/link check only until a real LiteOS-A sysroot exists.
+  # Default production path remains HDC_OSAL_TARGET=linux (static musl LA64).
   target_compile_definitions(hdc_osal PUBLIC HDC_OSAL_LITEOS_A __LITEOS_A__)
+  message(WARNING "HDC_OSAL_TARGET=liteos_a is a STUB skeleton (not HW-validated); prefer linux for board builds")
 endif()
-message(STATUS "hdcd OSAL backend: ${HDC_OSAL_TARGET}")
+message(STATUS "hdcd OSAL backend: ${HDC_OSAL_TARGET} (default linux = production musl LA64)")
 target_include_directories(hdc_osal PUBLIC
   ${CMAKE_CURRENT_LIST_DIR}/osal/include
   ${CMAKE_CURRENT_LIST_DIR}/osal/include/shim)
