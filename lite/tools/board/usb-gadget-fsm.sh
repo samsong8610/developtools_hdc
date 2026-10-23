@@ -82,8 +82,8 @@ fsm_mark_ffs_mounted() {
 fsm_try_bind() {
   local g="$CFG/usb_gadget/$GNAME"
   local udc=$1
-  if [ ! -e "$SYS_UDC_DIR/$udc" ]; then
-    echo "FSM_ERR:bind_fail_no_udc:$udc" >&2
+  if [ -z "$udc" ] || [ ! -e "$SYS_UDC_DIR/$udc" ]; then
+    echo "FSM_ERR:bind_fail_no_udc:${udc:-<empty>}" >&2
     return 1
   fi
   if [ ! -d "$g" ]; then

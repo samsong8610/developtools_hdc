@@ -1,6 +1,7 @@
 # IDE channel error codes (hdc lite / Ver 3.2.0c)
 
 Machine-readable companion: [`ide-error-codes.json`](ide-error-codes.json).  
+IDE field mapping (draft, 1.0.0): [`IDE-ERROR-CODES-FIELD-MAPPING.md`](IDE-ERROR-CODES-FIELD-MAPPING.md) — 全栈 after #7.  
 Normative ports/paths: [`IDE-CONTRACT.md`](IDE-CONTRACT.md). Host Ver gate: [`../tools/board/check-host-hdc-ver.sh`](../tools/board/check-host-hdc-ver.sh).
 
 IDE / 全栈: match `pattern` (substring) on hdc stdout/stderr; prefer `code` when `[E00…]` present.

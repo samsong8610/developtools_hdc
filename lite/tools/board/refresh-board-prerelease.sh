@@ -79,6 +79,8 @@ cp -a "$LITE/docs/IDE-CONTRACT.md" "$LITE/docs/CHANGELOG-ohjs-6.1-lite.md" \
   "$LITE/docs/IDE-ERROR-CODES.md" "$LITE/docs/ide-error-codes.json" \
   "$LITE/docs/ide-error-codes.schema.json" \
   "$LITE/docs/ide-contract.manifest.json" \
+  "$LITE/docs/SOAK-FAILURE-ARCHIVE.md" \
+  "$LITE/docs/IDE-ERROR-CODES-FIELD-MAPPING.md" \
   "$REPO_ROOT/lite/PORT.md" \
   "$H/"
 # Recovery handbook if present

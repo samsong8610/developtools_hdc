@@ -87,6 +87,7 @@ jobs:
           ln -sfn /tmp/ohjs-board/host/hdc-linux-x86_64 /tmp/ohjs-board-port/hdc-host 2>/dev/null || true
           bash lite/ci/run-qemu-ide-ci.sh
 
+      # Soak fail-fast archive: lite/test/qemu-ide-soak/failures/fail-iter-NNN (see SOAK-FAILURE-ARCHIVE.md)
       - name: Upload soak / edge logs
         if: always()
         uses: actions/upload-artifact@v4
@@ -94,6 +95,8 @@ jobs:
           name: qemu-ide-ci-logs
           path: |
             lite/test/qemu-ide-soak/
+            lite/test/qemu-ide-soak/failures/
+            lite/test/qemu-ide-soak/LAST_FAILURE
             lite/test/qemu-ide-edges.log
             lite/test/qemu-ide-contract*.log
           if-no-files-found: ignore

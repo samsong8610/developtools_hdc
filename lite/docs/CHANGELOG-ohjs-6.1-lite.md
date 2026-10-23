@@ -115,6 +115,9 @@ v5.0.3 CMake must **drop** 6.1-only sources (`memory_pool`, SSL, heartbeat, …)
 
 - `IDE-ERROR-CODES.md`: 1.x additive-only policy + version history from 1.0.0.
 - `smoke-qemu-edges.sh`: NEG port 18710 / wrong path / leftover `debug.*` (CI via run-qemu-ide-ci).
+- FSM NEG/edge in `test-usb-gadget-fsm.sh` + CI job `usb-gadget-fsm`.
+- Soak failure archive: `SOAK-FAILURE-ARCHIVE.md` + `failures/fail-iter-NNN`.
+- `IDE-ERROR-CODES-FIELD-MAPPING.md` draft (1.0.0) for 全栈 after #7.
 - `check-board-recovery-refs.sh`: BOARD-RECOVERY ↔ verify / checklist / package README asserts.
 
 

@@ -16,7 +16,7 @@ Also: [host/README.md](host/README.md) (host hdc 3.2.0c), [README-ABI.md](README
 - [qemu-ide README](../../test/qemu-ide/README.md) — no-board smoke + stub aa limits
 - [README-ABI.md](README-ABI.md) — pack-debug-libs / from-board-results (offline OK while ABI waits)
 - One-shot contract (no board): `../../test/qemu-ide/verify-ide-contract-oneshot.sh`
-- CI OSAL matrix: `../../ci/build-osal-matrix.sh` · USB FSM: `./test-usb-gadget-fsm.sh`
+- CI OSAL matrix: `../../ci/build-osal-matrix.sh` · USB FSM: `./test-usb-gadget-fsm.sh` (happy + NEG/edge; CI `usb-gadget-fsm` job)
 
 ## IDE-CONTRACT anti-drift
 

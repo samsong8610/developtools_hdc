@@ -9,6 +9,10 @@
 #
 # CI/doc: set SOAK_N or N; SKIP_CONTRACT nested inside oneshot still applies via env.
 # Exit 0 = all iterations PASS; non-zero = first failure (logs preserved).
+# Failure archive (fail-fast):
+#   $OUT_DIR/failures/fail-iter-NNN/   — copy of iter log + SUMMARY snippet + REPRO.txt
+#   Convention also documented in lite/docs/SOAK-FAILURE-ARCHIVE.md
+#   CI uploads lite/test/qemu-ide-soak/ (includes failures/).
 set -u
 D=$(cd "$(dirname "$(readlink -f "$0")")" && pwd)
 PORT_ROOT=${PORT:-/workspace/hdcd-port}
@@ -48,6 +52,44 @@ for i in $(seq 1 "$N"); do
   else
     echo "[FAIL] iter $i/$N — fail-fast; see $log" | tee -a "$SUMMARY"
     echo "RESULT=1 passed=$ok/$N failed_at=$i log=$log" | tee -a "$SUMMARY"
+    # Minimal failure archive for CI / local drop
+    FAIL_DIR=$OUT_DIR/failures/fail-iter-$iter
+    mkdir -p "$FAIL_DIR"
+    cp -a "$log" "$FAIL_DIR/iter.log" 2>/dev/null || true
+    cp -a "$SUMMARY" "$FAIL_DIR/SUMMARY.txt" 2>/dev/null || true
+    # Oneshoot nested logs if present
+    for extra in \
+      "$PORT_ROOT/hdc/lite/test/qemu-ide-contract-oneshot.log" \
+      "$PORT_ROOT/hdc/lite/test/qemu-ide-contract.log"
+    do
+      [ -f "$extra" ] && cp -a "$extra" "$FAIL_DIR/" || true
+    done
+    {
+      echo "# Soak failure repro — drop this directory into bug reports"
+      echo "failed_at_iter=$i"
+      echo "N=$N"
+      echo "log=iter.log"
+      echo "OUT_DIR=$OUT_DIR"
+      echo "FAIL_DIR=$FAIL_DIR"
+      echo "HDCD_BIN=${HDCD_BIN:-}"
+      echo "HDC=${HDC:-$PORT_ROOT/hdc-host}"
+      echo "OHOS_HDC_SERVER_PORT=${OHOS_HDC_SERVER_PORT:-8711}"
+      echo "HDCD_PORT=${HDCD_PORT:-8710}"
+      echo "SKIP_START=1"
+      echo "SOAK_SKIP_NESTED=${SOAK_SKIP_NESTED:-0}"
+      echo "date=$(date '+%Y-%m-%d %H:%M:%S %z')"
+      echo "tip=$(git -C "$(dirname "$D")/../.." rev-parse --short=8 HEAD 2>/dev/null || echo unknown)"
+      echo ""
+      echo "## Minimal repro"
+      echo "1. Ensure qemu-ide G2 up: lite/test/qemu-ide/run-qemu-hdcd.sh start"
+      echo "2. export OHOS_HDC_SERVER_PORT=8711 HDC=... HDCD_BIN=..."
+      echo "3. SKIP_START=1 OUT_LOG=/tmp/repro-oneshot.log lite/test/qemu-ide/verify-ide-contract-oneshot.sh"
+      echo "4. Or re-run soak: N=1 SKIP_START=1 lite/test/qemu-ide/soak-ide-contract.sh"
+      echo "5. Attach this FAIL_DIR (iter.log + REPRO.txt + SUMMARY.txt)"
+    } > "$FAIL_DIR/REPRO.txt"
+    echo "failure archive: $FAIL_DIR (see lite/docs/SOAK-FAILURE-ARCHIVE.md)" | tee -a "$SUMMARY"
+    # Pointer at known drop path
+    ln -sfn "failures/fail-iter-$iter" "$OUT_DIR/LAST_FAILURE" 2>/dev/null || true
     exit 1
   fi
 done

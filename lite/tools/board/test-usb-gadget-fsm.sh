@@ -93,5 +93,96 @@ fi
 # exit 1 expected off-board
 grep -qE 'MISS|OK' /tmp/usb-chk.txt && pass "setup-usb-gadget --check runs" || fail "check output"
 
+
+# ---- Negative / edge cases ----
+ROOT2=$(mktemp -d /tmp/usb-fsm-neg-XXXXXX)
+export CFG="$ROOT2/config"
+export SYS_UDC_DIR="$ROOT2/udc"
+export PROC_FILESYSTEMS="$ROOT2/filesystems"
+export FFS_DIR="$ROOT2/ffs"
+export GNAME=hdc
+mkdir -p "$CFG" "$SYS_UDC_DIR"
+printf 'nodev\tsysfs\n' > "$PROC_FILESYSTEMS"
+# re-source not needed — functions use env vars
+
+echo "==== NEG/edge FunctionFS FSM root=$ROOT2 ===="
+
+# N1) cleanup when ABSENT (idempotent no-op)
+st=$(fsm_state)
+[ "$st" = ABSENT ] || fail "neg setup ABSENT got $st"
+fsm_cleanup_gadget
+fsm_cleanup_gadget
+st=$(fsm_state)
+[ "$st" = ABSENT ] && pass "NEG: cleanup from ABSENT stays ABSENT" || fail "state=$st after ABSENT cleanup"
+
+# N2) bind before gadget exists
+if fsm_try_bind anything 2>/tmp/fsm-neg.txt; then
+  fail "NEG: bind without gadget should fail"
+else
+  grep -q FSM_ERR:bind_fail_no_gadget /tmp/fsm-neg.txt && pass "NEG: bind_fail_no_gadget" || \
+    grep -q FSM_ERR:bind_fail_no_udc /tmp/fsm-neg.txt && pass "NEG: bind fail before gadget (no_udc first)" || \
+    fail "NEG: unexpected bind err $(cat /tmp/fsm-neg.txt)"
+fi
+
+# N3) configfs present but functionfs missing from proc (edge — still CONFIGFS_READY)
+mkdir -p "$CFG/usb_gadget"
+printf 'nodev\tconfigfs\n' > "$PROC_FILESYSTEMS"   # no functionfs line
+st=$(fsm_state)
+[ "$st" = CONFIGFS_READY ] && pass "NEG: CONFIGFS_READY without functionfs in proc" || fail "state=$st"
+fsm_functionfs_in_proc && fail "NEG: functionfs should be absent" || pass "NEG: functionfs missing detected"
+
+# N4) require_udc with explicit wrong name while other UDC exists
+: > "$SYS_UDC_DIR/real_udc.0"
+if fsm_require_udc wrong-udc 2>/tmp/fsm-neg.txt; then
+  fail "NEG: require_udc wrong name should fail"
+else
+  grep -q FSM_ERR:udc_missing /tmp/fsm-neg.txt && pass "NEG: udc_missing for wrong explicit name" || fail "NEG udc err"
+fi
+fsm_require_udc real_udc.0 && pass "NEG control: correct UDC accepted" || fail "correct UDC rejected"
+
+# N5) bind_fail_no_gadget after tree removed mid-flight
+fsm_create_gadget_tree >/dev/null
+rm -rf "$CFG/usb_gadget/$GNAME"
+if fsm_try_bind real_udc.0 2>/tmp/fsm-neg.txt; then
+  fail "NEG: bind after gadget rm should fail"
+else
+  grep -q FSM_ERR:bind_fail_no_gadget /tmp/fsm-neg.txt && pass "NEG: bind_fail_no_gadget after rm" || fail "err=$(cat /tmp/fsm-neg.txt)"
+fi
+
+# N6) double-bind / rebind overwrite
+fsm_create_gadget_tree >/dev/null
+fsm_mark_ffs_mounted
+fsm_try_bind real_udc.0
+st=$(fsm_state)
+[ "$st" = UDC_BOUND ] || fail "precondition UDC_BOUND got $st"
+: > "$SYS_UDC_DIR/other_udc.1"
+fsm_try_bind other_udc.1
+bound=$(cat "$CFG/usb_gadget/$GNAME/UDC" 2>/dev/null || true)
+[ "$bound" = other_udc.1 ] && pass "NEG/edge: rebind switches UDC" || fail "UDC=$bound want other_udc.1"
+st=$(fsm_state)
+[ "$st" = UDC_BOUND ] && pass "NEG/edge: still UDC_BOUND after rebind" || fail "state=$st"
+
+# N7) unbind via empty UDC then state drops from UDC_BOUND
+echo "" > "$CFG/usb_gadget/$GNAME/UDC"
+st=$(fsm_state)
+# FFS marker still present → FFS_MOUNTED
+[ "$st" = FFS_MOUNTED ] && pass "NEG/edge: clear UDC → FFS_MOUNTED" || fail "state=$st want FFS_MOUNTED after unbind"
+
+# N8) bogus empty UDC name bind
+if fsm_try_bind "" 2>/tmp/fsm-neg.txt; then
+  fail "NEG: bind empty UDC should fail"
+else
+  grep -qE 'FSM_ERR:bind_fail_no_udc' /tmp/fsm-neg.txt && pass "NEG: bind empty UDC → no_udc" || pass "NEG: bind empty UDC fails ($(cat /tmp/fsm-neg.txt | tr '\n' ' '))"
+fi
+
+# N9) create twice (idempotent dirs)
+fsm_cleanup_gadget
+g1=$(fsm_create_gadget_tree)
+g2=$(fsm_create_gadget_tree)
+[ -d "$g1" ] && [ -d "$g2" ] && pass "NEG/edge: create_gadget_tree twice OK" || fail "double create"
+
+fsm_cleanup_gadget
+rm -rf "$ROOT2"
+
 echo "RESULT=$R"
 exit $R

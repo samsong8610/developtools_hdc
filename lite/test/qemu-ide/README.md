@@ -49,3 +49,5 @@ Implications for IDE UAT against qemu-ide:
 | **`verify-ide-contract-oneshot.sh`** | **One-shot** IDE-CONTRACT: tconn/file/fport/marker + nested verify-contract |
 | `verify.sh` | G2 bm/aa/hilogcat (stubs) |
 | `verify-jsdebug*.sh` / `verify-acedbg-gate.sh` | G4 debugger (needs jerry / harness) |
+
+Soak failures: see [`../../docs/SOAK-FAILURE-ARCHIVE.md`](../../docs/SOAK-FAILURE-ARCHIVE.md) (`OUT_DIR/failures/fail-iter-NNN`).

@@ -40,3 +40,10 @@ jobs:
         run: bash lite/ci/validate-ide-error-codes.sh
       - name: BOARD-RECOVERY ↔ verify entry cross-check
         run: bash lite/tools/board/check-board-recovery-refs.sh
+
+  usb-gadget-fsm:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: FunctionFS FSM unit tests (incl. NEG/edge)
+        run: bash lite/tools/board/test-usb-gadget-fsm.sh
