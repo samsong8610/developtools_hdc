@@ -158,6 +158,12 @@ everything else: new files under lite/
 - **What/why:** regression that wrong port 18710 fails in start-only mode, `/data/ohjs` + clean `debug.*`, host Ver 3.2.0c gate docs; ship Linux host bin in prerelease.
 - **v5.0.3:** lite-only.
 
+
+### 18. docs(lite): Windows host hdc paths (no win binary in package)
+- **Files:** `lite/tools/board/host/README.md` (+ handoff `host/README.md` / board README).
+- **What/why:** box has no redistributable `hdc.exe`; document DevEco `{DevEco}\sdk\default\openharmony\toolchains\hdc.exe` and `hdc -v` → `Ver: 3.2.0c`.
+- **v5.0.3:** lite-only.
+
 ## Known limitations
 
 ### `hdc shell` exit code is not propagated (upstream design, not a port bug)
