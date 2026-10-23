@@ -4,6 +4,7 @@ Branch `ohjs/6.1-lite` on `samsong8610/developtools_hdc`.
 Upstream base: **`51794b3`** (OpenHarmony-v6.1-LTS, see `lite/deps.lock`).
 Hand-port target noted below: **OpenHarmony-v5.0.3-Release** (`3575a53`).
 Thematic backport guide: [`docs/CHANGELOG-ohjs-6.1-lite.md`](docs/CHANGELOG-ohjs-6.1-lite.md).
+Board package doc index: [`tools/board/README.md`](tools/board/README.md).
 
 Rule: all new code lives under `lite/`. Upstream files are only touched with
 `#ifdef HDC_LITE_OSAL` (or `|| defined(HDC_LITE_OSAL)`), so builds without that macro are unchanged.
