@@ -134,6 +134,12 @@ everything else: new files under lite/
 - **What/why:** when a `board-results-*.zip` with `libs/` arrives, compare board `.so` to `b/acelite-la64` (ELF identity, NEEDED, export superset, debugger symbols) and emit `abi-report.md` + `.json` with YES/CONDITIONAL/NO. `relink-board-needed.sh` rewrites `libace_lite.so` DT_NEEDED in one command. Smoke covered by `smoke-abi-compare.sh`.
 - **v5.0.3:** lite-only.
 
+
+### 14. tools(lite): pack-debug-libs + board-package ABI fold-in + hdcd autostart notes
+- **Files:** `lite/tools/board/{pack-debug-libs.sh,pack-debug-libs.ps1,smoke-pack-debug-libs.sh,README-ABI.md}`, handoff package `README-ABI.md` + ABI scripts, `lite/PORT.md`.
+- **What/why:** after a YES (or CONDITIONAL-after-relink) ABI verdict, `pack-debug-libs.sh` builds `debug-libs-<ts>.zip` with the four `.so`, `SHA256SUMS`, `BACKUP-AND-ROLLBACK.md`, and `swap-libs.ps1` (print-only by default; `-Execute` / `-DoRemount` required for writes/remount). Board package README documents SysV + systemd hdcd autostart. Pre-release `ohjs-board-2026-10-29` refreshed with the ABI tooling.
+- **v5.0.3:** lite-only.
+
 ## Known limitations
 
 ### `hdc shell` exit code is not propagated (upstream design, not a port bug)

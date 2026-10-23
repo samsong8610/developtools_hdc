@@ -143,7 +143,18 @@ BOARD_NEEDED="libui.so libhilog_shared.so libace_native_engine.so …" \
 # then re-run abi-compare.sh; sha256 of libace_lite.so changes, jerry libs unchanged
 ```
 
-Smoke (no board zip needed): `lite/tools/board/smoke-abi-compare.sh` (identical → YES; x86 stub → NO; extra NEEDED → CONDITIONAL).
+
+**Pack replaceable libs** (only if verdict is YES, or CONDITIONAL after a successful BOARD_NEEDED relink):
+
+```sh
+lite/tools/board/pack-debug-libs.sh --board-libs /tmp/br/.../libs
+# → debug-libs-<timestamp>.zip  (libs + SHA256SUMS + BACKUP-AND-ROLLBACK.md + swap-libs.ps1)
+# swap-libs.ps1 prints hdc steps by default; -Execute (-DoRemount) required for writes/remount.
+```
+
+One-pager: `lite/tools/board/README-ABI.md` (also shipped in the board package).
+
+Smoke (no board zip needed): `lite/tools/board/smoke-abi-compare.sh` / `smoke-pack-debug-libs.sh` (identical → YES; x86 stub → NO; extra NEEDED → CONDITIONAL).
 
 Current build shas are also in `b/acelite-la64/SHA256SUMS` (written by `build.sh`).
 
