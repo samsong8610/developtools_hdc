@@ -1,0 +1,7 @@
+lite/test/qemu-ide-soak/
+lite/test/qemu-ide-edges.log
+lite/test/qemu-ide-contract*.log
+lite/test/qemu-ide-stability.log
+lite/test/qemu-jsdebug*.log
+**/.hdc.cache.log
+.hdc.cache.log

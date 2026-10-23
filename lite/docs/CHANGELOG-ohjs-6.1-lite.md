@@ -95,6 +95,14 @@ v5.0.3 CMake must **drop** 6.1-only sources (`memory_pool`, SSL, heartbeat, …)
 
 ---
 
+
+### Anti-drift / soak / edges (no board)
+
+- `lite/docs/ide-contract.manifest.json` — machine-readable ports/paths/markers (align IDE `docs/IDE-CONTRACT.md`).
+- `lite/tools/board/check-ide-contract-drift.sh` — hdc-side diff vs local MD + fetched IDE contract (全栈 adds IDE-side half).
+- `lite/test/qemu-ide/soak-ide-contract.sh` — oneshot ×N≥20 fail-fast.
+- `lite/test/qemu-ide/smoke-qemu-edges.sh` — large send / reconnect / concurrent sessions.
+
 ## 6. Protocol / ports / IDE-CONTRACT
 
 **PORT.md:** conventions + §16–§17 · **Docs:** `IDE-CONTRACT.md` · **Commits:** `6dcfcc5`, `5c42ddd`, `df0e5c3`

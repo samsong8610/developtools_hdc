@@ -10,6 +10,8 @@ Host hdc server: **`OHOS_HDC_SERVER_PORT=8711`**. See [`../../docs/IDE-CONTRACT.
 export OHOS_HDC_SERVER_PORT=8711
 hdc -s 127.0.0.1:8711 tconn 127.0.0.1:8710
 ./smoke-stability.sh          # reconnect / file send / parallel shell / verify-contract
+./smoke-qemu-edges.sh         # large file / reconnect burst / concurrent sessions
+N=20 ./soak-ide-contract.sh   # oneshot ×N fail-fast (logs qemu-ide-soak/)
 ./verify.sh                   # bm/aa/hilogcat + __RC (uses stubs)
 ./run-qemu-hdcd.sh stop
 ```

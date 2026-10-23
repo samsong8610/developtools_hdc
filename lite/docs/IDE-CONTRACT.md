@@ -115,3 +115,33 @@ CONTRACT=1 lite/test/qemu-ide/verify.sh                  # 可选
 | 种植 `/data/ohjs/debug.<bundle>` 后执行 `rm -f /data/ohjs/debug.*` | 标记清除；残留 → **FAIL / REFUSE** |
 
 日志：`lite/test/qemu-ide-contract.log`。
+
+## 机器可读契约 / 防漂移（hdc 侧）
+
+| 产物 | 路径 |
+|---|---|
+| JSON 清单（与上表 ports/paths/markers 对齐） | `lite/docs/ide-contract.manifest.json` |
+| hdc 侧漂移检查（vs 本仓 MD + IDE 仓 `docs/IDE-CONTRACT.md`） | `lite/tools/board/check-ide-contract-drift.sh` |
+
+```bash
+# 对照本仓 MD + 拉取 IDE 仓 baseline（默认 main，失败再试 docs/sync-ide-contract）
+lite/tools/board/check-ide-contract-drift.sh
+# 或指定本地 IDE 文件：
+IDE_CONTRACT_FILE=/path/to/ohos-lite-js-ide/docs/IDE-CONTRACT.md \
+  lite/tools/board/check-ide-contract-drift.sh
+```
+
+**全栈 / IDE：** 在 `ohos-lite-js-ide` 侧可另加 diff 脚本，以本清单 `ide-contract.manifest.json`（或本 `IDE-CONTRACT.md`）为 baseline；**勿改端口/路径命名**（8710 / 8711 / 18710、`/data/ohjs`、`/tmp/ohjs`、`debug.<bundle>`）。hdc **不**代开 IDE PR；PR #4 同步后两边脚本应同绿。
+
+## Soak / 边界冒烟（无板）
+
+```bash
+# 一键契约 soak（默认 N=20，fail-fast；日志 lite/test/qemu-ide-soak/）
+N=20 lite/test/qemu-ide/soak-ide-contract.sh
+# 可选：SOAK_SKIP_NESTED=1 跳过 oneshot 内嵌 verify-contract
+
+# qemu 边界：大文件 / 重连突发 / 并发 session
+LARGE_MB=32 N_RECONN=10 N_CONCUR=6 lite/test/qemu-ide/smoke-qemu-edges.sh
+```
+
+CI/文档可选：`SOAK_N` / `N` 控制 soak 次数；`SKIP_START=1` 假定 G2 已起。

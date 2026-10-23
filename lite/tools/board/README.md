@@ -17,3 +17,9 @@ Also: [host/README.md](host/README.md) (host hdc 3.2.0c), [README-ABI.md](README
 - [README-ABI.md](README-ABI.md) — pack-debug-libs / from-board-results (offline OK while ABI waits)
 - One-shot contract (no board): `../../test/qemu-ide/verify-ide-contract-oneshot.sh`
 - CI OSAL matrix: `../../ci/build-osal-matrix.sh` · USB FSM: `./test-usb-gadget-fsm.sh`
+
+## IDE-CONTRACT anti-drift
+
+- Manifest: [`../../docs/ide-contract.manifest.json`](../../docs/ide-contract.manifest.json) (ports 8710/8711/18710, paths `/data/ohjs` `/tmp/ohjs`, marker `debug.<bundle>`).
+- Check: `./check-ide-contract-drift.sh` — compares manifest ↔ local `IDE-CONTRACT.md` ↔ IDE repo `docs/IDE-CONTRACT.md` (fetch via `gh`; no IDE PR from hdc).
+- **全栈:** add IDE-side half against this manifest after PR #4 sync.
