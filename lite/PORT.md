@@ -129,6 +129,11 @@ everything else: new files under lite/
   - The ACE patch and the jerry patch touch only the scratch OH sources, not hdc `src/`.
 - **v5.0.3:** lite-only.
 
+### 13. tools(lite): offline ABI compare for board ACE/jerry libs
+- **Files:** `lite/tools/board/{abi-compare.sh,abi-compare.ps1,unpack-board-results.sh,relink-board-needed.sh,smoke-abi-compare.sh}`, `lite/docs/JS-DEBUG.md` (§B), `lite/tools/acelite-debug/build.sh` (writes `b/acelite-la64/SHA256SUMS`).
+- **What/why:** when a `board-results-*.zip` with `libs/` arrives, compare board `.so` to `b/acelite-la64` (ELF identity, NEEDED, export superset, debugger symbols) and emit `abi-report.md` + `.json` with YES/CONDITIONAL/NO. `relink-board-needed.sh` rewrites `libace_lite.so` DT_NEEDED in one command. Smoke covered by `smoke-abi-compare.sh`.
+- **v5.0.3:** lite-only.
+
 ## Known limitations
 
 ### `hdc shell` exit code is not propagated (upstream design, not a port bug)

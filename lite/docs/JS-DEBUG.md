@@ -113,12 +113,39 @@ out: done counter=33
    - `libace_native_engine.so` (JSI) and `libace_module_manager.so`;
    - hilog, samgr, and the platform adapter (`ace_malloc`, `Terminate`, `SetEngineSnapshotMode`…).
 
-   Our `.so` has **no DT_NEEDED for them**. Pass `BOARD_NEEDED="<exact NEEDED list from board>"` to relink with soname stubs.
+   Our `.so` has **no DT_NEEDED for them**. Pass `BOARD_NEEDED="<exact NEEDED list from board>"` to `lite/tools/acelite-debug/build.sh`, or use `lite/tools/board/relink-board-needed.sh` after a full build (see above).
 3. **Feature-flag mismatch risk:** the board's ACE/jerry build flags are unknown.
    - Examples: `ace_lite_common_defines` (netstack/battery/kv/media/camera), product `acelite_config.h` (we used `targets/linux`), and jerry `JERRY_ES2015`, `JERRY_SNAPSHOT_*`, `JERRY_CPOINTER_32_BIT`, heap size.
    - A mismatch can corrupt the external-context layout, or break **snapshot (.bc) compatibility**, which ACE lite uses for app JS.
 4. **Other libs use jerry too.** Board `libace_native_engine.so` / `libace_module_manager.so` link the board's jerry, so replacing jerry libs affects them. Replace all three jerry libs together, and only if the board's jerry exports the same API.
 5. The sources were shallow GitHub mirrors of the tag. The board image may carry vendor patches.
+
+**Offline ABI compare (when Sam returns a `board-results-*.zip` with `libs/`):**
+
+```sh
+# from developtools_hdc lite/ tree (or any checkout with llvm-readelf + llvm-nm)
+lite/tools/board/abi-compare.sh --board-results /path/board-results-….zip
+# or after unpack:
+lite/tools/board/unpack-board-results.sh board-results-….zip /tmp/br
+lite/tools/board/abi-compare.sh --board-libs /tmp/br/.../libs --ours /workspace/hdcd-port/b/acelite-la64
+# reports: abi-report-*/abi-report.md + abi-report.json
+# Windows: abi-compare.ps1 forwards to bash/WSL; if no bash, copy libs/ to Linux and run the .sh
+```
+
+Checks per matching `.so`: ELF machine/class/type, flags, SONAME, DT_NEEDED diff, defined-export set diff (ours must be a **superset** of board), undefined counts, `.text` size delta, debugger string, jerry debugger symbols (`tcp_create_bind` etc.).
+Verdict: **YES / CONDITIONAL (relink BOARD_NEEDED) / NO**.
+
+**BOARD_NEEDED one-command relink** (after a full `acelite-debug/build.sh`, once board NEEDED is known from the report):
+
+```sh
+BOARD_NEEDED="libui.so libhilog_shared.so libace_native_engine.so …" \
+  lite/tools/board/relink-board-needed.sh
+# then re-run abi-compare.sh; sha256 of libace_lite.so changes, jerry libs unchanged
+```
+
+Smoke (no board zip needed): `lite/tools/board/smoke-abi-compare.sh` (identical → YES; x86 stub → NO; extra NEEDED → CONDITIONAL).
+
+Current build shas are also in `b/acelite-la64/SHA256SUMS` (written by `build.sh`).
 
 **Required from the board before any swap** (paste back):
 ```sh

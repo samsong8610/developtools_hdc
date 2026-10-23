@@ -72,6 +72,8 @@ $C/clang++ $T -shared -o $O/libace_lite.so -Wl,-soname,libace_lite.so $O/obj/*.o
 $C/llvm-nm -D --undefined-only $O/libace_lite.so | awk '{print $2}' > $O/ace_undefined.txt
 echo "objs=$(ls $O/obj | wc -l) undefined=$(wc -l < $O/ace_undefined.txt) debugger_string=$(strings $O/libace_lite.so | grep -c 'please connect to debugger server')"
 sha256sum $O/*.so
+(cd $O && sha256sum libace_lite.so libjerry-core.so libjerry-ext.so libjerry-port-default.so acedbg-harness > SHA256SUMS)
+echo "SHA256SUMS written; BOARD_NEEDED relink: lite/tools/board/relink-board-needed.sh"
 # 6) gate harness (static, same jerry PIC libs) for the qemu jsdebug env
 $C/clang $T -O2 -static -o $O/acedbg-harness $H/acedbg-harness.c -I$A/frameworks/include/base \
   -I$J/jerry-core/include -I$J/jerry-ext/include -I$J/jerry-port/default/include \
