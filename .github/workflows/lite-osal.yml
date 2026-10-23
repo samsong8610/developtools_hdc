@@ -1,0 +1,28 @@
+# Compile gate: default linux OSAL + liteos_a stub must both build.
+# Public runners: host-cc (gcc) only. Self-hosted / local: lite/ci/build-osal-matrix.sh la64-osal
+name: lite-osal-matrix
+on:
+  push:
+    branches: [ohjs/6.1-lite, 'ohjs/**']
+    paths:
+      - 'lite/osal/**'
+      - 'lite/CMakeLists.txt'
+      - 'lite/ci/**'
+      - 'lite/toolchain/**'
+      - '.github/workflows/lite-osal.yml'
+  pull_request:
+    paths:
+      - 'lite/osal/**'
+      - 'lite/CMakeLists.txt'
+      - 'lite/ci/**'
+      - 'lite/toolchain/**'
+      - '.github/workflows/lite-osal.yml'
+  workflow_dispatch:
+
+jobs:
+  host-cc-osal:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: OSAL matrix (host gcc) linux + liteos_a
+        run: bash lite/ci/build-osal-matrix.sh host-cc

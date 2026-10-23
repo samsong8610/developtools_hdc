@@ -24,3 +24,13 @@ Env: `HDC_USB_UDC`, `HDC_USB_VID`, `HDC_USB_PID`, `HDC_USB_SERIAL`, `HDC_USB_GAD
 Requires kernel **configfs** + **usb_f_fs** (+ a UDC). Without them, only dry-run/check are useful — do not treat check MISS as a script bug.
 
 See also: `lite/test/usb-vm/` (QEMU FunctionFS e2e), OSAL `hdc_osal_usb_on_ffs_ready` (linux binds UDC; liteos_a is no-op stub).
+
+## Unit tests (no kernel / no real VID)
+
+```sh
+./test-usb-gadget-fsm.sh
+# Covers: configfs missing, UDC missing, bind fail, cleanup idempotent,
+#         state ABSENT→…→UDC_BOUND under a fake CFG root.
+```
+
+Logic lives in `usb-gadget-fsm.sh` (sourced by setup + tests). Placeholder VID:PID is never written to hardware in these tests.

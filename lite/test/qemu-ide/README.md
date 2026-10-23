@@ -44,5 +44,6 @@ Implications for IDE UAT against qemu-ide:
 | `run-qemu-hdcd.sh` | start/stop/status; `jsdebug` netns mode |
 | `smoke-stability.sh` | reconnect ×N, 1–5 MiB file send, parallel shell, `verify-contract` |
 | `verify-contract.sh` | 8710 PASS / 18710 FAIL (start-only); `/data/ohjs` + clean `debug.*` |
+| **`verify-ide-contract-oneshot.sh`** | **One-shot** IDE-CONTRACT: tconn/file/fport/marker + nested verify-contract |
 | `verify.sh` | G2 bm/aa/hilogcat (stubs) |
 | `verify-jsdebug*.sh` / `verify-acedbg-gate.sh` | G4 debugger (needs jerry / harness) |

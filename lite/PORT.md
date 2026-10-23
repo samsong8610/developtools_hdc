@@ -173,6 +173,12 @@ everything else: new files under lite/
 - **What/why:** clarify linux=default vs liteos_a stub; Sam hand-port file order; host-side scripts without board.
 - **v5.0.3:** lite-only.
 
+
+### 20. ci/test(lite): OSAL matrix CI, USB gadget FSM unit tests, IDE-CONTRACT one-shot
+- **Files:** `lite/ci/build-osal-matrix.sh`, `.github/workflows/lite-osal.yml`, `lite/tools/board/{usb-gadget-fsm.sh,test-usb-gadget-fsm.sh}`, `lite/test/qemu-ide/verify-ide-contract-oneshot.sh`.
+- **What/why:** compile gate linux+liteos_a; FunctionFS error-path tests without hardware; one board-package entry for contract happy paths on stubs.
+- **v5.0.3:** lite-only.
+
 ## Known limitations
 
 ### `hdc shell` exit code is not propagated (upstream design, not a port bug)

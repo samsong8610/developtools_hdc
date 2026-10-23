@@ -80,6 +80,7 @@ lite/test/qemu-ide/verify-acedbg-gate.sh     # ACE gate
 lite/test/qemu-ide/verify-jsdebug-marker.sh  # /data/ohjs/debug.<bundle>
 lite/test/qemu-ide/smoke-stability.sh        # 重连 / 连续 file send / 并行 shell
 lite/test/qemu-ide/verify-contract.sh        # 端口/路径/标记 residual 回归（负例必须失败）
+lite/test/qemu-ide/verify-ide-contract-oneshot.sh  # 一键：tconn/file/fport/marker + contract（无板）
 ```
 
 ## 5. 禁止事项（摘要）
@@ -92,6 +93,9 @@ lite/test/qemu-ide/verify-contract.sh        # 端口/路径/标记 residual 回
 ## 6. 验收 / 回归（verification）
 
 ```sh
+# 一键 IDE-CONTRACT happy path（推荐；无板，stubs）
+lite/test/qemu-ide/verify-ide-contract-oneshot.sh
+
 # 独立跑合同回归（G2 start 模式；会 stop jsdebug 别名以便负例成立）
 lite/test/qemu-ide/verify-contract.sh
 

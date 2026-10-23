@@ -15,6 +15,9 @@
 #             2 = usage/error.
 # Off-board: prefer --dry-run / --check. Full bind needs root + configfs + UDC.
 set -eu
+# Optional FSM helpers (unit-tested via test-usb-gadget-fsm.sh; safe if missing).
+_FSM="$(cd "$(dirname "$0")" && pwd)/usb-gadget-fsm.sh"
+[ -f "$_FSM" ] && . "$_FSM" || true
 
 UDC=${HDC_USB_UDC:-}
 VID=${HDC_USB_VID:-0x12d1}
@@ -133,6 +136,7 @@ check_only() {
     ok=0
   fi
   echo "Planned: gadget=$GNAME vid=$VID pid=$PID serial=$SERIAL ffs=$FFS_DIR udc=${UDC:-<first>}"
+  if type fsm_state >/dev/null 2>&1; then echo "FSM state: $(fsm_state)"; fi
   [ "$ok" = 1 ] && return 0 || return 1
 }
 

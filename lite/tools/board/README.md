@@ -15,3 +15,5 @@ Also: [host/README.md](host/README.md) (host hdc 3.2.0c), [README-ABI.md](README
 - [BACKPORT-v5.0.3.md](../../docs/BACKPORT-v5.0.3.md) — concrete v5 hand-port file list / order
 - [qemu-ide README](../../test/qemu-ide/README.md) — no-board smoke + stub aa limits
 - [README-ABI.md](README-ABI.md) — pack-debug-libs / from-board-results (offline OK while ABI waits)
+- One-shot contract (no board): `../../test/qemu-ide/verify-ide-contract-oneshot.sh`
+- CI OSAL matrix: `../../ci/build-osal-matrix.sh` · USB FSM: `./test-usb-gadget-fsm.sh`
