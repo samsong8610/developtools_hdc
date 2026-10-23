@@ -228,7 +228,11 @@ sources below. Later sources override earlier ones.
   hdc shell rm /data/ohjs/debug.<bundle>   # right after attach, so the next normal launch does not wait
   ```
 
-**Emulated verification:** `lite/test/qemu-ide/verify-acedbg-gate.sh`, log in `test/qemu-acedbg-gate.log`.
+**IDE / 全栈开发 marker path:** `/data/ohjs/debug.<bundle>` (default `ACE_DBG_FLAG_DIR`). The IDE clears `debug.*` before deploy and on failure (`shellClearDebugMarkers`). For a debug launch it should `touch` the marker before `aa start`, attach via `hdc fport`, then `rm` the marker so the next normal launch does not wait. `run-qemu-hdcd.sh` (start + jsdebug) creates a writable `/data/ohjs` on the host so qemu-user and `hdc shell` share the same path.
+
+**Emulated verification:**
+- `lite/test/qemu-ide/verify-acedbg-gate.sh` — gate sources (env / flag-dir override / bind); log `test/qemu-acedbg-gate.log`.
+- `lite/test/qemu-ide/verify-jsdebug-marker.sh` — **`/data/ohjs/debug.<bundle>`** create → wait + client e2e → delete → no wait; also creates the marker via `hdc shell`. Log: `lite/test/qemu-jsdebug-marker.log`.
 - It runs `b/acelite-la64/acedbg-harness`, a static la64 binary that uses the same `js_debugger_gate.h` and the
   same patched jerry-ext as `libace_lite.so`. It runs in the jsdebug netns through
   `run-qemu-hdcd.sh jsdebug` (new env `JERRY_BIN`/`JERRY_ARGS`/`JERRY_ENV`).

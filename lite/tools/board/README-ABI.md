@@ -9,6 +9,16 @@ English one-pager for the board package. Use this **after** `board-check.ps1` re
 
 Windows-only hosts: `abi-compare.ps1` / `pack-debug-libs.ps1` forward to bash/WSL/Git Bash. If none is available, copy `libs/` to Linux and run the `.sh` scripts there.
 
+## One-shot pipeline (recommended)
+
+```sh
+./from-board-results.sh board-results-….zip
+# unpack → abi-compare → auto BOARD_NEEDED relink if needed → pack-debug-libs
+# On failure: non-zero exit; work dir kept with intermediates.
+# Prints NEXT STEPS (download zip, review swap-libs.ps1, -Execute only after confirm).
+# Windows: from-board-results.ps1
+```
+
 ## Which command
 
 ```sh

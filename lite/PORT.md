@@ -140,6 +140,12 @@ everything else: new files under lite/
 - **What/why:** after a YES (or CONDITIONAL-after-relink) ABI verdict, `pack-debug-libs.sh` builds `debug-libs-<ts>.zip` with the four `.so`, `SHA256SUMS`, `BACKUP-AND-ROLLBACK.md`, and `swap-libs.ps1` (print-only by default; `-Execute` / `-DoRemount` required for writes/remount). Board package README documents SysV + systemd hdcd autostart. Pre-release `ohjs-board-2026-10-29` refreshed with the ABI tooling.
 - **v5.0.3:** lite-only.
 
+
+### 15. tools(lite): from-board-results pipeline + qemu /data/ohjs marker verify
+- **Files:** `lite/tools/board/{from-board-results.sh,from-board-results.ps1,smoke-from-board-results.sh}`, `lite/test/qemu-ide/{run-qemu-hdcd.sh,verify-jsdebug-marker.sh}`, `lite/docs/JS-DEBUG.md` §E, `README-ABI.md`.
+- **What/why:** one command from `board-results-*.zip` through unpack/compare/optional BOARD_NEEDED relink/pack with Sam-facing next steps; qemu-ide creates writable `/data/ohjs` so IDE marker `debug.<bundle>` matches device; `verify-jsdebug-marker.sh` proves wait-with-marker / no-wait-without.
+- **v5.0.3:** lite-only.
+
 ## Known limitations
 
 ### `hdc shell` exit code is not propagated (upstream design, not a port bug)
