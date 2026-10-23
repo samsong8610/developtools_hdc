@@ -146,6 +146,12 @@ everything else: new files under lite/
 - **What/why:** one command from `board-results-*.zip` through unpack/compare/optional BOARD_NEEDED relink/pack with Sam-facing next steps; qemu-ide creates writable `/data/ohjs` so IDE marker `debug.<bundle>` matches device; `verify-jsdebug-marker.sh` proves wait-with-marker / no-wait-without.
 - **v5.0.3:** lite-only.
 
+
+### 16. docs/tools(lite): IDE-CONTRACT + USB gadget script + qemu stability smoke
+- **Files:** `lite/docs/IDE-CONTRACT.md`, `lite/tools/board/{setup-usb-gadget.sh,README-USB-GADGET.md}`, `lite/test/qemu-ide/smoke-stability.sh`.
+- **What/why:** normative IDE↔device ports/paths/`__RC`/bm-aa/hilogcat/marker contract for the team; board-side configfs+FunctionFS setup (dry-run/check without UDC); qemu-ide reconnect / multi file-send / parallel shell smoke.
+- **v5.0.3:** lite-only.
+
 ## Known limitations
 
 ### `hdc shell` exit code is not propagated (upstream design, not a port bug)

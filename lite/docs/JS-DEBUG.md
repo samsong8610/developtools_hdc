@@ -5,6 +5,9 @@ Researched 2026-10-22 (Asia/Shanghai).
 
 ## Bottom line
 
+IDE / 全栈端口与路径约定见同目录 [`IDE-CONTRACT.md`](IDE-CONTRACT.md)。
+
+
 **On a stock device build, the JS debugger is compiled out and never started.**
 Enabling it needs a **rebuild of ace_engine_lite** (compile-time macro) **plus a code change** that turns on `startDebuggerServer`.
 Upstream has no runtime switch, parameter, or config file for it.
